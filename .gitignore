@@ -1,0 +1,30 @@
+# Large data / models / binaries — never commit (regenerable or huge)
+*.h5
+*.fits
+*.fits.gz
+*.npy
+*.pt
+*.pth
+*.tar
+*.tgz
+*.gz
+
+# Environments / caches
+.venv*/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Large reference PDFs and media (keep PAPER_DRAFT.pdf + paper_figures/ only)
+2*.pdf
+Nature_*.pdf
+arXiv-*.tar
+*.key.pdf
+CUHK_*.pdf
+LensFusion*.pdf
+hjmcc*.pdf
+
+# Stray diagnostic image dumps (keep only paper_figures/)
+diag_*.png
+diagnose_*.png
+preview_*.png
