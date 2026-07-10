@@ -5,6 +5,37 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-10 (night) — QUICK-TRAINS: REB set trains cleanly (resnet probe 0.120 vs 0.161 on the old set); convnextv2 REQUIRES lr 3e-4 (collapses at 1e-3); resnet50 best probe (0.116 @1e-3) → 16-member seed-honest GRID LAUNCHED
+
+Quick-train table (20k/10ep, jobs 47485–47490): resnet@1e-3 0.1204/R²0.83;
+incnext@1e-3 0.1595/0.74 (slow starter, catches up at 40ep historically);
+convnextv2@1e-3 0.4434/−0.00 COLLAPSED (classic pretrained-LR failure) vs
+convnextv2@3e-4 0.1165/0.82; resnet50@1e-3 0.1156/0.82 (best) vs @3e-4 0.1499.
+Cross-dataset caveat: probe MAEs are not strictly comparable across datasets
+(different task difficulty) — "trains cleanly" is the qualification, and it holds.
+**Grid launched** (`submit_grid_reb.sh`, 2 waves, jobs 47491+): 5 seeds × resnet@1e-3,
+5 × incnext@1e-3, 3 × convnextv2@3e-4, 3 × resnet50@1e-3 → 16 members, θ_E-only NLL
+heads. Aux-head variants (L2) follow as a second batch on the two best archs once the
+orientation-aware label pipeline is coded; everything arbitrated on sim-val together;
+ONE ⛔ eval #16. Old sel dataset (train/val_euclid_sel) now confirmed safe to delete
+(Nurkyz command). Quota 91.4 GB.
+
+## 2026-07-10 (evening, cont.) — ⛔ MERGED VISUAL PASSED (Nurkyz): background-source question = random real-panel draw; "misplaced arc" DISPROVED by θ_E-circle overlay (the #81435 pattern — eye-catchers are off-circle companions, arcs sit ON the circle); QUICK-TRAINS LAUNCHED (6 jobs, 4 archs)
+
+- Nurkyz's three observations on `real_vs_train_euclid_reb.png`, resolved with evidence:
+  (1) real panels in that draw look background-clean → seed-7 drew clean fields
+  (pilot's seed-5 draw shows busy real fields; companion recipe unchanged from her
+  approved pilot); (2) one sim arc invisible ↔ real also has such → selection floor at
+  faint-visible, by design (prominence-matched); (3) "misplaced arc" →
+  `theta_circle_check_REB.png`: all 8 displayed sims have their arc ON the true-θ_E
+  circle; the eye-catching knots (#13298, #82608) are off-circle COMPANIONS. Verdict:
+  not a bug (second confirmation of the #81435 diagnosis pattern).
+- **Training GO given.** Quick-trains submitted (jobs 47485–47490, 20k/10ep, NLL):
+  resnet@1e-3, inceptionnext@1e-3, convnextv2@{1e-3, 3e-4}, resnet50@{1e-3, 3e-4}.
+  Next: full seed-honest grid sized by quick-train evidence; aux-head training path
+  (orientation-aware e1/e2) being built in parallel; old sel dataset deletable after
+  quick-trains confirm the REB set trains cleanly.
+
 ## 2026-07-10 (evening) — REB DATASET MERGED & GATED: 101,180 train + 5,095 val, labels verified BEFORE shard deletion, ALL GATES PASS, θ_E ≈ FLAT (median 1.402 vs uniform 1.375) — ⛔ merged visual with Nurkyz, then training grid
 
 **Generation (waves 47453/47470/47478, ~65 min) + merge (47484):**
