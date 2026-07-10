@@ -5,6 +5,30 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-10 (evening) — REB DATASET MERGED & GATED: 101,180 train + 5,095 val, labels verified BEFORE shard deletion, ALL GATES PASS, θ_E ≈ FLAT (median 1.402 vs uniform 1.375) — ⛔ merged visual with Nurkyz, then training grid
+
+**Generation (waves 47453/47470/47478, ~65 min) + merge (47484):**
+- `train_euclid_reb_100k.h5` 101,180 / `val_euclid_reb_5k.h5` 5,095 (val kernels 80–87,
+  val stamps, seeds 8701+ — all disjoint). Label verification ran BEFORE the shard rm
+  (zeros=0 both files; mass_e1/e2, deflector_index/mag, arc_snr/extent all present —
+  the provenance fix works).
+- **θ_E flatness achieved:** merged fractions 0.184/0.207/0.292/0.318 vs flat
+  expectation 0.189/0.216/0.270/0.324; median 1.402 (old skewed set: 1.609).
+- deflector_re written from stamp half-light radii (train rows→train lib, val rows→val
+  lib, verified 0/5095 cross-contamination).
+- Gate: sky-RMS ratio 0.899 PASS, peak/sky 782 vs real band [574, 1310] PASS, θ_E PASS.
+- **Flag for the visual (disclosed):** merged sky-normed radial profile sits ~20–50%
+  above real at all radii (e.g. 208 vs 169 at r=0.25″) — plausibly the flat-θ_E
+  population putting more arc flux at small radii; compare
+  `radial_profile_train_euclid_reb.png` vs the old `radial_profile_OLD_sel.png`
+  (both in reb_pilot_review/ on the Mac) at the ⛔ visual.
+- Quota peak 91 GB → post-cleanup path clear; old sel dataset (~7 GB) deletable AFTER
+  the ⛔ visual + quick-train sanity (commands in the session report).
+**Next (on Nurkyz's merged-visual OK):** quick-train sanity 4 archs (resnet,
+inceptionnext, convnextv2, resnet50 — timm archs also probed at lr 3e-4), then the
+seed-honest grid; aux-head training path (orientation-aware e1/e2 transform ported
+from the multi-head lineage) to be built in parallel — L2 rides the same dataset.
+
 ## 2026-07-10 (cont.) — RULINGS (Nurkyz): rebalance pilot visuals APPROVED, companions fine; timm install APPROVED; ResNet-50 arm ADDED (LEMON-comparable backbone). Pipeline patched (aux labels + provenance), plumbing regression test in flight, full REB generation staged
 
 - **Nurkyz visual sign-off** on reb_pilot_review/ (small-θ_E panels + all-θ_E + stretches):
