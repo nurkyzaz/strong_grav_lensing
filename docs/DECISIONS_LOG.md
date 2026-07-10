@@ -5,6 +5,30 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 (AM) — G2 BUILT & PILOT LAUNCHED (job 47521): the manifest-driven self-consistent population generator
+
+Components (all in ~/cosmos_acs/tiles/, mirrored to repo):
+- `g2_merge_libs.py`: unified 139-stamp library (`deflector_stamps_g4_all.h5` +
+  `g2_kinematics_unified.csv`, origin column kept for the G4 val split).
+- `g2_make_manifest.py`: one physically self-consistent system per row — real
+  galaxy (stamp/σ_v/z_l) + drawn z_s → θ_E COMPUTED (SIS, σ_v jittered within its
+  error); mass shape = measured light shape after the row's dihedral ⊕ N(0,10°)
+  misalignment, q_mass = q_light ⊕ 0.08; bin-filling importance sampling → flat
+  effective θ_E where the library supports it (per-bin fill reported, tails not
+  silently padded); prints the manifest FJ correlation.
+- `config_lensfusion_acs_g2.py`: inherits the full Euclid-arm recipe, overrides
+  theta_E / 'e1,e2' / z_source with manifest-row callables (θ_E advances the row).
+- `g2_join_assign.py`: recovers accepted-render ↔ manifest mapping by exact
+  θ_E+e1 match (mag_cut rejections skip rows; 1:1 asserted).
+- `hybrid_combine.py --deflector_manifest` (patch, .bak_g2): pastes EXACTLY the
+  assigned stamp with the assigned dihedral at NATIVE amplitude — no mag draw;
+  the real galaxy's own photometry IS the lens light (GEN4-P1 delivered).
+- `g2_gate_fj.py` (NEW GATE): sim ρ(deflector mag, θ_E) must match the real
+  SLACS relation in sign and within 0.25 — the light→mass channel verified.
+Pilot chain (600 renders, seeds 811/812/216/217): manifest → render → join →
+combine → euclidise → select (0.7,150) → gate_stage0 + FJ gate + flatness +
+side-by-sides. Monitors chain to G4 on PASS per the blanket-green ruling.
+
 ## 2026-07-11 (early AM) — G1 COMPLETE: expansion library BUILT — 90 clean new stamps (of 197 fetched; 79 visually pruned + 28 auto-rejected) → combined 139 σ_v-clean deflectors (2.8× the old 49); all measured (mag/Re/q/PA + σ_v/z join)
 
 - Fetch: 197/201 cutouts (chunked, cache-purged; ~2.5 h). Builder auto-screens
