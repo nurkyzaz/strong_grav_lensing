@@ -13,19 +13,34 @@ comparator (Cao 2025) has public per-lens data. These four facts define our diff
 ## Tier 1 — must engage in detail
 
 - **Busillo et al. 2026, LEMON (A&A 711 A31; arXiv:2503.15329) — NEAREST COMPETITOR.**
-  BNN (ResNet-50), θ_E + ellipticity + more, trained on Euclid sims, evaluated on 60 real
-  spec-confirmed lenses (29 SLACS w/ Bolton b_SIE). Combined real: bias +0.17″, RMSE 0.63″,
-  NMAD 0.23″, **R² ≈ −0.03 full sample**; R² 0.91 after aggressive σ filtering (σ_R_Ein>0.5″
-  cut). Uses Platt-scaled BNN uncertainty; **already does σ-filtering on real lenses** — cite
-  them for that idea, do NOT claim confidence-gating as novel per se.
-  **Our head-to-head (v2, eval #2, LEMON conventions):** combined 102 native-HST lenses:
-  bias −0.059″, RMSE 0.210″, NMAD 0.096″, **R² +0.45 full sample** (no filtering);
-  σ/μ≤median half: R² +0.71, NMAD 0.061″. Every metric 2–3× better, on higher-resolution
-  (harder-to-simulate) native HST, with ~1.7× their real-GT sample size.
+  **[RETRACTION 2026-07-09: the numbers previously recorded here (bias +0.17″, RMSE 0.63″,
+  NMAD 0.23″, "R²≈−0.03 full sample", "R² 0.91 after σ-filtering") are WRONG — verified
+  against the paper's full text (Table 3). The −0.03 appears to be their BIAS in arcsec,
+  transposed into the R² cell of the review table. Corrected values below. The old
+  "every metric 2–3× better" claim is DEAD — do not repeat it.]**
+  Verified (their Table 3, θ_E on 60 EUCLIDISED real HST lenses = 29 SLACS + 13 EELs +
+  5 COSMOS + 13 ACS, heterogeneous literature GT, HST2EUCLID degradation, NO σ-filtering):
+  **bias −0.03″, RMSE 0.14″, NMAD 0.11″, R² = 0.53.** Plus 5 real Euclid ERO lenses (within
+  1σ, one outlier) and Euclid Q1 discussion. BNN (dropout epistemic + aleatoric head),
+  Platt-scaled σ (s=0.78–0.92). Training: 80k Euclid VIS sims, SIE+shear, sources = 1–4
+  Sérsic profiles (HUDF-anchored), lens light = single Sérsic. NO realism ablations, NO
+  domain adaptation, per-lens predictions NOT released (aggregate table only).
+  **Honest comparison vs our v2 (eval #2): 102 native-HST lenses, uniform-survey b_SIE GT:
+  bias −0.059″, RMSE 0.210″, NMAD 0.096″, R² +0.45 no filtering. Aggregates are COMPARABLE
+  (they win RMSE, we win NMAD; R² not cross-comparable — different samples, GT variance and
+  domains). Our defensible edges are QUALITATIVE: native HST (higher resolution, harder
+  sim-to-real), uniform spectroscopic-survey GT vs their 4-catalogue mix (their own paper
+  flags "differing modelling assumptions"), 1.7× real-GT sample, REAL sources + REAL
+  deflector light + realism ablations (they are fully parametric, no ablations), DA on real
+  GT. Direct head-to-head route: HST2EUCLID is public → Euclidise our 29 shared SLACS and
+  compare in THEIR domain.**
 - **Cao et al. 2025 (MNRAS 540 3121; arXiv:2503.08586)** — conventional GPU pixel modeling
   (TinyLensGPU + nautilus), 63 SLACS, ≲5% deviation, ~10% catastrophic failures, ~3 min/lens.
-  **Code + data public: github.com/caoxiaoyue/TinyLensGpu** → per-lens matched comparison is
-  actionable. Our speed contrast: ~ms/lens amortized vs ~3 min/lens.
+  **[CORRECTED 2026-07-09: only the CODE is public (github.com/caoxiaoyue/TinyLensGpu); the
+  per-lens θ_E results are NOT in the repo, the paper's data-availability line, or the
+  author's other repos — verified. Per-lens comparison needs the email ask, or re-running
+  their public code on the same 63 lenses ourselves.]** Our speed contrast: ~ms/lens
+  amortized vs ~3 min/lens.
 - **Ćiprijanović et al. 2023 (arXiv:2311.17238)**: DANN/MMD for θ_E regression, sim→sim
   (DES-noise-emulated target). **Agarwal, Ćiprijanović & Nord 2025 (arXiv:2411.03334)**:
   MVE+UDA, sim→sim, ~2× target-domain gain, calibrated aleatoric σ — closest to our

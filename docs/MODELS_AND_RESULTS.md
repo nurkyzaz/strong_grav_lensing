@@ -20,3 +20,10 @@ soft-θ_E regularizer.
 - Keep `normalize_images` at train time; images are raw electrons.
 - Evaluate through the **same** `metrics_real.py` on the **same** 62 SLACS + 40 S4TM.
 - Success = R² crosses to positive, median within ±5%, failure rate ≲10% (matching/beating Cao 2025).
+
+> **⚠️ STALE (noted 2026-07-09): everything above predates the hybrid-v1/v2/v3 and Path-B
+> model generations.** This file was never updated after the plan above was executed.
+> Authoritative current record: DECISIONS_LOG.md (benchmark evals #1–#9, model lineage,
+> per-eval tables) and PATHB_IMPROVEMENT_PLAN.md (current campaign). Current primary model:
+> `einstein_cnn_v3_inceptionnext.pt`. Do not extend this file until someone consolidates it;
+> extend DECISIONS_LOG instead.

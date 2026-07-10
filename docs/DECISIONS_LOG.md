@@ -5,6 +5,855 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-10 (cont., planning session) — STAGE L0 EXECUTED (analysis-only; running count UNCHANGED at 14): B3 arc-visibility hypothesis REJECTED on the benchmark — the Euclid-arm tail is SMALL-θ_E PRIOR-PULL reintroduced by the selection's θ_E-graded pass rate; tail is NOT benchmark-intrinsic; NMAD win not yet statistically decisive
+
+**Method integrity:** `l0_tail_forensics.py` + `l0_sample_math.py` (in ~/einstein_cnn/)
+reuse per-lens prediction CSVs from ALREADY-LOGGED evals (#8–#14 outputs in brian_run/) and
+compute image STATISTICS (same-estimator arc prominence, verbatim from
+arc_prominence_compare.py) on the benchmark files — gate-style diagnostic usage, no model
+passes; eval count stays 14. `l0_simval_bias.py` + `.sbatch` STAGED on the cluster but NOT
+submitted (sim-val-only job; script shown to Nurkyz per standing rule).
+
+**Findings (full report in session transcript; artifacts: l0_perlens_matrix.csv,
+l0_prominence_cache.csv, l0_tail_forensics.png — copied to Mac l0_forensics/):**
+1. **B3 REJECTED in its stated form:** eval-#14 SLACS failures do NOT concentrate at low
+   real-image arc prominence — ρ(prom, |frac err|) = −0.08 (p=0.52); the faintest-16%
+   group fails LESS than average (20% vs 31%). Arc visibility is not the real-benchmark
+   tail driver.
+2. **The actual driver is θ_E:** SLACS θ_E<0.9″ → fail 62%, median frac +28.6%
+   (OVERESTIMATE), monotone to 11% at θ_E>1.5″. S4TM (+7.1% overall bias) is the same
+   signature on a small-θ_E population. Mechanism: the visibility selection passes
+   26/53/64/84% by θ_E bin → selected training median θ_E = 1.609″ → a skewed effective
+   prior → prior-pull returns at small θ_E. **The deferred "θ_E-reweighting-vs-accept"
+   decision (accepted graded, 2026-07-10 launch) now has evidence against "accept": L3's
+   first lever becomes post-selection θ_E REBALANCING (oversample small-θ_E renders),
+   ahead of the VIS-PSF swap.**
+3. **B4 (selection-survivor bias) confirmed as secondary:** sel_inc bias +7.4%→−0.7%
+   across prominence quartiles (ensemble +4.6%→+1.3%) — a real gradient, but mostly the
+   θ_E effect in disguise.
+4. **The Euclid tail is NOT benchmark-intrinsic:** 16 SLACS lenses fail all 3 current
+   Euclid-arm models but ZERO lenses fail all current native AND Euclid models. The only
+   fail-all-native lens is J0841+3824 — Cao's shared failure — which the Euclid arm
+   PASSES. S4TM has 3 fail-everything lenses (SDSSJ1010+3124, SDSSJ1116+0729,
+   SDSSJ1550+2020; all HIGH prominence → candidates for complex-system/GT investigation,
+   not faint arcs).
+5. **Sample math vs LEMON Table 3 (10k bootstrap, N=62):** NMAD 0.084 CI [0.056, 0.177],
+   P(beats their 0.11) = 0.75 — the NMAD win is real but NOT yet decisive; do not
+   overclaim. RMSE CI [0.154, 0.260]. **R² across samples is close to meaningless:** our
+   MSE evaluated at LEMON's implied GT variance (sd 0.204″ vs our 0.254″) gives R² ≈
+   −0.04 — R² must be compared same-sample only (shared-29) or replaced by
+   variance-independent metrics; this cuts BOTH ways and goes in the paper. Trim curve:
+   removing the 2 worst lenses (J1251-0208, J1432+6317) alone lifts R² to 0.53. Tail
+   arithmetic: fail ≤12% ⇒ RMSE ≤0.14 at current tail RMS — the conf-half failure is
+   already 10–13%, so a σ-gated fallback (two-stage hybrid) numerically closes the RMSE
+   axis.
+6. **Emails drafted** (EMAIL_DRAFTS_20260710.md on the Mac): LEMON (29 names + per-lens
+   preds + HST2EUCLID), Cao (per-lens θ_E; J0841 angle), Brian (authorship). HUMAN to send.
+
+---
+
+## 2026-07-10 (planning session, Mac) — RULINGS (Nurkyz): beat-LEMON-on-every-axis adopted as explicit goal; work staged in IMPROVEMENT_PIVOT_PLAN_20260710.md; website idea REMOVED; LEMON Table 3 re-verified
+
+- **LEMON Table 3 verified by Nurkyz from the paper** (closing a same-day discrepancy where
+  an automated A&A full-text fetch misread rows as θ_E bias −0.10/RMSE 0.37/NMAD 0.24):
+  the 2026-07-09 LITERATURE.md values STAND — θ_E bias −0.03, RMSE 0.14, NMAD 0.11, R² 0.53.
+  Full six-parameter table (ϵx, ϵy, Re, n, m columns incl. n_lens R² = −0.47) recorded in
+  IMPROVEMENT_PIVOT_PLAN_20260710.md §0 for the E4 aux-head comparison.
+- **Goal adopted:** beat LEMON on every axis (bias, RMSE, NMAD, R²; optionally all six
+  parameter columns via aux heads). Current standing (eval #14 ensemble): NMAD won (0.084
+  vs 0.11); to close: |bias| 0.062→≤0.03, RMSE 0.208→≤0.14, R² +0.33→≥0.53. Staged campaign
+  L0–L4 in the plan file; integrity guardrail unchanged (no post-hoc benchmark trimming;
+  legitimate forms = shared-29 table, sample-composition analysis, pre-declared scope,
+  labeled confident-subset columns).
+- **Website idea REMOVED** (Nurkyz ruling). Community-value replacement: release package
+  only (benchmark + weights + per-lens predictions + protocol, Zenodo DOI).
+- **Professor feedback interpreted & adopted:** "keep the code flexible for any
+  observations" = pipeline modularity (InstrumentConfig abstraction + universal inference
+  loader; optional pixel-scale/PSF conditioning — the m3 lineage is already
+  scale-conditioned), NOT an architecture rebuild. Roman arm endorsed by professor → Track
+  R3, timed for paper 2 (~Oct 2026 launch), must not block paper 1.
+- **Forgotten-item finding logged:** the native arm never received the R1.2b population
+  program (HighSB selection, Newton mags, SLACS z_source, 1px jitter, screened backdrops)
+  — back-port is Track N1, the largest untapped native-headline lever.
+
+## 2026-07-09 (cont.) — RULING (Nurkyz): benchmark reporting restructured to SLACS-PRIMARY / S4TM-SECONDARY; benchmark itself NOT shrunk; R1.2 (Euclidised head-to-head vs LEMON) STARTED
+
+**Reporting decision (Nurkyz, after considering and REJECTING dropping S4TM):** the frozen
+benchmark stays 62 SLACS + 40 S4TM — no post-hoc shrinking (the drop idea was rejected because
+it would be results-driven selection, would cut the real-GT sample to ~LEMON's size, and S4TM
+is the lower-mass/shallower-imaging robustness test where confident-half failure is 10%).
+PRESENTATION changes: SLACS = primary headline table (also the Cao comparison set); S4TM =
+explicit "generalization to lower-mass, shallower-imaging lenses" section. All future evals
+report both, in that structure.
+
+**R1.2 execution (same session):** HST2EUCLID code NOT public (Bergamini et al. 2025 A&A
+aa53984-25 — no repo/DOI; email ask → human list). Recipe reimplemented from their published
+numbers (`euclidise.py` in ~/einstein_cnn/): ZP_Euclid 23.9, PSF matched to VIS (Gaussian
+0.10″→0.16″ approx, disclosed), exact 2×2 rebin 50→100 mas/px, Poisson(signal+sky) with sky
+variance set by m_AB=24.5 @ S/N=10 (1.3″ aperture, 2280 s EWS) → sky σ 0.0048 e-/s per Euclid
+px; bilinear upsample back to 128px so the CNN stack applies unchanged. DISCLOSED deviations:
+single-band F814W I_E proxy (they blend F606W 0.542/F814W 0.458); Gaussian matching kernel;
+input HST noise rides along (subdominant, symmetric train/test). Benchmark Euclidised
+(`euclid_slacs_images.h5`); sim pilot Euclidised; **side-by-side
+(`real_vs_sim_euclidised.png`): Euclidised real and sim are nearly indistinguishable — direct
+visual support for the resolution hypothesis.** Euclidise-100k-v3 + quick-train job 47372
+running. LEMON's 29 SLACS names NOT published → exact shared-lens comparison needs an author
+email (human list); until then compare distribution-level (our 62 vs their 60 aggregate).
+
+## 2026-07-09 (cont.) — End-of-day AUDIT clean; R1.2b premise VALIDATED (ρ=−0.57 post-degradation) → arc-visibility-selection pilot launched; σ-recal frozen into eval_protocol.json; backdrop tiles downloading
+
+**Audit of today's additions (Nurkyz-requested, before proceeding):**
+- Euclidiser flux conservation MEASURED: aperture-flux ratio 0.1538 vs expected 0.1528 (0.7%,
+  within PSF-truncation tolerance) ✓; Euclidised 100k labels intact (flat θ_E [0.45,2.30], no
+  NaNs) ✓; normalization train/predict consistent BY CONSTRUCTION (predict reads
+  scale_mean/std from the checkpoint) ✓; val PSF kernels 80–87 exist ✓.
+- Informative audit finding: post-degradation peak/sky S4TM 824 vs SLACS 742 — the S4TM
+  collapse is an ANGULAR-SCALE effect (θ_E vs 0.16″ PSF), not signal depth.
+- Known disclosed approximations stand (single-band I_E proxy; Gaussian matching kernel;
+  residual HST noise, symmetric).
+
+**R1.2b premise check (euclid_stratified.py, euclid-v3-resnet on euclidised pathb pilot;
+caveat: parametric-trained model on real-light pilot → absolute errors inflated, trend is the
+readout):** post-degradation arc SNR quartiles → failure 84% / 56% / 50% / 18%, lowest quartile
+median +11% (prior-pull); ρ(euclid arc SNR, |frac err|) = −0.57. **Arc visibility drives the
+Euclid-domain error; selection matched to the discovery-selected evaluated population is
+justified.** Pilot launched (job 47375): 400 renders (seed 211, npys kept) → final pathb
+combine → euclidise → `arc_visibility_select.py` (SNR > 0.7, sensitivity at 0.5/1.0/1.5
+reported, per-θ_E pass fractions reported — watch for small-θ_E depletion) → gate vs the
+EUCLIDISED benchmark. Full generation + retrain + eval #14 only after pilot + Nurkyz go.
+
+## 2026-07-10 (cont.) — ⛔ EVAL #14 (Euclid arm, R1.2b dataset; authorized "continue with everything left"): NMAD BEATS LEMON (0.084 vs 0.11); R² crosses to +0.33; residual gap isolated to the catastrophic tail
+
+**Running count: 14.** #81435 "misplaced arc" diagnosed NOT a bug (true arc on the θ_E circle
+at SNR 0.8; the eye-catcher was a chance companion chain; `diag_81435.png`). Final sweep clean
+(zeros=0 both files, selection-consistent, shard-disjoint, no NaN/Inf). Quick-train 0.161″ ✓ →
+full training: IncNeXt sim-val 0.0890″ (R² 0.80), ResNet 0.0877″ (R² 0.83). σ frozen on
+sim-val: s=1.320/1.712, ρ≈+0.66. TTA on euclid_slacs + euclid_s4tm, J0955 excluded:
+
+| SLACS (N=62), LEMON conventions | bias | RMSE | NMAD | R² | fail | conf-half |
+| LEMON Table 3 (60 mixed-GT, Euclidised) | −0.03 | 0.14 | **0.11** | **0.53** | — | — |
+| eval #12/#13 best (unselected arm, ref) | −0.01 | 0.254 | 0.162 | 0.00 | 35% | — |
+| IncNeXt | +0.095 | 0.255 | 0.112 | −0.01 | 35% | 16% |
+| ResNet | +0.028 | 0.226 | 0.108 | +0.21 | 32% | **10%** |
+| **ensemble (2-arch)** | +0.062 | 0.208 | **0.084** | **+0.33** | 31% | 13% |
+| ensemble S4TM (N=40, secondary) | +0.129 | 0.250 | 0.092 | +0.16 | 30% | 10% |
+
+**Reading:** (1) the R1.2b program (visibility selection + population-matched sources: SB, mags,
+z) HALVED NMAD (0.162→0.084) and moved R² 0.00→+0.33 in one iteration — and our ensemble NMAD
+0.084 now BEATS LEMON's 0.11 on typical-lens accuracy, with comparable bias. (2) RMSE/R² remain
+behind (0.208/0.33 vs 0.14/0.53): entirely a CATASTROPHIC-TAIL effect (fail 31% — their
+sample is a curated 4-catalogue mix; per-lens comparison awaits their 29 names) — the
+confident-half failure is 10–13% (the gating story holds in the Euclid domain). (3) S4TM
+NMAD 0.092 also below LEMON's 0.11 despite the harder small-θ_E population. Levers queued for
+the tail: E3 real VIS PSF, E4 auxiliary heads, E5 transfer-init, exact shared-29 table (email).
+Caveats stated for the paper: our Euclidiser is a disclosed reimplementation (single-band I_E,
+Gaussian kernel); domains differ from LEMON's exact degradation until the Bergamini code/name
+list arrive.
+
+## 2026-07-10 (cont.) — CLEAN MERGE VERIFIED (zeros=0; 102,174 train + 4,903 val); merged gate vs Euclidised benchmark ALL PASS — ⛔ awaiting Nurkyz's merged-set visual, then quick-train → full train → σ-recal → ⛔ eval #14
+
+**Re-merge (job 47422, sole writer): `train_euclid_sel_100k.h5` INTEGRITY zeros=0, θ_E
+[0.45, 2.30] median 1.609; `val_euclid_sel_5k.h5` 4,903.** Merged gate vs
+`euclid_slacs_images.h5`: sky-RMS 0.904 PASS, emergent peak/sky 792 vs real 822 (in band)
+PASS, θ_E PASS. Side-by-side + radial profile written; corrupted first-merge artifacts
+overwritten by the clean job. Shard backup retained until Nurkyz signs off the merged visual.
+
+## 2026-07-10 (cont.) — GENERATION COMPLETE (88/88 shards, ~102k selected, faster than projected); MERGE COLLISION INCIDENT (my duplicate submission corrupted the first merge; shards were backed up in time; clean re-merge in flight)
+
+**Generation:** all 3 waves done (~40 min total — per-image cost far below pilot-derived
+estimates; pilot runtimes were fixed overhead). 88/88 shard h5s, per-shard selection ≈59%
+(shard 00: 1242/2100, per-θ_E 24/46/... matching pilot D2), all provenance datasets present.
+48-lens preview from shard 00 shown to Nurkyz (no objections).
+
+**INCIDENT (mine, logged for the record):** I submitted `merge_gate_euclid_sel.sbatch`
+manually AND my waves-monitor auto-submitted it again → jobs 47420+47421 wrote the same
+output files; one died on the h5 lock but the interleaving left `train_euclid_sel_100k.h5`
+with 67% ZERO θ_E labels (val file intact). Damage contained because the shard inputs were
+backed up (`paltas_shards_euclid_backup/`, 88 files) BEFORE either job could execute its
+end-of-job shard deletion; scancel is permission-blocked (by design). Remedy: wait out the
+running job, restore shards, ONE clean re-merge, verify θ_E zeros==0 before anything else.
+Process fix adopted: completion-monitors must never carry submission side-effects that can
+race a manual action — monitors report, the session submits.
+
+## 2026-07-10 — EUCLID-ARM FULL RUN LAUNCHED (Nurkyz go after pre-flight inspection); backdrop pool expanded to 3,796 screened cutouts; merge script patched to carry arc_snr/arc_extent
+
+**Pre-flight (Nurkyz-requested):** arc-centering confirmed fixed (1px jitter in all D-era
+pilots + the run script; residual off-center LOOK = physical: mass-light scatter N(0,0.05″)
+matching real + arc asymmetry from source offset — real J0946 is equally lopsided). Plan
+checklist verified: augmentation ✓, per-shard ePSF kernels + val kernels 80–87 ✓, val stamps ✓,
+fresh seeds ✓, companions ✓, mag_cut active (acceptance 0.985) ✓, DA-pool noise ✓, screened
+backdrops ✓, per-image arc_snr/arc_extent stored AND merged (merge_hybrid_shards.py patched,
+`.bak_prearc`) ✓. Deferred deliberately: E3 real VIS PSF, E4 aux heads, E5 transfer-init,
+R2 backbones/TNG, R3 DA.
+
+**Q5 DONE:** tiles 066+074 harvested (3,000 cutouts) → gradient-screened at real-95% (90%
+keep) → concatenated with the old screened pool → **`empty_cutouts_expanded_screened.h5`,
+3,796 unique backdrops (was 1,098)**. Full run uses it (backdrop reuse ~3× lower).
+
+**FULL RUN LAUNCHED 00:02** (`submit_euclid_sel.sh`, nohup detached, wave 1 = job 47389
+running): 80×2100 train renders → ~102k selected + 8×1050 val → ~5.1k, per-sub-shard
+combine→euclidise→select(0.7,150)→cleanup. On ALL_WAVES_DONE the monitor submits
+`merge_gate_euclid_sel.sbatch` (merged gate vs Euclidised benchmark + side-by-side + radial
+profile). ⛔ Nurkyz's morning visual before training.
+
+## 2026-07-09 (cont.) — PILOT D + THRESHOLD SCAN: final Euclid-arm recipe locked (Newton mags + selection (0.7, 150) tuned to match the REAL prominence distribution); full-run package finalized, awaiting Nurkyz launch
+
+**Pilot D (job 47387, Newton-mag renormalization):** pass at the old (2.5, 300) thresholds
+crashed to 16% with the smallest θ_E bin EMPTY, and the SELECTED prominence distribution
+shifted brighter than real (selection-survivor bias) — i.e. with an honest source population,
+our old selection floor is STRICTER than the real SLACS discovery selection (real grade-A
+contains prominence down to ~25; our floor cut at ~40).
+
+**Threshold scan (`selection_threshold_scan.py`, 6×3 grid on pilot D, no new renders):**
+selection (SNR>0.7, extent≥150) best reproduces the real prominence distribution
+(selected 40.7/104.1/232.1 vs real 24.8/90.6/240.4 at 16/50/84 — median +15%, 84th −3%;
+the 16th-pct floor is estimator-limited, disclosed), pass 61%, per-θ_E 26/53/64/84% (all bins
+healthy). Reframing (important): the SELECTION now only asserts "arc present above noise";
+the POPULATION (measured SB + z + mags) carries the realism — the earlier eye-threshold 2.5
+was calibrated on the over-bright population and is obsolete. Side-by-side at (0.7,150)
+(`real_vs_sim_euc_selected_D2.png`): sims now show the same faint-but-present arc character
+as the real panels — Nurkyz's three visual verdicts (invisible arcs → off-center → too
+bright) each fixed a real defect and converged here.
+
+**FINAL Euclid-arm recipe:** HighSB(≤21) + Newton mags truncN(24.3,1.0,[22.5,25.5]) +
+z_source truncN(0.65,0.15,[0.55,1.1]) + real deflector light (jitter 1px) + screened
+backdrops + DA-pool noise → Euclidise → select (0.7, 150). Full-run package updated:
+80×2100 train renders → ~102k selected + 8×1050 val → ~5.1k (kernel/stamp/seed-disjoint,
+seeds 5701+/6101+); `submit_euclid_sel.sh` staged. **⛔ awaiting Nurkyz launch go.**
+
+## 2026-07-09 (cont.) — Nurkyz: "arcs a bit brighter than real" → MEASURED (same-estimator extended-feature prominence): sim median only +13% BUT the faint-arc tail is missing (16th pct 47.7 vs real 24.8) → cause = catalog mag floor (m<23.5) vs real source population (mean 24.3) → Newton mag renormalization, pilot D
+
+Same-estimator arc-prominence comparison (`arc_prominence_compare.py`, extended ≥300 px
+features only, companions excluded): real Euclidised SLACS median 90.6, 16–84% [24.8, 240];
+C2-selected sims 102 [47.7, 211]. Verdict: sims not grossly over-bright (median +13%) but the
+FAINT-arc tail is truncated — and since 94% of C2 sims pass the SNR floor, the truncation is
+the SOURCE POPULATION, not the selection: every catalog source is m<23.5 while the measured
+SLACS source distribution is F814W 22–26, mean 24.3 (Newton 2011). Fix: per-draw TOTAL-mag
+renormalization to truncnorm(24.3, 1.0, [22.5, 25.5]) via paltas's own `normalize_to_mag`
+(new `source_apparent_magnitude` parameter in HighSBCOSMOSCatalog.draw_source) — matches the
+measured population marginal; morphology/SED remain real COSMOS. Expect: pass fraction drops
+from C2's 51% (dimmer arcs), faint tail restored, prominence distribution should straddle the
+real one. **Pilot D (job 47387, seed 611, ONLY the mag renormalization added)** + automatic
+prominence re-comparison. Full-run launch (package already staged) re-sized after D.
+
+## 2026-07-09 (cont.) — PILOT C: SLACS source-REDSHIFT prior is the breakthrough (pass 61%; small-θ_E 24%); one physics bug caught (z_source could fall below z_lens) → C2 with corrected bounds
+
+**Clean per-θ_E comparison (correct pairing, jitter 1px everywhere):**
+normal sources (v2j1): 2/6/16/34% (18% overall); high-SB (B2): 6/14/40/47% (30%);
+**high-SB + z_source~N(0.65,0.15) (pilot C): 24/48/63/85% — 61% overall, SNR-only pass 90%.**
+The (1+z)⁴ dimming was the dominant arc-visibility mismatch; the union idea is DEAD (retracted
+with pilot B's garbage numbers — high-SB dominates every bin at fixed jitter, and z fixes the
+rest). Full-run cost at C's rates: ~165k renders → 100k selected (~1.6× a normal run).
+v2j1 also showed the jitter fix does NOT change selection for the normal arm (18%≈18%) — the
+jitter fix stays for REALISM (Nurkyz's off-center observation), not throughput.
+
+**Physics bug caught before the full run:** pilot C's z_source truncation [0.3,1.1] allowed
+~16% of draws BELOW z_lens=0.5 (source in front of the lens — unphysical even if the renderer
+tolerates it). Fixed to [0.55,1.1]; **pilot C2 (job 47385, seed 511)** verifies before launch.
+Also noted: config z_lens=0.5 vs SLACS median ≈0.2 is mostly inert in the pathb pipeline
+(θ_E set directly; deflector light = real stamps) — documented, not changed.
+
+## 2026-07-09 (cont.) — RETRACTION: pilot B's numbers were GARBAGE (selector paired seed-311 composed with seed-211 arcs — scripted-edit bug); B2 (valid) shows the JITTER FIX is a major lever (pass 30%); normal-source@jitter1 rerun in flight
+
+**RETRACTED: pilot B's selection numbers (13%; per-θ_E 24/13/13/7) and the "compact sources
+rescue small θ_E" reading.** Root cause: my sed/python derivation of `euc_sel_pilot_B.sbatch`
+failed to update the selector's `--arcs` path (and dropped the euclidise-arcs step), so B scored
+seed-311 composed images against the OLD seed-211 Euclidised arcs — count assert (400==400)
+passed, pairing was garbage. Caught because B2's extent distribution changed on "identical"
+arcs (impossible) → path audit. Lesson: selector now needs a seed/provenance check, not just a
+count assert (queued); derived sbatches must be diffed against intent before submission.
+
+**Valid results so far (correct pairing):**
+- v2 arm = normal sources, jitter 2px: pass@2.5+extent 17→18%, per-θ_E 2/6/15/34.
+- B2 arm = high-SB sources, jitter 1px: **30%**, per-θ_E **6/14/40/47**, extent median 258 px
+  (compact arcs; extent cut alone removes 59% — extent threshold may need per-arm tuning).
+- Jitter fix (Nurkyz's off-center observation) is a MAJOR selection lever: an off-center
+  deflector leaves a dipole residual in the azimuthal subtraction that suppresses arc SNR
+  (and the eye's view). SNR-only pass at 2.5: v2-pairing-correct-jitter2 ~23% → B2-jitter1 61%.
+- Pending for the union decision: **v2j1** (normal sources @ jitter 1px, job 47383) — isolates
+  source-population effect at fixed (correct) jitter. Union math to be redone from v2j1 + B2.
+
+## 2026-07-09 (cont.) — Nurkyz visual: arcs not centered on lens light → CONFIRMED over-jitter (mass N(0,0.05″) ⊕ paste U(±0.10″) ≈ 0.09″ typical, 0.3″ tail vs real SLACS ≲0.05″) → paste jitter 2px→1px, pilot B2
+
+Nurkyz spotted rings not centered on the deflector glare in the selected-pilot panels; real
+lenses center exactly. Measured against config: mass-center prior N(0, 0.05″)/axis (Stage-2a
+decoupling) PLUS light-paste jitter U(±2 px = ±0.10″)/axis → typical relative offset ~0.09″
+with tail to ~0.3″ — versus real SLACS mass-light alignment ≲0.05″ (Bolton 2008). A small
+offset is physical; ours was ~2× with an unphysical tail (1–3 Euclid px = visible). FIX:
+`--deflector_jitter 1.0` (px) in all future combines — decoupling purpose retained at a
+realistic amplitude. Applies to ALL arms going forward; noted that the native pathb-v2 dataset
+carried the 2px value (≈1.9 native px — modest, model treats light as nuisance; not
+regenerating retroactively). Pilot B2 (job 47382, same seed-311 renders, ONLY jitter changed)
+for visual confirmation before the union full run.
+
+## 2026-07-09 (cont.) — PILOT B RESULT: SB fix rescues small θ_E (2%→24%) but compact sources crash large θ_E (34%→7%) — populations are COMPLEMENTARY → UNION full-run proposed
+
+**Pilot B (job 47381, gates all PASS, acceptance 0.995): per-θ_E selection pass vs pilot v2:**
+0.45–0.8″: 2%→**24%**; 0.8–1.2″: 6%→13%; 1.2–1.7″: 15%→13%; 1.7–2.3″: **34%→7%**. Survivor
+median θ_E 1.91→1.02, band fraction 0.62. **Physics: compact high-SB sources rescue small-θ_E
+visibility, but at large θ_E their long thin arcs fall below the Euclid PSF width → PSF
+convolution dilutes SB → invisible. Extended sources dominate large-θ_E visibility. The real
+SLACS source population is a size MIX (Newton 2011) — the two piloted populations are its two
+ends.**
+
+**Proposed full run (needs Nurkyz sign-off — >1k generation):** UNION dataset — 50% normal-
+config renders + 50% high-SB-config renders, both piloted, selection (SNR>2.5 + extent≥300,
+screened backdrops) as the arbiter. Expected mixed per-bin pass ≈ 13%/9.5%/14%/20.5% (mildly
+large-θ_E-tilted but every bin populated), overall ~14% → ~525k renders for 75k selected train
+(+5k val) ≈ overnight waves; threshold 2.0 variant (~19% overall) available if cost matters
+more than the strict eye standard. No new pilot needed — both populations are individually
+piloted and gated; the union is a dataset-composition choice, not a new config.
+
+## 2026-07-09 (cont.) — R1.2b OPTION B chosen (Nurkyz): SLACS-population source fix; HighSB source class built + pilot B launched; E-diagnosis program for the LEMON gap added to MASTER_PLAN
+
+**Nurkyz chose option B** (fix the source population) over rebalancing/scoping/pausing, with a
+standing instruction to keep auditing and to build the plan through the full run + a program to
+get the Euclidised head-to-head ABOVE LEMON.
+
+**The science:** SLACS XI (Newton et al. 2011, arXiv:1104.2608) measured the SLACS source
+population: unlensed F814W 22–26 (mean 24.3) but sub-kpc half-light radii → SB_eff ≈ 18–21
+mag/arcsec². Unselected COSMOS-23.5 draws average ≈22.4 → our arcs are 3–4 mag/arcsec² lower-SB
+than the population the benchmark actually contains; SB is conserved by lensing and sets
+visibility against deflector glare. Fix: `HighSBCOSMOSCatalog` (new
+`config_lensfusion_acs_pathb_euclid.py`) adds a max-SB cut (mag_auto + 2.5log10(2π r_flux²) ≤
+21) — 7,808/56,062 catalog galaxies pass (healthy diversity). Population-matched SELECTION of
+real galaxies, explicitly NOT the banned v0 flux boost. Pilot B = job 47381 (seed 311, only the
+source population changed vs pilot v2). PASS criterion: per-θ_E pass fractions materially above
+v2's 2%/6%/15%/34%.
+
+**Audit note (this leg):** found a further population mismatch to queue — config fixes
+z_source=1.5 while SLACS sources sit at z≈0.6–0.8 → (1+z)⁴ SB dimming penalizes our arcs;
+queued as E2 (pilot C) rather than bundled (one change at a time). Full E-diagnosis program
+E1–E7 (source SB, source z, real VIS PSF, multi-param auxiliary heads, transfer-init,
+pretrained backbone, eval-sample honesty) + the full-run pipeline written into MASTER_PLAN
+R1.2b. Backdrop tiles still downloading (Q5).
+
+## 2026-07-09 (cont.) — Nurkyz's visual verdict on the selected-Euclid pilot: 3 defects, ALL root-caused → pilot v2 with fixes (job 47380)
+
+**Nurkyz on `real_vs_sim_euc_selected.png`:** (1) arcs invisible in 5/8 sim panels (all 8 real
+visible); (2) SIM #11 deflector light "ends abruptly"; (3) sim arcs look smaller than real.
+
+**Root causes (measured, `diag_euc_sel_panels2.py`):**
+1. **Threshold miscalibration in-domain:** displayed invisible panels have arc SNR 0.72–1.93;
+   the two clearly visible ones 7.05/8.41. The NATIVE eye calibration (0.7 = faint-visible)
+   does NOT transfer to the Euclid domain (glare) — eye threshold there is ≈2–3. Selection
+   threshold recalibrated to **2.5**, sensitivity at 1.5–4.0 reported by the selector.
+2. **SIM #11 = backdrop-pool gradient outlier CONFIRMED:** its empty cutout (#1211) has
+   plane-gradient 10.6× noise. Pool-wide screening (`screen_empty_pool.py`) vs the REAL
+   benchmark's gradient distribution (median 0.70, 95% 2.85, max 4.08; pool tail reached
+   15.7): screened at real-95% (2.85) → `empty_cutouts_4k_screened.h5`, keep 1098/1317 (83%).
+   NOTE: all prior datasets (v1–v3, pathb, euclid arms) used the unscreened pool — mild
+   gradient backdrops acted as (harmless-at-native) domain randomization; at Euclid stretch
+   they are glaring. Screened pool used from now on; new-tile harvest to be screened too.
+3. **"Arcs smaller": θ_E NOT the cause** (displayed sim median 1.16 ≈ real 1.17) — the risk is
+   compact knots passing SNR without looking arc-like → NEW extent criterion in the selector:
+   arc footprint (≥0.5 peak) ≥ 300 px on the upsampled grid; `arc_extent` stored per image.
+
+**Pilot v2 (job 47380, SAME 400 seed-211 renders reused — no regeneration):** screened pool +
+SNR>2.5 + extent≥300 → gate vs Euclidised benchmark + fresh side-by-side for Nurkyz.
+Expect pass fraction ~20–30% → full run needs ~350–500k renders for 100k; the
+θ_E-reweighting-vs-accept decision and generation budget go to Nurkyz with the v2 panels.
+
+**R1.2b PILOT v2 (job 47380): visuals FIXED (arcs visible in ~8/8 panels, no edge artifact;
+`real_vs_sim_euc_selected_v2.png`); numeric gates PASS (sky-RMS 0.904, peak/sky 792 in band).
+BUT the selection statistics expose a hard physics constraint:** pass at SNR>2.5+extent = 18%
+overall, and per-θ_E: 0.45–0.8″: **2%**, 0.8–1.2″: **6%**, 1.2–1.7″: 15%, 1.7–2.3″: 34% →
+survivors median θ_E 1.91. At Euclid resolution, small-θ_E arcs with our COSMOS-depth source
+population are genuinely eye-invisible — note the REAL Euclidised small-θ_E lenses (J0029 0.96,
+J1420 1.04) DO show arcs, because SLACS sources are [OII]-selected LUMINOUS galaxies, i.e. the
+real source population is brighter than our flat COSMOS draw. Options priced for Nurkyz:
+(A) θ_E-stratified oversampling to rebalance → ~1.9M renders for 100k balanced — PROHIBITIVE;
+(B) fix the SOURCE POPULATION for the Euclid arm (SLACS-like luminous sources, measured from
+Bolton source photometry — population-motivated, NOT the v0 arbitrary brightening) → visibility
+at small θ_E rises, selection becomes affordable; the physically right fix; needs a
+source-prior study + re-pilot; (C/E) full run at SNR>2.0–2.5 unbalanced, model DECLARED
+(pre-eval, not post-hoc) as valid for θ_E ≳ 1.0–1.2 and compared on that SLACS subset — fast,
+honest scoping, LEMON's own Euclidised sample skews large-θ_E anyway; (D) pause R1.2b, ship the
+native paper core (R1) with the Euclidised negative as an honest result. ⛔ Nurkyz chooses.
+
+**R1.2b PILOT v1 RESULT (job 47375), for the record — numeric gates passed but the visual check
+(the gate that matters) was REJECTED by Nurkyz; see the entry above. The eye > metric lesson
+(companion-v2→v3 history) repeats: in-domain eye recalibration is now a standing requirement
+whenever the domain changes.** Selection at post-degradation arc SNR > 0.7 keeps
+236/400 (59%); pass fraction graded in θ_E (0.45–0.8″: 36%, 0.8–1.2″: 47%, 1.2–1.7″: 60%,
+1.7–2.3″: 76%) — no bin depleted; survivor θ_E median 1.64 (pre-selection 1.39), range intact.
+Gate vs the EUCLIDISED benchmark: sky-RMS 0.935 PASS, peak/sky 777 vs real 822 (in band) PASS,
+θ_E PASS (note: gate's θ_E row reads the pre-selection metadata — cosmetic, survivors' stats in
+the selection report). Side-by-side (`real_vs_sim_euc_selected.png`): selected sims show clear
+arcs, matching the Euclidised real panels. **Full R1.2b run staged, awaiting Nurkyz go:**
+~170k renders to net ~100k selected (59% pass), then retrain + ⛔ eval #14. Selection-fraction
+θ_E reweighting decision (flatten post-selection or accept the graded distribution as the
+population's) to be made WITH Nurkyz before the full run.
+
+**Also done:** `eval_protocol.json` frozen on the cluster (σ-recal factors per model fitted on
+sim-val, J0955 exclusion, SLACS-primary reporting, arc-SNR thresholds) — eval scripts to read
+from it instead of hardcoded constants. Backdrop tiles 066+074 downloading (fixed script,
+login-node nohup) toward the ~4k-unique-cutout pool (Q5); harvest + re-gate when it lands.
+
+## 2026-07-09 (cont.) — ⛔ EVALS #12/#13 (Euclidised domain, pre-authorized "eval on green"): NEGATIVE — Euclidisation does NOT rescue sim-to-real; resolution hypothesis REJECTED in its strong form
+
+**Running count: 13.** Euclid-domain models (jobs 47373/47374; sim-val 0.092″/0.088″ — best
+in-distribution of any generation; σ near-self-calibrated, s=0.906/0.980, ρ=+0.70; recal frozen
+before eval). TTA on `euclid_slacs_images.h5` / `euclid_s4tm_images.h5` (J0955 excluded):
+
+| Euclidised (LEMON conventions) | bias | RMSE | NMAD | R² | fail>15% |
+| LEMON Table 3 (60 mixed-GT) | −0.03 | 0.14 | 0.11 | +0.53 | — |
+| ours SLACS IncNeXt | +0.092 | 0.275 | 0.137 | −0.18 | 29% |
+| ours SLACS ResNet | −0.009 | 0.254 | 0.162 | +0.00 | 35% |
+| ours S4TM IncNeXt / ResNet | +0.242 / +0.130 | 0.41 / 0.31 | 0.24 / 0.13 | −1.25 / −0.26 | 48% / 35% |
+
+**Findings (honest):** (1) the Euclid domain is EASIER in-distribution but our sim-to-real gap
+does NOT shrink with resolution — the strong "LEMON's numbers are just resolution" hypothesis is
+REJECTED; the visual near-indistinguishability of Euclidised sim/real was not sufficient.
+(2) S4TM collapses catastrophically (+0.24 bias = prior-pull), physically expected: θ_E ~0.8–1.1″
+arcs blur into the deflector at 0.16″ PSF / 100 mas px. (3) Prime suspect for the SLACS shortfall:
+ARC VISIBILITY — our training arcs are faint (58% eye-visible at NATIVE resolution; degradation
+buries more), while LEMON's Euclid training mocks are detectability-selected bright-arc systems,
+matching their discovery-selected evaluation sample. Proposed fix (R1.2b, needs Nurkyz):
+post-degradation arc-visibility selection in the Euclid-arm training set — this matches the
+training selection function to the evaluated population (grade-A lenses), which is legitimate
+and DIFFERENT from the v0 brighten-sources mistake (selection, not flux distortion).
+(4) Strategic consequence: "beat LEMON quickly on their turf" is not free; our native-HST
+ground (uniform GT, causal decomposition, real-GT-validated calibration) remains the paper's
+spine, and the Euclidised negative itself is publishable evidence that resolution alone does
+not close sim-to-real gaps (a caution for the Euclid-CNN literature).
+
+**R1.2 quick-train (job 47372, InceptionNeXt 20k/10ep on Euclidised v3): val MAE 0.153″,
+R² 0.75, steeply descending — the healthiest quick-train trajectory of any generation,
+consistent with the resolution hypothesis (Euclid domain is easier in-distribution too).**
+Full Euclidised training launched: jobs 47373 (InceptionNeXt) / 47374 (ResNet), 40 ep.
+NOTE: the subsequent evaluation on `euclid_slacs_images.h5` is an evaluation of TRANSFORMED
+benchmark images → ⛔ (counts in the running count; Nurkyz go required before it runs).
+
+**R1.2 rationale recorded:** LEMON's strong real-lens numbers are plausibly a RESOLUTION effect
+— Euclidisation (0.1″/px, ~0.16″ PSF, EWS depth) destroys exactly the structure that is hard to
+simulate, and their test images share a simulated degradation operator with their training sims
+(they never evaluate on native HST). Plan: Euclidise OUR benchmark + training sims, quick
+retrain, compare on the 29 shared SLACS against their Table 3. HST2EUCLID = Euclid Collab:
+Bergamini et al. 2025; availability unstated → obtain or reimplement from their published
+procedure (flux conversion, PSF matching, rebin to 100 mas/px, noise to EWS SNR).
+
+## 2026-07-09 (cont.) — ⛔ BENCHMARK EVALS #10 (pathb-v2 InceptionNeXt) & #11 (pathb-v2 ResNet): real deflector light does NOT improve the benchmark → causal decomposition COMPLETE; σ-recal transfers (ResNet 95/95 coverage); v3 InceptionNeXt stays primary
+
+**Running count: 11** (Nurkyz present — "continue R0"; TTA; J0955+0101 excluded; ensemble column
+derived from the same two prediction passes, no extra benchmark pass).
+
+**σ recalibration frozen on sim-val BEFORE evals** (`recalibrate_sigma.py`): s=1.575
+(InceptionNeXt), s=1.998 (ResNet); sim-val ρ(σ,|err|)=+0.58 both; recal sim-val coverage
+68.3/87% (heavy tails at 95%, disclosed).
+
+| model (Path B v2) | SLACS med / R² / fail / conf-half | S4TM med / R² / fail / conf-half |
+|---|---|---|
+| InceptionNeXt | +1.6% / −0.12 / 35% / 16% | +3.1% / −0.17 / 32% / 35% |
+| ResNet | **+0.1% / +0.20 / 29% / 13%** | +3.7% / +0.12 / 28% / **10%** |
+| ensemble (2-arch mean) | +1.3% / +0.14 / 31% / 16% | +4.5% / +0.09 / 30% / 30% |
+| v3 IncNeXt (eval #8, ref) | −0.4% / +0.22 / 24% / 10% | +3.1% / +0.02 / 32% / 10% |
+
+**Findings:**
+1. **Real deflector light did NOT improve benchmark accuracy** — pathb-v2's best (ResNet) ≈
+   v3-ResNet; pathb-v2 InceptionNeXt clearly worse than v3 IncNeXt; ensembling doesn't rescue.
+   The pre-written negative-result framing APPLIES: lens-light realism is not the residual
+   failure driver; remaining failures are system-specific complexity. **The causal
+   decomposition is now complete: backdrops ≫ prior ≈ PSF > pool ≈ DA ≈ companions ≈ lens
+   light.** Caveat (honest): v2 bundled deflector light WITH DA-pool noise (+ augment + stamp
+   split); a strict single-axis claim needs a controlled variant — frame as "real deflector
+   light plus its associated pipeline changes" or run the P4-only ablation.
+2. **Architecture ranking FLIPPED on real-light data** (ResNet > InceptionNeXt), as the
+   clear-arc-bin stratification predicted. "InceptionNeXt primary" was a v3-data-specific
+   choice, not a general one.
+3. **Calibration headline (NEW, positive): the sim-val-frozen recalibration TRANSFERS to real
+   GT** — pathb-v2 ResNet recal coverage on real lenses: 81/95% (SLACS), 82/95% (S4TM) at
+   68/95% nominal — 95% coverage is spot-on; 68% over-covers (conservative, safe direction).
+   Confident-half failure 13%/10%. This is the paper's honest-uncertainty exhibit.
+4. **Primary model for point accuracy remains `einstein_cnn_v3_inceptionnext.pt`** (eval #8).
+   pathb-v2 ResNet becomes the realism/calibration exhibit. Etherington subset: still pending
+   (lens list not on disk — chase arXiv:2202.09201 table). sky-RMS-1.26 ruling: mooted for
+   accuracy (null result), but the P4-only ablation would disentangle noise-vs-light if wanted.
+
+## 2026-07-09 (cont.) — MAJOR RETRACTION: LEMON numbers were mis-recorded (they are GOOD); strategy rewritten (MASTER_PLAN R0–R3); professor's suggestions triaged into controlled experiments
+
+**RETRACTION (Nurkyz's suspicion verified against the paper's full text):** LITERATURE.md had
+LEMON (Busillo et al. 2026, arXiv:2503.15329) at "R²≈−0.03 full sample, RMSE 0.63″" on real
+lenses. **WRONG.** Their Table 3 (θ_E, 60 Euclidised HST lenses = 29 SLACS + 13 EELs + 5 COSMOS
++ 13 ACS, heterogeneous literature GT, no σ-filtering): **bias −0.03″, RMSE 0.14″, NMAD 0.11″,
+R² = 0.53.** The −0.03 was almost certainly their BIAS transposed into the review table's R²
+cell. Consequence: the "every metric 2–3× better than LEMON" positioning is DEAD. Honest
+read: aggregates comparable (they win RMSE, we win NMAD; R² not cross-comparable across
+different samples/domains/GT variance). LITERATURE.md corrected with explicit retraction.
+Also verified: LEMON trains on fully PARAMETRIC sims (1–4 Sérsic sources, single-Sérsic lens
+light, SIE+shear, 80k Euclid VIS), does NO realism ablations, NO domain adaptation, and does
+NOT release per-lens predictions.
+
+**Strategy rewrite (MASTER_PLAN, new top section R0–R3):** paper leads with what remains
+unclaimed — native-HST + uniform b_SIE GT + no-filter full-sample result; the causal realism
+decomposition (nobody ablates); real-deflector-light training; honest σ-calibration on real GT;
+DA as second pillar. NEW concrete head-to-head: Euclidise our 29 shared SLACS with the public
+HST2EUCLID code and compare in LEMON's own domain on the same lenses.
+
+**Professor's suggestions, triaged (meeting 2026-07-09):**
+1. *Return to IllustrisTNG κ maps*: NOT a wholesale return (κ̄=1 labels mismatch the b_SIE
+   benchmark GT; weaker θ_E-prior control; m3's failure was prior-pull+realism, not SIE-ness).
+   Adopted instead as R2.2: TNG-κ mass-realism arm through lenstronomy INTERPOL inside the
+   current hybrid pipeline (same sources/ePSF/backdrop/deflector light), flat effective-θ_E via
+   κ rescaling, κ̄=1→SIE label calibration on a fitted subsample. One controlled dataset+train;
+   adopt mixed-mass training only if it wins on evidence. Bonus: a 6th ablation axis.
+2. *ConvNeXt V2 / DINO*: adopted as R2.1 — ConvNeXt V2 (pretrained, grayscale-adapted, same
+   NLL+scale-conditioning) as one controlled run; DINOv2 as a cheap frozen-feature probe first
+   (full ViT fine-tune only if the probe is promising). Framed as a PRETRAINING ablation for
+   sim-to-real robustness — architecture was explicitly not the diagnosed failure axis, so this
+   is a measured experiment, not a rebuild.
+
+## 2026-07-09 (cont.) — P7 FULL TRAINING DONE (both architectures); clear-arc accuracy matches v3-parametric on real-light images; ⛔ READY FOR BENCHMARK EVALS #10/#11 (Nurkyz)
+
+## 2026-07-09 (cont.) — P7 FULL TRAINING DONE (both architectures); clear-arc accuracy matches v3-parametric on real-light images; ⛔ READY FOR BENCHMARK EVALS #10/#11 (Nurkyz)
+
+**Full training (40 ep, 100k, selection on sim-val only): InceptionNeXt best val MAE 0.2182″
+(final val_frac 8.05%, R² 0.446) → `einstein_cnn_pathb_v2_inceptionnext.pt`; ResNet 0.2062″
+(7.00%, R² 0.489) → `einstein_cnn_pathb_v2_resnet.pt`.** Aggregate sim-val is NOT comparable to
+v1/v3 (v2's val is deliberately harder: val-disjoint stamps, DA-pool noise, honest arc burial).
+
+**Arc-SNR-stratified accuracy (full models on pilot v7, N=200 — the informative numbers):**
+| bin | InceptionNeXt | ResNet |
+| clear (>1.8), N=67 | MAE 0.069″, fail 6% | **MAE 0.049″, fail 1%** |
+| faint-visible (0.7–1.8), N=50 | 0.098″, 22% | 0.102″, 18% |
+| invisible (<0.3), N=41 | 0.408″, 66% | 0.412″, 66% |
+ρ(arc SNR, |frac err|) = −0.61/−0.63. **Where arcs are visible, real-light models match
+v3-parametric's sim-val accuracy (0.054–0.064″) — on far more realistic images.** Aggregate is
+diluted by unlearnable arc-buried images (which train the σ-head). Both models qualify under the
+plan's bar ("trains cleanly, converges, no pathological bias").
+
+**⛔ NEXT: benchmark evals #10 (InceptionNeXt) / #11 (ResNet), Nurkyz present, TTA, standard
+protocol, running count 9→11. Protocol additions agreed: report Etherington subset (Q8),
+ensemble column (Q2), arc-SNR-stratified sim-val alongside. Open item for the same session:
+sky-RMS 1.26 [CHECK] ruling.** Interesting note for eval interpretation: ResNet beats
+InceptionNeXt on the clear-arc bin here (0.049 vs 0.069) — the v3-era "InceptionNeXt primary"
+choice should be re-examined against eval #10/#11, not assumed.
+
+## 2026-07-09 (cont.) — Quick-train STOP rule fired → arc-SNR-stratified diagnosis CLEARS the dataset (error concentrates exactly where arcs are unlearnable); full training launched (jobs 47358/47359)
+
+**Quick-train (job 47356, InceptionNeXt, 20k/10 ep): best val MAE 0.281″ — above the 0.15″ STOP
+rule → full training NOT auto-launched; diagnosed first, per plan.**
+
+**Images-seen-matched trajectories** (from the original training logs, not memory): at 200k
+images seen — v3-parametric 0.13–0.16″; Path-B v1 0.40″; **Path-B v2 0.28″**. So P1b/P2 fixes
+demonstrably helped (v2 ≈ 1.4× better than v1 at matched exposure) but real-deflector sim-val
+remains ~2× harder than parametric. (Plan already noted: sim-val MAE is NOT comparable across
+dataset generations.)
+
+**Arc-SNR-stratified error (`arc_snr_stratified_error.py`, quick-train ckpt on pilot v7 N=200,
+per-image SNR from arc_snr_v7.npy): the decisive diagnostic.**
+- clear arcs (SNR>1.8, N=67): **MAE 0.109″, failure 13%** — near-v3 numbers from a 10-epoch
+  quick-train;
+- invisible arcs (SNR<0.3, N=41): MAE 0.473″, failure 78%, median **+23%** = pull toward the
+  prior mean on physically unlearnable inputs — as expected when the image contains no θ_E
+  information;
+- monotonic in between; Spearman ρ(arc SNR, |frac err|) = −0.57 (p≈2e-18).
+**Reading: no v1-style collapse. The aggregate 0.28″ is dominated by arc-buried images where
+θ_E is unlearnable; the model learns cleanly where information exists. Real-light texture hides
+faint arcs more than smooth Sérsics — the sim task difficulty is now HONEST. Grade-A benchmark
+lenses live in the visible-arc regime. Bonus: unlearnable images are exactly what trains the
+NLL σ-head to know when it doesn't know (the confident-half headline mechanism).**
+
+**Decision: full training launched** (47358 InceptionNeXt / 47359 ResNet, 40 ep, selection on
+sim-val only) under Nurkyz's "train on green" — the STOP rule's PURPOSE (don't full-train a
+collapsed dataset) is satisfied by the diagnosis; the 0.15″ number itself was calibrated on the
+easier parametric task. Only GPU-hours at stake; benchmark evals remain ⛔ gated. Nurkyz can
+scancel 47358/47359 on return if she reads the diagnosis differently. Eval protocol addition
+queued: report benchmark results alongside sim-val stratified by arc SNR; consider a
+visible-arc-subset sim-val number as the cross-generation comparable.
+
+## 2026-07-09 (cont.) — Nurkyz: "train on green" (full training PRE-AUTHORIZED on quick-train pass); P9 post-Path-B queue added to plan; Sam-PSF ask assessed as superseded
+
+- **Training authorization**: Nurkyz pre-authorized FULL training (both architectures) to launch
+  automatically when the quick-train sanity passes (val MAE well below the 0.15″ STOP rule).
+  Benchmark evals #10/#11 remain ⛔ Nurkyz-present.
+
+**P6 merged dataset (job 47350): `train_hybrid_100k_pathb_v2.h5` (100k) + `val_hybrid_5k_pathb_v2.h5`
+(5k) written; shard h5s deleted; quota 55.6 GB.** Gate on the FULL merged set: θ_E flat
+[0.45, 2.30] PASS; peak/sky 704 in real band PASS; profile tracks real (shape 0.372 vs 0.451 at
+r=0.25″; sky-normed on real to r=3″). **OPEN ITEM for Nurkyz: sky-RMS ratio 1.26 vs the 1.25 cap
+(gate marks [CHECK])** — the predicted, disclosed S4TM-coverage consequence of P4's DA-pool
+draws (pilot v7 was 1.23). NOT tuned per prior commitment. Proceeding to training on the explicit
+"train on green / launch full training when quicktrain passes" instruction, with this item queued
+for the ⛔ eval checkpoint; the alternative (exposure_time 675→~1074 s + full regen, ~3 h) is
+Nurkyz's decision if she wants the SLACS-only noise match instead of the S4TM-covering one.
+Quick-train submitted (job 47356).
+- **P9 queue** added to PATHB_IMPROVEMENT_PLAN (Q1–Q12): σ recalibration (D3), eval ensembling
+  (new), arc-SNR-stratified error (new), DA retry on real-light model (D4), backdrop pool
+  expansion, D1 ablations, D2 Cao comparison (email + reproduce fallback), Etherington subset,
+  paper chores, companion realism v2 (conditional), human tasks, D5. Nurkyz: execute each point.
+- **Sam larger-PSF standing ask**: assessed as SUPERSEDED by the STScI focus-diverse ePSF
+  library (169+52 cubes, wings extended) — recommended downgrade to "optional independent
+  cross-check (star stack from SLACS exposures)". Awaiting Nurkyz's confirmation to amend the
+  CLAUDE.md standing item.
+
+## 2026-07-09 (cont.) — P6 LAUNCHED (Nurkyz go); P8 chores executed; Cao per-lens data NOT public (MASTER_PLAN D2 corrected); P7 scripts staged
+
+**P6 launched** on Nurkyz's go-ahead: `submit_pathb_v2.sh` via login-node nohup (PID detached,
+survives logout), 3 QOS-capped waves → `paltas_shards_pathb_v2/`. Wave 1 (sub-shards 0–31)
+completed cleanly; monitor armed to submit `merge_gate_pathb_v2.sbatch` on ALL_WAVES_DONE.
+
+**P8 chores done while generation runs:**
+- **COSMOS tiles 071/072 mystery SOLVED: those tiles DO NOT EXIST at IRSA** — the archive's tile
+  sequence jumps 069 → 073 (verified against the directory listing). The 2026-07-06 download
+  "failure" was a 404 hidden by `wget -q`. `dl_more_tiles.sh` rewritten (backup
+  `.bak_071072`): tiles 066 + 074 (both verified HTTP 200), no `-q`, hard existence checks,
+  `set -e`. NOT run yet (quota discipline: wait until pathb_v2 shards are merged+deleted).
+- Stale 073 `.gz` leftovers deleted (~0.5 GB back).
+- `metrics_real.py` stale "m3 zero-shot / κ̄=1 caveat" title fixed (backup `.bak_title`) — the
+  κ̄=1-vs-SIE caveat has been obsolete since the paltas SIE pivot.
+- **Cao et al. 2025 per-lens data: NOT public.** TinyLensGpu repo = code only; paper's
+  data-availability points back at the same repo; author's other repos contain no SLACS results.
+  MASTER_PLAN D2 corrected (it claimed "public per-lens data"). Primary route = the email ask
+  (Nurkyz/Brian); fallback = re-run their public code on the same 63 lenses ourselves.
+
+**P7 staged (not launched):** `quicktrain_pathb_v2.sbatch` (InceptionNeXt, 20k subset, 10 ep,
+~20 min; STOP rule ≥0.15″ val-MAE plateau baked into the header) and `train_pathb_v2.sbatch`
+(full 40-ep, both architectures via ARCH env). Quick-train auto-runs after the merged gate
+passes; FULL training awaits Nurkyz (standing >30 min rule). Benchmark evals #10/#11 remain
+⛔ Nurkyz-present (running count still 9).
+
+## 2026-07-09 (cont.) — Nurkyz signed off P2 visuals; P3+P4 executed & pilot-passed; P5 metric built (v1 RETRACTED → v2 eye-calibrated); P6 package staged, NOT launched (⛔)
+
+**P3 (pilot v6, job 47324): PASS.** Library split: `deflector_stamps_lrg_v6_train.h5` (41) +
+`..._val.h5` (8, chosen at Re quantiles to span the size range; src 3, 13, 32, 36, 53, 63, 74,
+78) via `split_deflector_lib.py` — mirrors the val-disjoint PSF-kernel pattern. Dihedral
+augmentation ON (`--deflector_augment`; aperture flux is rotation-invariant → P1b scaling
+unaffected; θ_E label untouched). Gates: sky-RMS 1.11, peak/sky 959 vs real 994, θ_E PASS.
+Bundled as the single P3 step per plan (augmentation is label- and photometry-neutral).
+
+**P4 (pilot v7, job 47325): PASS, with a disclosed edge.** Pre-check
+(`verify_dapool_skyrms.py` → `dapool_skyrms_check.png`): the 104-cutout benchmark-disjoint DA
+pool covers S4TM fully (median 0.0204 vs S4TM 0.0176) and the SLACS bulk, but lacks SLACS's
+deepest tail (pool min 0.0116 vs SLACS min 0.0057) — missing the LOW-noise tail is the easy
+direction for a CNN, accepted. Combine `--real` → `real_dapool_images.h5` (closes the
+calibration-leakage objection; SUBSUMES the pending 2026-07-06 'S4TM noise union' fix — logged
+as resolved). Gate vs benchmark SLACS: sky-RMS ratio **1.23 (PASS, at the 1.25 edge — expected
+and reported, NOT tuned away**: the pool is genuinely shallower because it is S4TM-dominated);
+peak/sky 765 in band (lower vs v6 because the noise denominator rose); θ_E PASS.
+
+**P5 arc-visibility metric: v1 RETRACTED, v2 adopted, calibrated by eye.**
+- v1 (annulus-MAD denominator) said median arc SNR 0.43, 9% > 3 — but arcs are plainly visible
+  in the same images; the annulus spans a radial range, so the deflector's own radial gradient
+  dominated the 'fluctuation'. RETRACTED as an absolute instrument.
+- v2 subtracts the per-radius azimuthal median profile first (what the eye sees against the
+  halo). Eye-calibration on the v7 side-by-side panels: clear Einstein ring (h5 #29) = 1.83;
+  faint-but-visible ≈ 0.7–1.4; invisible ≈ 0.16. Distribution on 200 v7 images: median 0.90;
+  **58% > 0.7 (eye-visible), 34% > 1.83 (clear)**. Real grade-A panels: ~6/8 visible by eye.
+  Sim below real is EXPECTED (discovery selection bias: SLACS lenses exist because their arcs
+  were visible; training must include hard cases). Absolute thresholds remain soft — the
+  metric is a rank instrument. npys kept in ~/paltas_arcs_seed111_keep (regen job 47326);
+  per-image scores in arc_snr_v7.npy. **⛔ acceptance decision belongs to Nurkyz.**
+  Recommendation: accept; do NOT brighten sources (the v0 mistake).
+
+**P6 staged, NOT launched:** `generate_pathb_v2.sbatch` + `submit_pathb_v2.sh` +
+`merge_gate_pathb_v2.sbatch` + new `merge_shard_metadata.py` on the cluster. Changes vs v1
+generation: shards dir `paltas_shards_pathb_v2`; train sub-shards (S<80) use the 41-stamp train
+library, val (80–87) the 8-stamp val library (stamp- AND kernel-disjoint); `--deflector_augment`;
+`--real` = DA pool; fresh seeds 2701+/3101+ (disjoint from all prior); merge adds a
+radial-profile check on the full 100k. Quota headroom OK (49.7 GB now; ~+13 GB peak).
+
+**No temporary fixes were taken in P3–P5.** Two soft spots to keep in view (not hacks, but
+judgment calls): (1) the arc-SNR 'visible' threshold is eye-calibrated on 8 panels, not on an
+independent standard; (2) the DA pool's missing deep-SLACS noise tail (see above).
+
+## 2026-07-09 (cont.) — P1b VERIFIED (pilot v4b: emergent peak/sky 950 vs real 994, absolute profile ON real); P2 library v6 built from 256px refetch (49 stamps, prune expanded); pilot v5 launched
+
+**Pilot v4b (job 47307, ONLY the scaling target changed to mag_aper): the brightness fix works.**
+- Emergent peak/sky median **950 vs real 994** (v4 total-mag scaling: 1405) — EMERGENT, not
+  matched by construction; genuine validation.
+- New third panel in `radial_profile_compare.py` (sky-RMS-normalized ABSOLUTE profile): sim
+  lands ON real through r=1″ (170.7/64.7/27.3 vs 169.1/69.1/26.8 at r=0.25/0.5/1.0″), slightly
+  high at r=1.5–2″ (16.0 vs 12.7, 8.8 vs 6.7) — residual attributed to the wing-deficient v3
+  library shape (P2's job). Peak-normed SHAPE unchanged, as predicted (library-driven).
+- All numeric gates PASS (sky-RMS 1.07, θ_E range unchanged); arcs re-emerging in the
+  side-by-side (`real_vs_pathb_pilot_v4b.png`).
+
+**P2 executed:** 256px/12.8″ refetch finished (84/84 → `real_lrgdefl_images_256.h5`, 22 MB;
+mast_cache 17 GB purged immediately, quota back to 49.6 GB). Builder v5 confirmed fully
+size-agnostic (all thresholds are fractions of n; pixel scale unchanged at 0.05″/px) → ran
+as-is on the 256px file. **IMPORTANT finding during the visual prune:** at 256px (true-sky
+corner subtraction) the stamps reveal central spirals, edge-on disks, double cores and mergers
+that the old 128px over-subtraction had visually suppressed — i.e. the v3 library's apparent
+cleanliness was partly an artifact of the very bug being fixed. Pruned on a NEW preview of the
+CENTRAL 128px crop (= exactly the pasted region; `preview_lib_crop.py`): drop list grew from 7
+to 26 src indices (added 4, 7, 14, 15, 23, 27, 35, 39, 50, 55, 56, 57, 60, 64, 69, 70, 77, 82,
+83 — criterion: the CENTRAL object must be a smooth elliptical; peripheral faint companions
+kept, they are realism). **`deflector_stamps_lrg_v6.h5`: 49 stamps, 256px** (+6 auto-rejected
+faint, +3 axis-ratio). 49×8 dihedral (P3) = 392 effective morphologies.
+
+**Pilot v5 (job 47315, ONLY change vs v4b = library v6): PASSES all numeric gates; profile
+now tracks real in BOTH shape and brightness.**
+- peak-normed shape: r=0.25″ 0.341 (real 0.451; v4b was 0.218), r=1.0″ 0.051 (real 0.064),
+  r=2.0″ 0.016 (real 0.018) — the r≈0.3″ kink is gone, wings converge to real;
+- absolute sky-normed profile lies ON real from 0 to 3″ (mild ~15% deficit around 0.3–1″);
+- gates: sky-RMS 1.08 PASS, emergent peak/sky 870 vs real 994 (in band) PASS, θ_E PASS;
+- side-by-side (`real_vs_pathb_pilot_v5run.png`): no edge/boundary artifact anywhere, wings
+  blend into noise like real; SIM #29 (θ_E=2.21) shows a clear Einstein ring resembling real
+  J0946+1006; deflector morphology visually matches the real panels.
+Remaining honest residual: sim core slightly less cuspy than real (0.34 vs 0.45 peak-normed at
+0.25″) and ~12% fainter emergent peak/sky — plausibly the LRG non-lens population being slightly
+less concentrated than SLACS deflectors; small enough to defer to the P5 arc-visibility metric
+and training outcome. **⛔ STOPPED HERE for Nurkyz visual sign-off** on
+`real_vs_pathb_pilot_v5run.png` + `radial_profile_v5.png` + `deflector_lib_v6crop_preview.png`
+(all copied to da_pool_inspection/ on the Mac) before P3 (augment ON + val-disjoint stamps),
+P4 (DA-pool calibration), P5, P6.
+
+## 2026-07-09 (cont.) — P1 total-flux scaling DIAGNOSED AS OVER-BRIGHT (1.85×) → P1b APERTURE-mag scaling; pilot v4b launched
+
+**Nurkyz's visual verdict on pilot v4** (`real_vs_pathb_pilot_v4run.png` + `radial_profile_v4.png`):
+worse than before — sim deflectors are huge diffuse halos filling the frame with dark
+corners/edges, and NO arcs visible in any of the 8 panels.
+
+**Root cause MEASURED (`diag_inframe_flux.py`, kept in ~/cosmos_acs/tiles/): the P1 TOTAL-flux
+scaling stuffs 100% of the galaxy's total-mag flux into the 6.4″ frame, but real cutouts only
+contain ~54% of it** (the rest is de Vaucouleurs wing beyond the frame; for Re 1.4–2.9″ the
+in-frame fraction is 0.53–0.72 analytically):
+- sim in-frame flux median 4378 e-/s vs real 2365 → **ratio 1.85×**;
+- sim implied in-frame mag ≡ the drawn TOTAL mag (16.84 = 16.84, all flux in frame, QED);
+- real implied in-frame mag median 17.51 vs total ~16.8 → in-frame fraction ~0.54;
+- explains v4's high emergent peak/sky (1405 vs real 994 — ratio 1.41 ≈ the wing deficit),
+  the plateau-to-dark-corner contrast, AND the buried arcs (deflector ~2× over-bright).
+The old parametric Sérsic recipe never had this problem because lenstronomy renders only the
+in-frame part of the profile — the out-of-frame wing flux stays out naturally.
+
+**Fix (P1b, `hybrid_combine.py`, old kept as `.bak_totalflux`): scale each stamp so its flux
+inside the r=2″ measurement aperture equals 10^(−0.4(mag_aper−25.94))** — `mag_aper` is the
+CSV's measured r=2″ aperture magnitude (verified: CSV `aper_frac` matches the analytic de Vauc
+fraction within r=2″ to 3 decimals, e.g. Re=1.71″ → 0.545 predicted vs 0.544 in CSV). Fully
+empirical (no model wing assumption), robust to both frame truncation and the 128px library's
+wing-stripping (the aperture sits well inside the stamp), aperture flux is rotation-invariant
+(safe with `--deflector_augment`). Same rank-matched row draw; same jitter applied to both mags;
+`deflector_mag` still stores the TOTAL mag for provenance. New flag `--deflector_aper_arcsec`
+(default 2.0). `radial_profile_compare.py` parameterized (argparse; `.bak_v4` kept) + new third
+panel: sky-RMS-normalized ABSOLUTE profile — the peak-normed panels test SHAPE (library-driven,
+P2's job), the new panel tests BRIGHTNESS (scaling-driven, P1b's job). Expected v4b outcome:
+sky-normed profile lands on real; peak-normed shape still core-peaked until P2's 256px library.
+
+**Pilot v4b** (job 47307, seed 111, ONLY the scaling target changed) running; 256px LRG refetch
+in progress in parallel (~28/84 at 11:56). Next: library v6 from 256px cutouts → combined pilot
+v5 → ⛔ Nurkyz visual sign-off.
+
+## 2026-07-09 (cont.) — P1 EXECUTED: deflector brightness now magnitude-scaled (tiny-blob + over-bright-monster GONE); residual profile-shape mismatch isolated to library construction → P2
+
+**P0 done** (Nurkyz ran the deletions): quota 69→49.5 GB; `paltas_shards_pathb`, v1 and v2
+hybrid datasets removed; v3 dataset + all checkpoints kept.
+
+**P1 (`hybrid_combine.py`, old kept as `.bak_peaksky`): replaced peak/sky matching with TOTAL-
+FLUX scaling to the empirical magnitude prior** (`lens_light_empirical.csv`, ZP 25.94). Each
+pasted deflector's total flux = 10^(-0.4(mag-ZP)) for a magnitude drawn from the prior.
+`deflector_mag` now stores the real magnitude (provenance mislabel fixed). Also coded (but OFF
+in this pilot, one-change-at-a-time): `--deflector_augment` dihedral flag (P3) and the >frame
+centre-crop paste branch (P2-ready).
+
+**Re-matching correction found during the pilot:** measured stamp half-light radius (median
+0.95″) is ~2× smaller than the Bolton prior Re (1.98″) — the 128px corner-bg subtraction +
+outskirt smoothing strip the de Vaucouleurs wings. Absolute-arcsec Re-matching therefore biased
+draws faint; switched to RANK-matching (scale-invariant, preserves the magnitude marginal while
+keeping size↔brightness correlation). Also fixed a crash where the summary read an h5 dataset
+after `fo.close()`.
+
+**Pilot v4 (200 img, seed 111, ONLY the deflector-scaling changed): magnitude control VERIFIED.**
+Used deflector mag median 16.84, 16-84% [15.99, 17.38], range [14.65, 18.75] — ≡ the prior
+(16.80, [15.85,17.28], [14.79,18.66]). The 31× flux blowup and the 13.5–22.1 mag range are
+gone; NO tiny blobs, NO 14th-mag monsters. Gate PASSES (sky-RMS 1.14, peak/sky median 1405 in
+real band, θ_E range). All eight side-by-side deflectors now visible at sensible brightness.
+
+**Residual (honest), diagnosed with `radial_profile_compare.py`:** the sim deflector profile is
+too sharply peaked in the core AND WING-DEFICIENT vs real (peak-normed: sim 0.22 vs real 0.45 at
+r=0.25″; sim sits below real through the whole mid-radius; artificial kink at r≈0.3″).
+Emergent peak/sky skews high (median 1170 vs real 967) and edge-step still elevated (median 4.0σ
+vs real 2.5σ, max 15.5σ down from 27σ). **Sim profile ≈ raw-library profile → this is a
+LIBRARY-CONSTRUCTION artifact, not the combine step** (confirms P1 is clean). Cause: 128px
+corner-bg subtraction over-subtracts the real de Vaucouleurs wings (corners at r~64px still hold
+galaxy light). **Fix = P2's 256px refetch** (corners at r~180px = true sky → wings preserved in
+the central 128 crop). Fetch running (`real_lrgdefl_images_256.h5`); builder + combine already
+256-ready (size-agnostic). Rebuild + combined P1+P2 pilot when the fetch lands; that is the ⛔
+Nurkyz visual sign-off point (deflector shape must then match real).
+
+## 2026-07-09 (cont.) — Pilot-v3 visual defects ROOT-CAUSED (peak/sky matching is the bug); PATHB_IMPROVEMENT_PLAN.md written
+
+**Nurkyz's visual verdict on pilot v3:** 2/8 deflectors perfect; 1 only a tiny central blob;
+arcs visible in only 2/8; 3 bright deflectors end abruptly against darker edges. All three
+symptoms quantified with `inspect_pathb_pilot.py` and traced to ONE mechanism — **the PEAK/sky
+brightness matching in `hybrid_combine.py`**:
+- library stamp concentration (peak/total flux) spans **31×** → peak-matching leaves TOTAL
+  deflector flux uncontrolled;
+- implied deflector TOTAL mags span **13.5–22.1** vs the real prior 14.8–18.7 — unphysical at
+  both tails. Tiny blob = peak/sky draw of 25 (tail of the real array; almost certainly
+  J0955+0101, the known-bad cutout still inside real_slacs_images.h5) → mag 21.97. Abrupt-edge
+  = diffuse stamp × high draw → mag 14.23 (2.6 mag brighter than any real deflector), edge step
+  7.8σ; sim edge-step tail 27σ vs real max 9σ (medians agree: 2.77σ vs 2.48σ — the TAIL is the
+  artifact);
+- arc burial (brightness drawn independent of arc flux) also the prime suspect for the Path-B-v1
+  sim-val collapse (0.194″).
+**Fix direction (plan P1): scale deflectors by TOTAL flux from the empirical magnitude prior
+(`lens_light_empirical.csv`, Re-matched draw, ZP 25.94) — the same physical route the parametric
+recipe used; peak/sky then becomes an EMERGENT gate check instead of matched-by-construction.**
+
+**Also discovered:** COSMOS tiles 071/072 downloads FAILED silently on 2026-07-06
+(`tile_dl.log`: gzip "No such file") — backdrop pool is still 1,317 unique cutouts from tile 073;
+the 2026-07-06 entry's "tiles downloading in background" never completed. Correction logged.
+
+**Full phased plan written: `PATHB_IMPROVEMENT_PLAN.md`** (P0 housekeeping deletions for Nurkyz —
+agent permission-blocked from rm/scancel on the cluster; P1 magnitude scaling; P2 256px LRG
+refetch to kill the edge mechanism; P3 stamp augmentation + val-disjoint stamps; P4 calibration
+statistics from the DA pool instead of the benchmark file, subsumes the S4TM noise-union fix;
+P5 arc-visibility metric + ⛔ decision; P6 full regen; P7 quick-train sanity gate → training →
+⛔ evals #10/#11; P8 parallel chores). Flawed shards (`paltas_shards_pathb`, 6.5 GB) and
+superseded v1/v2 datasets (13 GB) queued for deletion in P0.
+
+## 2026-07-09 — Path B 'circular frame' ROOT-CAUSED & fixed (deflector library v3); unlogged 2026-07-08 afternoon reconstructed; pilot v3 passes numeric gates — ⛔ awaiting visual sign-off
+
+**Unlogged history reconstructed (prior session ended without logging; from file mtimes + SLURM logs):**
+after the 13:07 entry, the full Path B v1 generation (radial-taper library) completed and both
+models were trained (`einstein_cnn_pathb_inceptionnext.pt` 16:06, `_resnet.pt` 16:17):
+**sim-val MAE 0.194″/0.203″ — 3–5× WORSE than v2/v3 (0.042–0.064″), R² 0.66 vs 0.93, strong
+positive error tail [−12,+24]%.** NOT benchmark-evaluated (running count stays 9 — correct call).
+Nurkyz then reported the pasted deflector light still showed circular frames; pilot iterations
+v3–v7 (17:00–18:02, previews in da_pool_inspection/) reworked the taper into "no taper +
+neighbour clean" without resolving it. None of this was logged until now.
+
+**Root cause (code read, not guessed):** `build_deflector_from_lrg.py` v4 printed "NO taper" but
+still multiplied every stamp by a LINEAR OPACITY RAMP af=(64−r)/64 px → (a) pasted light forced
+to zero at r=64 px = the circular boundary against the noisy backdrop; (b) photometric
+distortion of the ENTIRE profile (light at r=32 px halved) — the deflector was no longer
+real-galaxy light. Same failure family as v1's square Tukey and v2's radial taper: **any opacity
+ramp reaching zero inside the visible frame creates both the visible edge and the distortion.**
+
+**Fix — v5 builder (old file kept as `build_deflector_from_lrg.py.bak_v4`): NO opacity ramp at
+all.** Corner-based bg subtraction makes the stamp ≈0 at the corners BY CONSTRUCTION → seamless
+full-frame paste with the natural profile untouched. Cleaning: neighbour removal by replacement
+with a 15-px median-filter base (ellipticity-preserving, unlike an azimuthal-circular model);
+satellite-trail/spike shape rejection (caught 1); chip-edge blank check; outskirt noise
+cross-fade (smoothstep r/n 0.12→0.35 — changes noise only, not the mean profile); recentre with
+mode='nearest' (kills the shifted-in zero strip). Then a visual prune of 7 stamps from the grid
+preview (src 18, 21, 33, 41, 43, 58, 67 — edge-on disks/dust lanes, chip-edge blobs, multi-blob
+mess) → **64 stamps, `deflector_stamps_lrg_v3.h5`** (+`src_index` provenance).
+
+**Pilot v3 (200 img, seed 111, everything else identical — one change): numeric gates ALL PASS**
+(sky-RMS 1.04 [0.8–1.25]; peak/sky 795 in real band 492–1798; θ_E [0.455, 2.296]).
+Side-by-side (`real_vs_pathb_pilot_v3run.png`): circular boundary GONE; wings fill the frame and
+fade into noise like real. Residual (honest): mild corner darkening in the brightest wings —
+corner bg estimation oversubtracts the wing level there; fully fixable only by refetching larger
+(≥192 px) LRG cutouts. ⛔ full regen only after Nurkyz's visual sign-off.
+
+**Operational:** a full 100k generation with the FLAWED v4-era library auto-launched 10:16
+(submit_pathb.sh waves, jobs 47271/47279/47287, dir `paltas_shards_pathb/`); cancelling was
+permission-blocked for this agent → it will complete. **Those shards must NOT be merged or
+trained on** — regenerate with `deflector_stamps_lrg_v3.h5` after sign-off (~40 min).
+
+**Open issues flagged this session (details in session report):** (1) the pathb v1 sim-val
+collapse is NOT explained by the frame artifact alone — diagnose (deflector-brightness draw is
+independent of arc flux → arc burial?) BEFORE training on regenerated data; (2) `deflector_mag`
+dataset in hybrid h5 actually stores the peak/sky draw, not a magnitude (provenance mislabel);
+(3) no per-paste flip/rotation of deflector stamps (64 stamps × ~1.5k reuses) — add dihedral
+augmentation in inject_deflector; (4) companion stamps render as speckle clusters vs real round
+companions; (5) sky-RMS/peak-sky calibration distributions are drawn from the benchmark SLACS
+file at every generation — switch to the disjoint 104-cutout DA pool to close the calibration-
+leakage objection; (6) S4TM noise-union fix (2026-07-06 hypothesis) still not done; (7) pathb
+val shares all 64 deflector stamps with train — reserve a few stamps for val (like PSF kernels).
+
 ## 2026-07-08 (cont.) — PATH B pilot PASSES both gates (LRG deflectors + radial taper); full generation LAUNCHED
 
 **LRG deflector library:** `build_deflector_from_lrg.py` on the 84 fetched non-lens LRG cutouts

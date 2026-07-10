@@ -1,6 +1,21 @@
 # PAPER PLAN — Accurate Strong-Lensing Parameter Prediction from Single-Band HST Imaging
  
 _Last updated: 2026-07-02. Status: pre-results (training set being finalized)._
+
+> **⚠️ STATUS ADDENDUM 2026-07-09 (this header section is stale below this line — trust
+> DECISIONS_LOG.md + PATHB_IMPROVEMENT_PLAN.md for current state):**
+> - Results exist: v2/v3 hybrid models trained & benchmark-evaluated (evals #1–#9 logged).
+>   v3 InceptionNeXt = current primary (SLACS median −0.4%, R² +0.22, fail 24%;
+>   confident-half fail 10% on BOTH samples — the robust headline so far).
+> - The "baseline m3" column in the target table below is still correct as the BEFORE point,
+>   but the working comparison for new models is now v3 (see PATHB plan P7 bars), with the
+>   paper-level bar unchanged (Cao parity: ±5% median, ≲10% failure, R² > 0).
+> - The §"Honest risks" Path B item is no longer hypothetical: Path B (real LRG deflector
+>   light) is EXECUTING (library v6, dataset v2 generating 2026-07-09).
+> - D2 correction: Cao per-lens data NOT public (code only) — email or reproduce-with-their-code.
+> - The thesis sentence should eventually be updated to name the causal decomposition
+>   (backdrops ≫ prior ≈ PSF > pool ≈ DA ≈ companions; lens light under test now) as a
+>   second novelty pillar alongside accuracy.
  
 ## One-sentence thesis
  

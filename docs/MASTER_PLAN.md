@@ -2,6 +2,127 @@
 
 ---
 
+## ⚡⚡ 2026-07-09 STRATEGY REWRITE — post-LEMON-correction roadmap (supersedes the D-campaign ORDERING below; D-item content still valid where referenced)
+
+**Trigger:** (a) LEMON's real-lens numbers were mis-recorded in our review (their true Table 3:
+bias −0.03″, RMSE 0.14″, NMAD 0.11″, R²=0.53 on 60 Euclidised HST lenses, NO filtering —
+comparable to our v2, NOT 2–3× worse; see LITERATURE.md retraction). (b) Professor's meeting
+suggestions: revisit IllustrisTNG κ-map training; try pretrained backbones (ConvNeXt V2 / DINO).
+(c) Nurkyz's directive: fastest path to publishable results that beat LEMON or carry clear
+novelty.
+
+**Honest position after correction:** we cannot claim aggregate-metric superiority over LEMON.
+Our defensible, unclaimed assets: (1) NATIVE-HST domain (higher resolution, harder sim-to-real)
+with UNIFORM spectroscopic-survey b_SIE ground truth (their GT mixes 4 catalogues, which their
+own paper flags); (2) the CAUSAL REALISM DECOMPOSITION — nobody in the field ablates simulation
+ingredients (LEMON: fully parametric sims, zero ablations); (3) REAL deflector light + real
+sources + real backdrops + focus-diverse ePSFs as training ingredients (first for θ_E
+regression); (4) sim-to-REAL domain adaptation validated on real GT (all published DA is
+sim-to-sim); (5) honest σ-calibration ON real GT. The paper leads with (1)+(2)+(3); (4) is the
+second pillar if it moves metrics.
+
+### R0 — THIS WEEK (decides the paper's primary model; blocking)
+1. ⛔ Benchmark evals #10/#11 (Path-B-v2 InceptionNeXt + ResNet, Nurkyz present, TTA,
+   running count 9→11) + protocol additions already queued: ensemble column, Etherington
+   subset, arc-SNR-stratified sim-val, sky-RMS-1.26 ruling.
+2. σ recalibration (old D3) fitted on sim-val, reported at the same evals.
+3. DECISION: primary model = best of {v3-parametric, pathb-v2} × {archs, ensemble} on the
+   full-sample benchmark. Path B v2's realism story is preferred IF within noise of v3.
+
+### R1 — PAPER CORE (~2 weeks; nothing below blocks submission)
+1. **LEMON comparison, corrected framing:** honest side-by-side table (native-HST vs
+   Euclidised domains stated), emphasize uniform GT, 102-lens sample, no filtering.
+2. **Euclidised-SLACS cross-domain figure (NEW — the direct head-to-head):** HST2EUCLID is
+   public; degrade our 29 shared SLACS benchmark images to Euclid resolution, evaluate our
+   model (zero-shot; optionally + a quick Euclidised-sim fine-tune) and compare against
+   LEMON's published Table 3 on the SAME lenses. Either outcome is a result; if we transfer
+   well, it directly answers "but Euclid is the future".
+3. **Causal decomposition completed:** D1 ablations A3 (prior), A1 (PSF), A2 (backdrop),
+   A4 (ePSF pool) + the lens-light axis (v3-parametric vs pathb-v2 — already trained, free).
+   One 100k variant + one training + one logged eval each; batch the evals.
+4. **Cao et al. 2025 comparison:** email (Nurkyz/Brian) for per-lens θ_E; fallback = run
+   their public TinyLensGpu on the 63 lenses ourselves. Summary-level comparison suffices
+   for submission if per-lens stalls.
+5. Write the paper (PAPER_DRAFT skeleton exists; §2.3 → Path B method; calibration-
+   disjointness sentence; corrected LEMON table).
+
+### R2 — PROFESSOR'S EXPERIMENTS (parallel, controlled, non-blocking; each = one run + sim-val + joins evals only at a ⛔ batch)
+1. **Pretrained backbones (professor #2):** (a) ConvNeXt V2 (FCMAE-pretrained, timm),
+   grayscale-adapted, scale-conditioning + NLL head retained — one controlled run on the
+   pathb-v2 dataset. (b) DINOv2 frozen-features + regression head as a cheap probe of
+   whether generic pretraining helps this domain at all. Full ViT fine-tune only if the
+   probe is promising. Rationale: architecture was NOT the diagnosed failure axis, but
+   pretrained features may specifically help sim-to-real robustness — test it as a
+   pretraining ablation row, not a rebuild.
+2. **Mass-model realism arm (professor #1, reframed):** do NOT wholesale return to the
+   κ̄=1 pipeline (label mismatch with b_SIE GT, weaker prior control, and m3's failure was
+   prior-pull + realism, not SIE-ness). Instead: render IllustrisTNG κ maps through
+   lenstronomy INTERPOL inside the CURRENT hybrid pipeline (same sources/ePSF/backdrops/
+   deflector light), flat effective-θ_E prior via κ rescaling, labels calibrated
+   κ̄=1→SIE-equivalent on a fitted subsample. One dataset variant + one training. If it
+   beats SIE on the benchmark → adopt mixed-mass training for the final model AND gain the
+   "mass-realism ablation" — a 6th decomposition axis nobody has. This honors the
+   professor's physical intuition (real arcs come from non-SIE mass) as a measured
+   experiment instead of a pivot.
+
+### R1.2b — Euclid arm: source-population fix + full run (added 2026-07-09 evening, Nurkyz: option B)
+
+**Diagnosed chain:** Euclidised eval negative (evals #12/#13) → error is monotonic in
+post-degradation arc SNR → selection needed → at eye-honest threshold small-θ_E sims never
+pass (2%/6%) while REAL small-θ_E lenses show arcs → because SLACS sources are COMPACT/HIGH-SB
+(Newton et al. 2011: F814W 22–26, mean 24.3, sub-kpc → SB ~18–21 mag/arcsec²) vs our
+unselected COSMOS draw (~22.4). **Fix = population-matched SB selection**
+(`config_lensfusion_acs_pathb_euclid.py`, HighSBCOSMOSCatalog, SB ≤ 21; 7,808/56,062 catalog
+galaxies pass) — measured selection, not the banned v0 flux boost.
+
+**STATUS 2026-07-10: R1.2b EXECUTED THROUGH EVAL #14.** Final recipe (pilots v2j1→B2→C→C2→D→
+threshold scan): HighSB + Newton mags + SLACS-z sources, selection (0.7, 150)
+prominence-matched, expanded screened backdrops (3,796), 1px light jitter. Dataset
+102,174+4,903 (label-verified). **Eval #14: ensemble SLACS NMAD 0.084 (LEMON 0.11 — BEATEN),
+bias +0.06, R² +0.33 (was 0.00), fail 31% (conf-half 10–13%).** Remaining gap to LEMON's
+RMSE/R² = catastrophic tail only → next levers E3/E4/E5 below + shared-29 per-lens table
+(author email). Full table + caveats: DECISIONS_LOG 2026-07-10.
+
+**Pilot B (job 47381):** ONLY change vs pilot v2 = source population. PASS criterion: per-θ_E
+selection pass fractions rise materially (v2 baseline: 2%/6%/15%/34%), gates + side-by-side
+hold. Then FULL RUN: (1) waves of arc-only generation sized by the measured pass fraction
+(target ~100k selected + 5k val, val = disjoint seeds/kernels/stamps as always, npys kept per
+shard until selection); (2) per-shard combine (screened backdrops) → euclidise → select →
+delete intermediates (quota); (3) merged gate vs Euclidised benchmark + side-by-side + Nurkyz
+visual; (4) quick-train sanity → full train both archs → σ recal on Euclid sim-val;
+(5) ⛔ Euclidised-benchmark eval (θ_E validity scope DECLARED BEFORE the eval from the
+selection statistics) + LEMON-convention table.
+
+**E-diagnosis program — closing the remaining gap to LEMON's Euclidised numbers (execute in
+order, one change at a time, each gated):**
+- E1 source SB population — pilot B, running.
+- E2 source REDSHIFT prior: we fix z_source=1.5; SLACS sources sit at z≈0.6–0.8 →
+  (1+z)⁴ SB dimming + size scaling penalize us. Legitimate population fix: z_source ~ the
+  measured SLACS source-z distribution. (paltas θ_E label is set directly by the deflector
+  prior, so this changes appearance only.) Pilot C if B insufficient.
+- E3 PSF fidelity: replace the Gaussian VIS approximation with the public Euclid VIS PSF
+  model in BOTH the Euclidiser and (if obtainable) compare against Bergamini's original code.
+- E4 multi-parameter auxiliary heads (LEMON predicts 7 params jointly — auxiliary tasks
+  regularize and force explicit lens-light modeling): add e1/e2 + lens-light outputs using
+  the existing Stage-5 ellipticity-label machinery; orientation-aware augmentation required
+  (the corrected e1/e2 transform).
+- E5 transfer-init: initialize Euclid-arm training from the best NATIVE checkpoint
+  (fine-tune) instead of scratch — cheap, likely helps.
+- E6 pretrained backbone (= R2.1 ConvNeXt V2) on the Euclid arm.
+- E7 eval-sample honesty: LEMON's 60 mix four catalogues incl. compact high-SB EELs (easier);
+  get their 29 SLACS names (author email) for the exact shared-lens table; report per-subset.
+
+### R3 — SECOND PILLAR / FOLLOW-UP
+1. DA on real GT (old D4; style-MMD path exists in train_cnn_paltas.py) — retry on the
+   real-light model where the residual domain gap is smaller.
+2. Euclid Q1 zero-shot/adapted evaluation (old D5) — candidate SECOND paper on LEMON's
+   home turf; do not let it delay paper #1.
+
+**Rules unchanged:** benchmark evals only at ⛔ with running count; one change per dataset;
+gates before scale; sim-val-only model selection; log everything in DECISIONS_LOG.
+
+---
+
 ## ⚡ 2026-07-06 ADDENDUM — Differentiator campaign (supersedes the Stage-4 ablation list below; informed by the systematic literature review, see LITERATURE.md)
 
 **Context:** hybrid v2 already achieves full-sample R² +0.45 on 102 native-HST real lenses
@@ -19,9 +140,14 @@ training run + one benchmark evaluation (logged, batched as the ablation bundle)
   - A4 ePSF pool: benchmark-matched → broad non-benchmark pool (the circularity answer).
   Quota discipline: delete each ablation's dataset after its training+eval; keep ckpt+CSVs.
 
-**D2 — Per-lens matched comparison vs Cao et al. 2025** (conventional pipeline, same 63 SLACS,
-public per-lens data: github.com/caoxiaoyue/TinyLensGpu). Deliverable: per-lens scatter
-(us-vs-Cao), agreement statistics, speed contrast (~ms vs ~3 min/lens).
+**D2 — Per-lens matched comparison vs Cao et al. 2025** (conventional pipeline, same 63 SLACS).
+Deliverable: per-lens scatter (us-vs-Cao), agreement statistics, speed contrast (~ms vs
+~3 min/lens). **[CORRECTED 2026-07-09: the per-lens θ_E results are NOT public — the GitHub
+repo (github.com/caoxiaoyue/TinyLensGpu) contains only the code, and the paper's data-availability
+line points back at that repo; checked repo + author's other repos. Paths: (a) the email to Cao
+(P8 chore, still the primary route); (b) fallback that needs no cooperation: their code is public
+and runs ~3 min/lens on GPU — re-run TinyLensGpu ourselves on the same 63 lenses and compare
+against our reproduction of their pipeline (label it as such in the paper).]**
 
 **D3 — σ recalibration + honest coverage.** Our σ under-covers on real data (52%/83% vs 68%/95%).
 Fit a single temperature/scale factor on SIM-VAL ONLY (never the benchmark), report raw AND

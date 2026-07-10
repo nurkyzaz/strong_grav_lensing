@@ -28,3 +28,31 @@ hjmcc*.pdf
 diag_*.png
 diagnose_*.png
 preview_*.png
+
+# Flat ROOT working files (live copies; the repo tracks their mirrors in
+# docs/, results/, training/, pipeline/ — see docs/CLAUDE.md "Code repository")
+/*.md
+!/README.md
+/*.py
+/*.png
+/*.csv
+/*.txt
+/*.tex
+/*.pdf
+/*.npz
+/*.zip
+/.claude/
+/epsf_library/
+/da_pool_inspection/
+/files (3)/
+/l0_forensics/
+/lens_pngs/
+/slacs_previews/
+/s4tm_previews/
+/previews_stage2/
+/meeting_20260709/
+/audit/
+/Figures_M2_M3_CNN/
+/psf_bank/
+/psf_bank_v2/
+/psf_bank_broad/

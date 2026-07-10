@@ -63,7 +63,7 @@ def main():
     plt.xlim(lim); plt.ylim(lim)
     plt.xlabel("published SIE theta_E (b_SIE) [\"]")
     plt.ylabel("CNN theta_E [\"]")
-    plt.title("m3 zero-shot on real lenses\ncaveat: kappa_bar=1 vs SIE -> partly definitional offset")
+    plt.title("CNN on real lenses (SIE b_SIE ground truth, no convention conversion)")
     plt.legend(fontsize=8)
     plt.tight_layout(); plt.savefig(args.out, dpi=120)
     print(f"\nwrote {args.out}")

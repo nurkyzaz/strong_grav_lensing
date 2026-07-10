@@ -17,13 +17,22 @@ resampled + median-subtracted; paltas output_ab_zeropoint = 25.94).
 Approximation, stated: no Poisson noise on the lensed flux itself; acceptable
 in the sky-dominated regime (matches MASTER_PLAN 1.3; state in the paper).
 
+PATH B deflector light (2026-07-09, P1 rewrite): a real elliptical stamp is
+pasted as the foreground lens light. It is scaled by TOTAL FLUX to a draw from
+the real empirical deflector magnitude prior (lens_light_empirical.csv, ZP 25.94),
+Re-matched to the stamp's own half-light radius so the (mag, size) pair stays
+physical. This REPLACES the earlier peak/sky matching, which -- because library
+stamps span ~30x in concentration -- left total deflector flux uncontrolled and
+produced 13.5-22.1 mag deflectors (tiny blobs and 2.6-mag-too-bright monsters with
+hard edges). With magnitude scaling the peak/sky gate becomes an EMERGENT check.
+
 Usage:
     python hybrid_combine.py --run ~/paltas_pilot200c_nonoise \
         --empty empty_cutouts.h5 --real ~/einstein_cnn/real_slacs_images.h5 \
         --out ~/einstein_cnn/hybrid200.h5 --seed 4
-Also writes <out_dir>/hybrid_preview_source .npy folder? No -- writes an h5
-with keys lensed/theta_E/image_fov (same as paltas_npy_to_train.py) plus
-per-image provenance (cutout_index, target_rms, topup_sigma).
+Also writes an h5 with keys lensed/theta_E/image_fov (same as paltas_npy_to_train.py)
+plus per-image provenance (cutout_index, target_rms, topup_sigma, deflector_index,
+deflector_mag = the actual magnitude drawn).
 """
 import argparse
 import glob
@@ -34,6 +43,7 @@ import numpy as np
 import pandas as pd
 
 THETA_COL = "main_deflector_parameters_theta_E"
+PIXSCALE = 0.05  # arcsec/px (both 128px and 256px LRG stamps: 6.4/128 = 12.8/256)
 
 
 def robust_sky(img, s=16):
@@ -50,12 +60,72 @@ def robust_sky(img, s=16):
     return np.nanmedian(stds)
 
 
+def central_peak_over_sky(img, box=10):
+    """Central peak / sky-RMS, matching the gate's 'lens peak/sky' definition.
+    Kept as a DIAGNOSTIC only now (P1): the deflector is no longer scaled to it,
+    so the gate's peak/sky agreement is an emergent validation, not a tautology."""
+    n = img.shape[0]
+    c = n // 2
+    sky = robust_sky(img)
+    if not np.isfinite(sky) or sky <= 0:
+        return np.nan
+    peak = img[c - box:c + box, c - box:c + box].max()
+    lvl = np.median(np.concatenate([img[:16, :16].ravel(), img[-16:, -16:].ravel()]))
+    return (peak - lvl) / sky
+
+
+def half_light_radius_px(st):
+    """Circular half-light radius [px] of a background-subtracted stamp."""
+    n = st.shape[0]
+    c = n // 2
+    yy, xx = np.mgrid[0:n, 0:n]
+    r = np.hypot(yy - c, xx - c).ravel()
+    f = np.clip(st.ravel(), 0, None)
+    order = np.argsort(r)
+    cum = np.cumsum(f[order])
+    if cum[-1] <= 0:
+        return np.nan
+    k = int(np.searchsorted(cum, 0.5 * cum[-1]))
+    k = min(k, len(order) - 1)
+    return float(r[order][k])
+
+
+def aperture_flux(st, r_px):
+    """Positive flux of a stamp within a central circular aperture of r_px.
+    The aperture (r=2" = 40 px) sits well inside even the 128-px stamps, so
+    this is robust to frame truncation AND to the wing-stripping of the 128-px
+    corner-bg libraries — unlike the stamp TOTAL, which depends on both."""
+    n = st.shape[0]
+    c = (n - 1) / 2.0
+    yy, xx = np.mgrid[0:n, 0:n]
+    mask = np.hypot(yy - c, xx - c) <= r_px
+    return float(np.clip(st, 0, None)[mask].sum())
+
+
+def quantile_ranks(x):
+    """Fractional ranks in (0,1] robust to NaN (NaN -> median before ranking).
+    Used for RANK-based Re-matching: the measured stamp half-light radius is
+    systematically ~2x smaller than the Bolton effective radius (outskirt
+    smoothing + bg subtraction strip the de Vaucouleurs wings), so absolute
+    arcsec matching would bias the drawn magnitudes faint. Ranks are
+    scale-invariant -> the drawn-magnitude MARGINAL stays equal to the prior
+    while big-for-its-population stamps still lean brighter."""
+    x = np.asarray(x, dtype="float64").copy()
+    if np.isnan(x).any():
+        x[np.isnan(x)] = np.nanmedian(x)
+    order = np.argsort(x, kind="mergesort")
+    ranks = np.empty(len(x))
+    ranks[order] = (np.arange(len(x)) + 0.5) / len(x)
+    return ranks
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--run", required=True, help="paltas NOISELESS run folder")
     p.add_argument("--empty", required=True, help="empty_cutouts.h5")
     p.add_argument("--real", required=True,
-                   help="real SLACS h5 (sky-RMS target distribution ONLY)")
+                   help="real h5 supplying the sky-RMS target distribution ONLY "
+                        "(use the benchmark-disjoint DA pool once P4 lands)")
     p.add_argument("--out", required=True)
     p.add_argument("--seed", type=int, default=4)
     p.add_argument("--no-backdrop", action="store_true",
@@ -76,11 +146,23 @@ def main():
     p.add_argument("--companion_rmax", type=int, default=62)
     p.add_argument("--deflector_stamps", default=None,
                    help="PATH B: h5 of REAL elliptical deflector-light cutouts "
-                        "(build_deflector_stamps.py), pasted centred as the "
+                        "(build_deflector_from_lrg.py), pasted centred as the "
                         "foreground lens light; requires the arc-only Path B config")
     p.add_argument("--deflector_mag_csv", default="lens_light_empirical.csv",
-                   help="CSV with a 'mag' column of real SLACS deflector total "
-                        "magnitudes; each stamp is rescaled to a draw from it")
+                   help="CSV with 'mag'/'mag_aper'/'re' columns of real SLACS "
+                        "deflectors; each stamp's flux within the measurement "
+                        "aperture is scaled to an Re-matched mag_aper draw")
+    p.add_argument("--deflector_aper_arcsec", type=float, default=2.0,
+                   help="radius [arcsec] of the aperture mag_aper was measured "
+                        "in (build_lens_light_prior.py used r=2\"); scaling "
+                        "matches IN-APERTURE flux, so the out-of-frame de Vauc "
+                        "wing flux is NOT stuffed into the frame (P1b fix)")
+    p.add_argument("--deflector_mag_jitter", type=float, default=0.2,
+                   help="uniform +/- jitter [mag] added to each magnitude draw")
+    p.add_argument("--deflector_re_sigma", type=float, default=0.4,
+                   help="Gaussian kernel width [arcsec] for Re-matching mag rows to stamps")
+    p.add_argument("--deflector_augment", action="store_true",
+                   help="P3: random dihedral (rot90 x k + optional flip) per paste")
     p.add_argument("--zeropoint", type=float, default=25.94)
     p.add_argument("--deflector_jitter", type=float, default=2.0,
                    help="centre jitter [px] of pasted deflector vs mass centre")
@@ -91,15 +173,47 @@ def main():
 
     deflectors = None
     defl_mags = None
+    defl_re = None
+    stamp_re = None
+    stamp_re_rank = None
+    csv_re_rank = None
     if args.deflector_stamps:
         with h5py.File(os.path.expanduser(args.deflector_stamps), "r") as f:
             deflectors = f["stamps"][:].astype("float32")
         mc = os.path.expanduser(args.deflector_mag_csv)
         if not os.path.isabs(mc):
             mc = os.path.join(os.path.dirname(os.path.abspath(__file__)), args.deflector_mag_csv)
-        defl_mags = pd.read_csv(mc)["mag"].values.astype("float32")
-        print(f"deflector library: {deflectors.shape}; brightness-matched to "
-              f"{len(defl_mags)} real SLACS deflector mags (median {np.median(defl_mags):.2f})")
+        csv = pd.read_csv(mc)
+        defl_mags = csv["mag"].values.astype("float32")
+        if "mag_aper" not in csv:
+            raise SystemExit("deflector_mag_csv needs a 'mag_aper' column "
+                             "(aperture-based scaling, P1b)")
+        defl_mags_aper = csv["mag_aper"].values.astype("float32")
+        defl_re = csv["re"].values.astype("float32") if "re" in csv else None
+        stamp_re = np.array([half_light_radius_px(s) * PIXSCALE for s in deflectors],
+                            dtype="float32")
+        aper_r_px = args.deflector_aper_arcsec / PIXSCALE
+        stamp_aper_flux = np.array([aperture_flux(s, aper_r_px) for s in deflectors],
+                                   dtype="float32")
+        print(f"deflector library: {deflectors.shape}; APERTURE-flux "
+              f"(r={args.deflector_aper_arcsec} arcsec) scaled to the real "
+              f"empirical mag_aper prior (ZP {args.zeropoint}) -- in-frame flux "
+              f"matches real cutouts instead of stuffing the full TOTAL into "
+              f"the frame")
+        print(f"  stamp Re [arcsec]: median {np.nanmedian(stamp_re):.2f} "
+              f"16-84%=[{np.nanpercentile(stamp_re,16):.2f}, {np.nanpercentile(stamp_re,84):.2f}]")
+        print(f"  prior mag (TOTAL): median {np.median(defl_mags):.2f} "
+              f"16-84%=[{np.percentile(defl_mags,16):.2f}, {np.percentile(defl_mags,84):.2f}]")
+        print(f"  prior mag_aper (scaling target): median {np.median(defl_mags_aper):.2f} "
+              f"16-84%=[{np.percentile(defl_mags_aper,16):.2f}, {np.percentile(defl_mags_aper,84):.2f}]")
+        if defl_re is not None:
+            stamp_re_rank = quantile_ranks(stamp_re)
+            csv_re_rank = quantile_ranks(defl_re)
+            print(f"  prior Re [arcsec]: median {np.median(defl_re):.2f} "
+                  f"16-84%=[{np.percentile(defl_re,16):.2f}, {np.percentile(defl_re,84):.2f}] "
+                  f"-> RANK-matched draws (marginal preserved; scale offset noted)")
+        else:
+            print("  no 're' column in CSV -> magnitude drawn without Re-matching")
 
     companions = None
     comp_p = None
@@ -107,13 +221,10 @@ def main():
         with h5py.File(os.path.expanduser(args.companion_stamps), "r") as f:
             companions = f["stamps"][:].astype("float32")
         flux = companions.reshape(len(companions), -1).sum(1)
-        # keep only the brighter tail (faint COSMOS sources fall below the
-        # detection floor once pasted; real detectable companions are bright)
         if args.companion_flux_pct > 0:
             thr = np.percentile(flux, args.companion_flux_pct)
             keep = flux >= thr
             companions = companions[keep]; flux = flux[keep]
-        # sample brighter stamps more often (prob proportional to flux)
         comp_p = flux / flux.sum()
         print(f"companion stamps: {companions.shape} (kept flux>=p{args.companion_flux_pct}) "
               f"rate~Poisson(U[{args.companion_rate_lo},{args.companion_rate_hi}]) "
@@ -143,6 +254,12 @@ def main():
     real_rms = real_rms[np.isfinite(real_rms) & (real_rms > 0)]
     print(f"real sky-RMS targets: N={len(real_rms)} median={np.median(real_rms):.5f} "
           f"16-84%=[{np.percentile(real_rms,16):.5f}, {np.percentile(real_rms,84):.5f}]")
+    # DIAGNOSTIC ONLY (P1): real deflector peak/sky -- no longer used for scaling.
+    real_peaksky = np.array([central_peak_over_sky(r) for r in R])
+    real_peaksky = real_peaksky[np.isfinite(real_peaksky) & (real_peaksky > 0)]
+    print(f"real deflector peak/sky (diagnostic): N={len(real_peaksky)} "
+          f"median={np.median(real_peaksky):.0f} "
+          f"16-84%=[{np.percentile(real_peaksky,16):.0f}, {np.percentile(real_peaksky,84):.0f}]")
 
     N = len(files)
     n_px = np.load(files[0]).shape[0]
@@ -160,13 +277,12 @@ def main():
     fo.attrs["note"] = ("hybrid: noiseless paltas + real empty COSMOS cutout + "
                         "Gaussian topup to real SLACS sky-RMS draw"
                         + ("; + real companion-source injection" if companions is not None else "")
-                        + ("; PATH B real elliptical deflector light" if deflectors is not None else ""))
+                        + ("; PATH B real elliptical deflector light (magnitude-scaled)"
+                           if deflectors is not None else ""))
     fo.attrs["run"] = run
     fo.attrs["seed"] = args.seed
 
     def inject_companions(img):
-        """Paste N real source stamps at random field positions (outside the
-        central lens/arc radius). Returns the count actually placed."""
         rate = rng.uniform(args.companion_rate_lo, args.companion_rate_hi)
         n = int(rng.poisson(rate))
         sp = companions.shape[1]; h = sp // 2
@@ -185,29 +301,62 @@ def main():
         return placed
 
     def inject_deflector(sim):
-        """PATH B: paste one real elliptical, brightness-matched to a random
-        real-SLACS deflector magnitude, centred (with jitter) on the mass
-        centre. Returns (stamp_index, target_mag)."""
+        """PATH B (P1b): paste one real elliptical scaled so its flux WITHIN the
+        r=2" measurement aperture equals an Re-matched mag_aper draw from the
+        empirical prior. Total-flux scaling (P1) put the galaxy's ENTIRE flux
+        inside the 6.4" frame while real cutouts only hold ~54% of it (rest is
+        de Vauc wing beyond the frame) -> sim deflectors were 1.85x over-bright
+        in-frame (measured, pilot v4), burying arcs. Centred with jitter; if the
+        stamp is larger than the frame, the CENTRE crop is pasted (jitter shifts
+        the crop window) so no opacity edge can exist.
+        Returns (stamp_index, total_magnitude_drawn)."""
         di = int(rng.integers(len(deflectors)))
         st = deflectors[di]
-        tmag = float(rng.choice(defl_mags))
-        f_target = 10.0 ** ((args.zeropoint - tmag) / 2.5)
-        cur = st.sum()
-        st = st * (f_target / cur) if cur > 0 else st
+        ap = float(stamp_aper_flux[di])
+        if ap <= 0:
+            return di, 0.0
+        # RANK-matched joint (mag, Re) draw: correlates size<->brightness while
+        # keeping the drawn-magnitude marginal equal to the prior (robust to the
+        # stamp-vs-Bolton Re scale offset). sigma in rank space (0..1).
+        if csv_re_rank is not None:
+            w = np.exp(-0.5 * ((csv_re_rank - stamp_re_rank[di]) / 0.3) ** 2)
+            sw = w.sum()
+            j = int(rng.choice(len(defl_mags), p=(w / sw))) if sw > 0 else int(rng.integers(len(defl_mags)))
+        else:
+            j = int(rng.integers(len(defl_mags)))
+        jit = float(rng.uniform(-args.deflector_mag_jitter,
+                                args.deflector_mag_jitter))
+        mag_draw = float(defl_mags[j]) + jit          # TOTAL mag (provenance)
+        mag_ap_draw = float(defl_mags_aper[j]) + jit  # same row+jitter, aperture mag
+        flux_target = 10.0 ** (-0.4 * (mag_ap_draw - args.zeropoint))
+        st = st * (flux_target / ap)
+        if args.deflector_augment:
+            st = np.rot90(st, int(rng.integers(4)))
+            if rng.random() < 0.5:
+                st = np.fliplr(st)
+            st = np.ascontiguousarray(st)
         sp = st.shape[0]
         jy = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
         jx = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
-        # place the stamp centre at (n_px/2 + jitter); stamp is 128 = full frame
-        y0 = (n_px - sp) // 2 + jy
-        x0 = (n_px - sp) // 2 + jx
-        ys, xs = max(0, y0), max(0, x0)
-        ye, xe = min(n_px, y0 + sp), min(n_px, x0 + sp)
-        sy, sx = ys - y0, xs - x0
-        sim[ys:ye, xs:xe] += st[sy:sy + (ye - ys), sx:sx + (xe - xs)]
-        return di, tmag
+        if sp >= n_px:
+            # stamp bigger than frame: paste the CENTRE n_px crop (jitter shifts window)
+            c0 = (sp - n_px) // 2
+            oy, ox = c0 + jy, c0 + jx
+            oy = min(max(oy, 0), sp - n_px)
+            ox = min(max(ox, 0), sp - n_px)
+            sim += st[oy:oy + n_px, ox:ox + n_px]
+        else:
+            y0 = (n_px - sp) // 2 + jy
+            x0 = (n_px - sp) // 2 + jx
+            ys, xs = max(0, y0), max(0, x0)
+            ye, xe = min(n_px, y0 + sp), min(n_px, x0 + sp)
+            sy, sx = ys - y0, xs - x0
+            sim[ys:ye, xs:xe] += st[sy:sy + (ye - ys), sx:sx + (xe - xs)]
+        return di, mag_draw
 
     skipped_topup = 0
     ncomp_all = []
+    dmag_all = []
     for i, fn in enumerate(files):
         sim = np.load(fn).astype("float32")
         target = float(rng.choice(real_rms))
@@ -215,8 +364,8 @@ def main():
         di, dmag = -1, 0.0
         if deflectors is not None:
             di, dmag = inject_deflector(sim)
+            dmag_all.append(dmag)
         if args.no_backdrop:
-            # A2 variant: same noise AMPLITUDE distribution, no real structure
             ci = -1
             top = target
             img = sim + rng.normal(0.0, top, sim.shape).astype("float32")
@@ -244,6 +393,12 @@ def main():
 
     fo.close()
     msg = f"wrote {out}: lensed ({N}, {n_px}, {n_px}); topup skipped: {skipped_topup}/{N}"
+    if deflectors is not None and dmag_all:
+        used = np.array(dmag_all)
+        used = used[used > 0]
+        if len(used):
+            msg += (f"; deflector mag used median {np.median(used):.2f} "
+                    f"16-84%=[{np.percentile(used,16):.2f}, {np.percentile(used,84):.2f}]")
     if companions is not None:
         msg += f"; injected companions/img median {int(np.median(ncomp_all))} mean {np.mean(ncomp_all):.1f}"
     print(msg)

@@ -29,6 +29,12 @@ def merge(paths, out):
         d_sh = fo.create_dataset("shard", (n_total,), dtype="int16")
         d_cut = fo.create_dataset("cutout_index", (n_total,), dtype="int64")
         d_top = fo.create_dataset("topup_sigma", (n_total,), dtype="float32")
+        # optional per-image selection provenance (Euclid arm, 2026-07-09):
+        # arc_snr / arc_extent enable free arc-SNR-stratified sim-val analysis
+        with h5py.File(paths[0], "r") as f0:
+            opt_keys = [k for k in ("arc_snr", "arc_extent") if k in f0]
+        d_opt = {k: fo.create_dataset(k, (n_total,), dtype="float32")
+                 for k in opt_keys}
         w = 0
         for p in paths:
             sid = int(os.path.basename(p).split("_")[-1].split(".")[0])
@@ -41,6 +47,8 @@ def merge(paths, out):
                 d_fov[w:w + n] = f["image_fov"][:]
                 d_cut[w:w + n] = f["cutout_index"][:]
                 d_top[w:w + n] = f["topup_sigma"][:]
+                for k in d_opt:
+                    d_opt[k][w:w + n] = f[k][:]
                 d_sh[w:w + n] = sid
             w += n
             print(f"  merged {os.path.basename(p)} ({n})")

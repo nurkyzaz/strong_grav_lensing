@@ -18,6 +18,18 @@ vs. lens vs. lens light vs. convergence) and its Phase-2 non-differentiability
 caution are still valid background. If you see it, treat data-generation claims in
 it as historical, not current.
 
+## Code repository
+
+GitHub (private): **https://github.com/nurkyzaz/strong_grav_lensing** — this Mac folder is
+the working tree (`main`). Layout convention (set by the initial curation, keep it):
+the FLAT root files are the live working copies and stay UNTRACKED; the repo tracks
+curated mirrors — `docs/` (the .md/.tex docs), `pipeline/` (~/cosmos_acs/tiles scripts),
+`training/` (~/einstein_cnn scripts), `analysis/` (Mac-side scripts), `results/`
+(per-lens prediction CSVs + forensics), `tables/`, `paper_figures/`. To publish: copy
+root docs into `docs/`, pull current cluster scripts into `pipeline/`+`training/`,
+add new eval CSVs to `results/`, commit, push — only when Nurkyz asks. Data/binaries
+never enter git (*.h5, *.pt, *.npy, PDFs, epsf_library/ — cluster or Zenodo).
+
 ## Cluster operational facts (validated by a prior orientation pass — do not re-derive)
 
 - Login shell is **csh**. Every remote command needs `bash -lc '...'` wrapping:
