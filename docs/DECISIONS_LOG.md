@@ -5,6 +5,25 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 (early AM) — G1 COMPLETE: expansion library BUILT — 90 clean new stamps (of 197 fetched; 79 visually pruned + 28 auto-rejected) → combined 139 σ_v-clean deflectors (2.8× the old 49); all measured (mag/Re/q/PA + σ_v/z join)
+
+- Fetch: 197/201 cutouts (chunked, cache-purged; ~2.5 h). Builder auto-screens
+  rejected 28 (faint/q/trail); Claude's 3-page visual prune dropped 79 more:
+  disks/spirals (~30), mergers/pairs (~25), artifacts (~10), ring/arc suspects
+  incl. 2 possible uncatalogued lenses (id66/src74, id83/src91 — noted for
+  curiosity, NOT used). Eye > metric confirmed again: the prominence auto-flag
+  mis-fired on native stamps (threshold recalibrated to the old-library max ~400,
+  then superseded by the visual prune as the authoritative screen).
+- Final: `deflector_stamps_lrg2_v1.h5` (90) + `g1_kinematics_v1.csv`
+  (per-stamp σ_v/σ_err/z/mag/Re/q/PA); old libraries re-measured identically
+  (`g1_kinematics_old_train/val.csv`). Combined 139 stamps, σ_v median ~210,
+  spanning ~120–410 km/s. Preview grids saved for Nurkyz's async review
+  (g1_page_p0–2.png, g1_preview_v1.png in ~/cosmos_acs/tiles/).
+- NEXT: G2 — the manifest-driven population generator (stamp=light, σ_v→θ_E,
+  mass shape = light shape ⊕ 10° misalignment coupled to γ_ext, dihedral
+  augmentation rotating mass+light together, importance-sampled effective θ_E,
+  new light–θ_E-correlation gate) → pilot → gates.
+
 ## 2026-07-11 (cont.) — G1 LAUNCHED: target list = 201 new σ_v-clean galaxies (336 unique F814W pointings → 233 after exclusions → 201 with clean SDSS σ_v; median 205 km/s, 36 above 250) → combined library 283 stamps; overnight batched fetch running (chunks of 40, cache purged per chunk). GEN4-NET v1 probe: UNDERPERFORMS (honest null-so-far)
 
 - `lrgdefl2_labels.csv` built (MAST PI programs ∩ SDSS spectroscopy, benchmark/LRGDEFL
