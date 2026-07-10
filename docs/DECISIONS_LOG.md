@@ -5,6 +5,34 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-10 (late night) — GEN4 DATA-OVERHAUL PROPOSED (Nurkyz: "big substantial changes only"): restore PHYSICAL SELF-CONSISTENCY between deflector light and mass — the channel our generator scrambles and both HOLISMOKES and LEMON keep; emails verified; task-specific architecture (log-polar) proposed
+
+**Research findings (sources in session):** HOLISMOKES sims centre cutouts on real
+SDSS galaxies with MEASURED σ_v and compute the SIE mass from that same galaxy —
+light and mass are one physical object. LEMON draws light AND mass normalisation
+from the same Flagship galaxy (θ_E from stellar mass + DM fraction; amplitude channel
+present) while their mass–light ELLIPTICITIES are deliberately unaligned (verified
+from the paper). Ours draws θ_E independently of the deflector stamp → the network
+provably learns to ignore the light → nothing to fall back on when arcs are faint —
+consistent with eval #16's unchanged small-θ_E tail under a flat prior.
+**GEN4 plan written (DATA_OVERHAUL_GEN4_PLAN.md):** P1 σ_v-based self-consistent
+deflectors (library expanded to ~200–500 stamps spanning σ_v 120–350, θ_E computed
+from σ_v + redshifts, mass shape = light shape ⊕ measured misalignment scatter,
+importance-sampled effective θ_E to keep anti-prior-pull; subsumes S4TM fix and
+mass–light axis); P2 real VIS PSF / STPSF-Roman; P3 REAL Euclid Q1 empty-sky
+backdrops for the Euclid arm (beyond anything in the literature); P4 sources
+unchanged; P5 PopulationConfig × InstrumentConfig = one population, three renderings
+(HST/Euclid/Roman — professor's flexibility directive made concrete); P6 log-polar
+dual-branch task-specific architecture (ring → 1-D radial localization + explicit
+photometric-prior branch). "Copy LEMON exactly?" answered: reproduces their numbers
+only in their own validation domain; inherits their ceiling (R²=0.71 vs traditional
+on real Q1 lenses); GEN4 takes their one good idea (population consistency) and
+keeps our realism. Staging G0–G5 (~2–3 weeks). ⛔ Nurkyz ruling requested.
+**Emails verified from paper footnotes:** Busillo valerio.busillo@inaf.it; Bergamini
+pietro.bergamini@inaf.it (HST2EUCLID = arXiv:2508.20860, no public-code statement);
+TinyLensGPU correspondents liran@bnu.edu.cn + nan.li@nao.cas.cn (Cao via GitHub).
+Bergamini draft added to EMAIL_DRAFTS_20260710.md.
+
 ## 2026-07-10 (night, cont.) — ⛔ EVAL #16 (Nurkyz go; count → 16): REBALANCE DOES NOT FIX THE REAL TAIL — small-θ_E bin UNCHANGED (62% fail, +28.7% vs baseline 62%/+33%); the residual Euclid-domain failure is a SIM-TO-REAL effect at small angular scales, not prior-pull; pretrained backbones = no decisive win; σ-recal transfer fails again (real-domain effect)
 
 Primary (resnet5, frozen constants) SLACS: bias +0.063, RMSE 0.220, NMAD 0.131,

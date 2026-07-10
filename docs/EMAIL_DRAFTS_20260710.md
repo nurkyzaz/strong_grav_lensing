@@ -1,7 +1,16 @@
 # Email drafts — 2026-07-10 (L0 item 4; Nurkyz to review, personalize, and send)
 
-All three are the long-lead-time items that block the exact head-to-head comparisons.
-Send order: LEMON first (blocks the shared-29 table), Cao second, Brian whenever.
+**VERIFIED ADDRESSES (2026-07-10 night, from the papers' own footnotes):**
+- LEMON corresponding author: **valerio.busillo@inaf.it** (V. Busillo, INAF-Capodimonte)
+- HST2EUCLID corresponding author: **pietro.bergamini@inaf.it** (Euclid prep. LXXIV,
+  arXiv:2508.20860; the paper has NO public-code statement → email required)
+- TinyLensGPU paper corresponding authors: **liran@bnu.edu.cn** (Ran Li) and
+  **nan.li@nao.cas.cn** (Nan Li); first author Xiaoyue Cao — no email in the paper,
+  reachable via github.com/caoxiaoyue → address the two correspondents, mention Cao.
+
+Send order: LEMON first (blocks the shared-29 table), Bergamini second (HST2EUCLID
+gates the exact-degradation comparison AND GEN4-G3), Cao/Li third, Brian whenever.
+A fourth draft (Bergamini) is appended below.
 
 ---
 
@@ -104,6 +113,31 @@ Two things I'd like to settle with you:
 Happy to walk you through the result tables whenever suits.
 
 Nurkyz
+
+---
+
+## 4. To Pietro Bergamini (HST2EUCLID — Euclid preparation LXXIV, arXiv:2508.20860)
+
+Subject: HST2EUCLID code access for a strong-lensing CNN validation study
+
+Dear Dr. Bergamini,
+
+I am working on CNN-based Einstein-radius estimation for galaxy-galaxy lenses,
+validated on real SLACS/S4TM systems against Bolton et al. (2008) spectroscopic
+b_SIE values. To compare against the Euclid Q1 LEMON results in their evaluation
+domain, we Euclidise our HST benchmark images — currently with our own
+reimplementation of the procedure described in your Euclid preparation LXXIV paper
+(flux conversion, PSF matching, rebinning to 100 mas, EWS-depth noise), which we
+disclose as an approximation (single-band, Gaussian matching kernel).
+
+Would it be possible to obtain access to the HST2EUCLID code, or to a degraded
+version of public HST galaxy-scale lens fields produced with it? Using the original
+operator would remove our largest disclosed systematic and would let us credit the
+tool properly. We would of course cite the paper and acknowledge any assistance.
+
+Best regards,
+Nurkyz Ydyrysova
+[affiliation]
 
 ---
 
