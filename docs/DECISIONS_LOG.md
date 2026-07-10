@@ -5,6 +5,26 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-10 (night, cont.) — GRID DONE (16/16 clean) + ARBITRATION FROZEN (TTA-consistent): RECOMMENDED = resnet5 (sim-val MAE 0.0864, b≈0, s=0.923, cov 68/90, ρ=+0.66); small-θ_E in-dist bias HALVED (+7–8% → +4.4%) but not erased; pretrained backbones LOSE on sim-val → answered at eval #16 via derived columns; EVAL #16 PRE-REGISTERED & STAGED (⛔ awaiting Nurkyz)
+
+- Grid finals (40ep sim-val MAE): resnet 0.095–0.096, incnext 0.104–0.106,
+  r50 0.097–0.105 (single members), cnv2 up to 0.163. Ensembles: resnet5 0.0864 <
+  custom10 0.0912 < all16 0.0936 < r50_3 0.0990 < incnext5 0.0984 < cnv2_3 0.1063.
+  Seed-spread per arch recorded in slurm_reb_arbitrate output (paper paragraph data).
+- reb_recal.json FROZEN: variant resnet5, b=−0.0002″, s=0.923 — fitted on sim-val with
+  the exact benchmark TTA rule (μ=8-view mean, σ²=mean aleatoric var + view spread) —
+  the eval-#15 σ-transfer defect is closed by construction.
+- Sanity pre-eval: per-θ_E sim-val bias of resnet5: +4.4% at [0.45,0.9) (was +7–8%
+  in-dist on the skewed set), +0.6% at [0.9,1.2). Distribution fixed; residual small-θ_E
+  difficulty is intrinsic (faint arcs at Euclid resolution) — benchmark impact = eval #16.
+- **Eval #16 protocol PRE-REGISTERED before any benchmark numbers** (l16_tables.py +
+  l16_eval.sbatch staged): primary row = frozen resnet5; ALL 16 members predicted in
+  the same pass with arch-ensembles (custom10/pretrained6/cnv2_3/r50_3/all16) as
+  DERIVED columns (evals #14/#15 precedent) — this answers Nurkyz's pretrained-
+  robustness question in the same eval; bootstrap P(beats LEMON) per axis; RAW and
+  RECAL coverage; per-θ_E bins vs the eval-#15 baseline (62% fail/+33% at <0.9″).
+  ⛔ submit only on Nurkyz's go (count → 16).
+
 ## 2026-07-10 (night) — QUICK-TRAINS: REB set trains cleanly (resnet probe 0.120 vs 0.161 on the old set); convnextv2 REQUIRES lr 3e-4 (collapses at 1e-3); resnet50 best probe (0.116 @1e-3) → 16-member seed-honest GRID LAUNCHED
 
 Quick-train table (20k/10ep, jobs 47485–47490): resnet@1e-3 0.1204/R²0.83;
