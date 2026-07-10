@@ -5,6 +5,64 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-10 (cont.) — RULINGS (Nurkyz): rebalance pilot visuals APPROVED, companions fine; timm install APPROVED; ResNet-50 arm ADDED (LEMON-comparable backbone). Pipeline patched (aux labels + provenance), plumbing regression test in flight, full REB generation staged
+
+- **Nurkyz visual sign-off** on reb_pilot_review/ (small-θ_E panels + all-θ_E + stretches):
+  "images look good, companions are fine" → Q10 companion tuning NOT triggered. Full
+  regeneration GO (>1k rule satisfied: pilot gates PASS + visual sign-off).
+- **Architecture clarification recorded:** we have NEVER used ResNet-50 — `resnet` in
+  train_cnn_paltas.py is the custom 2.83M-param EinsteinCNNScale (the name is shorthand);
+  `inceptionnext` is a 4.19M custom. LEMON used a ResNet-50-style backbone → resnet50
+  added as a proper arm.
+- **timm 1.0.27 installed** (approved) into Stronglensing; weights pre-cached on the
+  login node (compute nodes may lack internet): convnextv2_nano.fcmae_ft_in22k_in1k
+  (professor R2.1 + Nurkyz), resnet50.a1_in1k. `train_cnn_paltas.py` patched
+  (.bak_archs): +TimmScale wrapper (grayscale stem auto-adapted, scale-conditioning
+  kept — scalar concatenated to pooled features), --arch choices extended.
+- **Pipeline patches** (labels only, images untouched): `hybrid_combine.py`
+  (.bak_auxlabels) now writes mass_e1/mass_e2 from paltas metadata;
+  `merge_hybrid_shards.py` (.bak_prov) now carries ALL 1-D per-image columns with
+  native dtypes (closes the provenance-drop bug logged at eval #14). euclidise/select
+  were already generic pass-throughs (verified by code read).
+- **Plumbing regression test** (job 47452): rerun combine→euclidise→select on the
+  EXISTING seed-711 pilot renders with patched scripts; PASS requires new columns
+  present end-to-end AND images bit-identical to the gated pilot (same seeds).
+- **Full REB generation staged** (launch gated on 47452 PASS): 88 sub-shards,
+  N=2450 train / 1250 val per sub-shard (≈196k renders → ~100k selected at the
+  measured 51%), seeds 8701+/9101+/9601+ (disjoint), per-sub-shard ePSF kernels,
+  val kernels/stamps/seeds disjoint as always. `submit_euclid_reb.sh` deliberately
+  does NOT auto-merge: quota 84/100 GB → merge submitted only after a quota check
+  (cleanup candidates for Nurkyz: `rm -rf ~/paltas_shards_euclid_backup`;
+  `rm -f ~/einstein_cnn/train_euclid_sel_100k.h5 ~/einstein_cnn/val_euclid_sel_5k.h5`
+  once the REB merged set passes its gate — NOT before).
+- deflector_re label: derivable post-merge from deflector_index + stamp library
+  (per-stamp half-light radius; train/val library chosen by shard id ≥80) — small
+  add-on script planned with the merge job rather than touching the combine loop.
+
+## 2026-07-10 (cont.) — REBALANCE PILOT (job 47451, 600 renders, ONE change = θ_E prior ∝ 1/pass): ALL GATES PASS; post-selection θ_E ≈ FLAT (median 1.609″ → 1.371″); pass 51% exactly as predicted — ⛔ awaiting Nurkyz visual on reb_pilot_review/
+
+Config `config_lensfusion_acs_pathb_euclid.py` patched (backup `.bak_prereb`): piecewise
+θ_E prior with density ∝ 1/pass(θ_E) using the D2-scan pass fractions (26/53/64/84%).
+Everything else at production values (HighSB+Newton+SLACS-z, jitter 1px, expanded
+screened backdrops, selection 0.7/150).
+- Gate vs Euclidised benchmark: sky-RMS 0.912 PASS, peak/sky 772 (band 574–1310) PASS,
+  θ_E range PASS. Selected 305/600 (51%; prediction was 51%).
+- Post-selection θ_E fractions per bin: 0.17/0.25/0.30/0.29 vs flat expectation
+  0.19/0.22/0.27/0.32 — the large-θ_E skew is gone (was median 1.609″).
+- Full-run cost at 51%: ~196k renders for 100k train + ~10k for 5k val ≈ same scale as
+  the last production run. Pilot ops note: my sbatch ran gate_stage0.py from the wrong
+  cwd (lives in ~/cosmos_acs/tiles) — steps 4–5 rerun from the correct dirs; renders/
+  selection unaffected.
+- Review images on the Mac (`reb_pilot_review/`): side-by-side all-θ_E + small-θ_E-only
+  (θ_E<1.0, n=87), three stretches, θ_E histogram, gate overlay. Claude pre-screen:
+  large-θ_E sims show clear centered rings matching real; small-θ_E sims are
+  faint-arc-dominated (consistent with real small-θ_E appearance at this stretch);
+  companion blobs look somewhat denser/brighter than real in several panels —
+  Q10 (companion realism v2) may deserve a re-look at the merged stage.
+- ⛔ FULL REGENERATION BLOCKED ON: (1) Nurkyz visual sign-off; (2) merge provenance
+  patch; (3) aux-label plumbing (mass e1/e2 + lens-light params through
+  combine→euclidise→select→merge); (4) timm-install decision for the ConvNeXt V2 arm.
+
 ## 2026-07-10 (cont.) — ⛔ EVAL #15 (Nurkyz present; count → 15): L1 ensemble does NOT transfer — aggregates flat-to-slightly-worse; bias confirmed STRUCTURAL; NEW finding: seed variance on the 62-lens benchmark is comparable to method differences (R² +0.01…+0.33 across compositions) — single-seed comparisons in this literature are fragile
 
 **Protocol:** all12 TTA via the SAME predict script as eval #14 (pair_s0 recombination
