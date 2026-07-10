@@ -5,6 +5,36 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 (cont.) — G1 LAUNCHED: target list = 201 new σ_v-clean galaxies (336 unique F814W pointings → 233 after exclusions → 201 with clean SDSS σ_v; median 205 km/s, 36 above 250) → combined library 283 stamps; overnight batched fetch running (chunks of 40, cache purged per chunk). GEN4-NET v1 probe: UNDERPERFORMS (honest null-so-far)
+
+- `lrgdefl2_labels.csv` built (MAST PI programs ∩ SDSS spectroscopy, benchmark/LRGDEFL
+  excluded at 5″). High-σ_v tail thinner than hoped (36 new + existing) — importance
+  sampling will lean on it; logged as a GEN4 limitation to disclose.
+- Fetch driver `g1_fetch_driver.sh` (nohup, login node): 6 chunks × ~40 targets,
+  `mast_cache_g1` purged between chunks (the 84-target fetch grew a ~32 GB cache —
+  unpurged this would blow quota). Concat → `real_lrgdefl2_images_256.h5`. ~4 h.
+- **GEN4-NET (logpolar) v1 probe (jobs 47517/47518, REB 20k/10ep):** val_MAE
+  0.181 (lr 1e-3) / 0.191 (3e-4) vs custom resnet probe 0.120 — clearly behind at
+  probe depth. Read: v1 design (early φ-mean-pooling likely dilutes localized arc
+  signal; 1.5M params); slow-converging archs deserve a 40-ep shot, so it keeps a
+  LOW-PRIORITY seat in the G4 grid, but the architecture-null doctrine is reinforced
+  again: data first. Idea banked, not abandoned; v2 tweaks listed in session notes.
+
+## 2026-07-11 — RULING (Nurkyz): BLANKET GREEN for GEN4 stages G1→G5 — "execute all Gs, do not wait for my yes". Scope and safeguards as recorded here
+
+- Authorization: generation runs, fetches, training grids, and the G-stage pilots
+  proceed WITHOUT per-stage sign-off. Claude chains stages via completion monitors.
+- Safeguards that REMAIN in force: numeric gates must PASS before scale-up (a gate
+  failure = STOP and report); quota checked before every large run; benchmark evals
+  still logged with the running count and reported immediately; pilot visual
+  artifacts still produced + pre-screened by Claude and saved for Nurkyz's async
+  review; destructive/irreversible actions (deletions of non-superseded data,
+  external communications) still require Nurkyz.
+- No separate "approval agent": the session chains stages itself; an auto-approving
+  agent would remove a safety layer without adding capability.
+- Also ruled: implement and EVALUATE the task-specific architecture (P6 log-polar)
+  now — probe on the existing REB dataset independent of GEN4 data.
+
 ## 2026-07-11 — GEN4-G0 EXECUTED (Nurkyz "go"): FEASIBILITY PROVEN — 82/84 existing stamps have SDSS σ_v; expansion source = SLACS-lineage snapshot archives (~520 pointings, σ_v by construction); misalignment relations anchored; importance-sampling designed
 
 - σ_v crossmatch (local, astroquery): 82/84 LRGDEFL targets have clean SDSS σ_v
