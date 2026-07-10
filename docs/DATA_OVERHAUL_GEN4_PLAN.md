@@ -115,9 +115,39 @@ arch. Nobody in this literature uses log-polar for θ_E regression.
 
 ## 2. Staging (est. 2–3 weeks to eval; parallel with paper writing)
 
+### ✅ G0 RESULTS (2026-07-10/11 — feasibility PROVEN)
+
+1. **σ_v crossmatch: 82/84 of the existing LRGDEFL targets have clean SDSS σ_v**
+   (median 204 km/s, range 73–408; z_l median 0.131). Implied SIS θ_E at SLACS-like
+   z_s: median ~0.9″, 16–84% [0.65, 1.30], full range 0.13–3.9″ → the benchmark range
+   [0.45, 2.3] is coverable by weighted draws; **G1 directive: expansion targets
+   preferentially HIGH σ_v (>250 km/s)** — the θ_E>1.5″ tail is stamp-thin.
+   Bonus: the stamp population is already S4TM-like in σ_v — the S4TM mismatch came
+   from the imposed SLACS-tuned brightness prior, which GEN4 deletes outright.
+   (g0_stamp_kinematics.csv, tables/ in the repo.)
+2. **Expansion source identified: the SLACS-lineage HST snapshot archives** —
+   PI Bolton ~349 + Treu ~124 + Koopmans ~49 ≈ **520 distinct ACS/WFC3 pointings of
+   SDSS-spectroscopic targets** (σ_v by construction; mostly non-lenses). After
+   removing the frozen-102 benchmark and known lenses: realistic net library
+   ~300–450 stamps — inside the plan's 200–500 target. Random-archive harvesting is
+   NOT viable (0.8% HST coverage of the 1.0M-galaxy SDSS σ_v pool) — the snapshot
+   programs are the route.
+3. **Misalignment relations anchored (literature):** mass–light PA aligned within
+   ~±10–12°; large ΔPA correlates with large external shear → implement
+   ΔPA ~ N(0, 10°) with the misalignment tail COUPLED to γ_ext; q_mass from q_light
+   with ~0.1 scatter (exact relation to be fitted from Shajib+2021/Etherington+2022
+   tables at G2 — flagged for verification).
+4. **Importance-sampling design (the anti-prior-pull reconciliation):** per training
+   image draw (stamp i, z_s) with probability ∝ w(θ_E(i, z_s)) where θ_E(i, z_s) is
+   precomputed on a (stamp × z_s-grid) table and w = 1/density so the EFFECTIVE θ_E
+   distribution is ~flat on [0.45, 2.3]; σ_v jittered within its measurement error
+   per draw (honest label noise); weights capped (max reuse factor per stamp logged;
+   effective-sample-size per θ_E bin reported by the generator as a new gate metric);
+   physics inside each image never broken — only WHICH system is drawn is weighted.
+
 | Stage | Work | Est |
 |---|---|---|
-| G0 | σ_v/z crossmatch for existing 49 stamps; misalignment/q relations from literature; library-expansion feasibility count (HST∩SDSS-spec early-types); importance-sampling design note | 1–2 d |
+| G0 | ✅ DONE (above) | — |
 | G1 | Library expansion fetch + per-stamp light-shape/photometry measurement (q, PA, Re, mag) | 2–4 d |
 | G2 | Generator refactor (PopulationConfig + InstrumentConfig); pilot → gates incl. the NEW light–θ_E-correlation gate + Nurkyz visual | 2–3 d |
 | G3 (∥) | Euclid-native ingredients: Q1 empty-sky harvest + VIS PSF (or HST2EUCLID) | 2–4 d |

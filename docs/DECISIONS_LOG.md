@@ -5,6 +5,26 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 — GEN4-G0 EXECUTED (Nurkyz "go"): FEASIBILITY PROVEN — 82/84 existing stamps have SDSS σ_v; expansion source = SLACS-lineage snapshot archives (~520 pointings, σ_v by construction); misalignment relations anchored; importance-sampling designed
+
+- σ_v crossmatch (local, astroquery): 82/84 LRGDEFL targets have clean SDSS σ_v
+  (median 204 km/s, range 73–408; z_l median 0.131). Implied SIS θ_E @ SLACS z_s:
+  median 0.9″, range 0.13–3.9″ → benchmark coverage by weighted draws; G1 targets
+  HIGH σ_v preferentially (θ_E>1.5″ tail thin). S4TM insight: stamps are ALREADY
+  σ_v-S4TM-like — the mismatch was the imposed SLACS-tuned brightness prior.
+- Feasibility: SDSS clean-σ_v pool = 1,004,800 galaxies; random HST coverage 0.8%
+  (dead end); PI-program route: Bolton ~349 + Treu ~124 + Koopmans ~49 ≈ 520
+  distinct pointings → net library ~300–450 after benchmark/lens exclusion.
+- Misalignment: PA within ~10–12°, big-ΔPA ↔ big external shear (couple them in
+  the generator); q_mass–q_light scatter ~0.1, exact relation fitted at G2.
+- Importance-sampling note written into DATA_OVERHAUL_GEN4_PLAN.md §G0.4 (weights
+  on WHICH system is drawn; physics inside an image never broken; ESS-per-θ_E-bin
+  becomes a new gate metric).
+- Artifacts: g0_stamp_kinematics.csv, g0_sigma_crossmatch.py, g0_feasibility.py
+  (repo tables/ + analysis/). NEXT: G1 (library expansion fetch — cluster MAST
+  pattern, ~1.5h nohup + builder v7) on Nurkyz's go; G2 generator refactor design
+  can start in parallel.
+
 ## 2026-07-10 (late night) — GEN4 DATA-OVERHAUL PROPOSED (Nurkyz: "big substantial changes only"): restore PHYSICAL SELF-CONSISTENCY between deflector light and mass — the channel our generator scrambles and both HOLISMOKES and LEMON keep; emails verified; task-specific architecture (log-polar) proposed
 
 **Research findings (sources in session):** HOLISMOKES sims centre cutouts on real
