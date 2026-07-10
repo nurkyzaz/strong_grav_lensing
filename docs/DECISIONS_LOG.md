@@ -5,6 +5,8 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 (AM, cont.) — G2 pilot v1 BUG caught by its own 1:1 assert: paltas draws params in config-dict order, so 'e1,e2' read the row BEFORE theta_E advanced it → mass shapes lagged one manifest row (mass of galaxy i−1 on light of galaxy i). FIX: order-agnostic row dispatcher (advance when any param repeats within a sample). Pilot v2 = job 47522; v1 renders deleted (self-consistency was broken in them by construction)
+
 ## 2026-07-11 (AM) — G2 BUILT & PILOT LAUNCHED (job 47521): the manifest-driven self-consistent population generator
 
 Components (all in ~/cosmos_acs/tiles/, mirrored to repo):
