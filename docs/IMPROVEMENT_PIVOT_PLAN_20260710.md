@@ -4,6 +4,31 @@ Status: ADOPTED DIRECTION (Nurkyz 2026-07-10): beat-LEMON-on-every-axis is an ex
 goal; work staged for minimum time/effort; website idea REMOVED; Roman endorsed by
 professor. DECISIONS_LOG.md remains authoritative; log each stage's outcome there.
 
+## STATUS AUDIT (2026-07-10 evening — update in place)
+
+| Item | Status |
+|---|---|
+| §0 LEMON Table 3 verification | ✅ RESOLVED (Nurkyz, from the paper; logged) |
+| L0.1 tail forensics | ✅ DONE — B3 REJECTED; tail = small-θ_E prior-pull (selection-skewed prior, median 1.609″); NOT benchmark-intrinsic (0 lenses fail all native+euclid) |
+| L0.2 bias forensics | ✅ DONE — benchmark + sim-val (job 47433): +7–8% bias at θ_E<0.9″ in-distribution; B4 survivor-gradient real but secondary |
+| L0.3 R² sample math | ✅ DONE — NMAD win P=0.75 (not decisive); cross-sample R² near-meaningless (report same-sample only); fail≤12% ⇒ RMSE≤0.14 |
+| L0.4 emails (HUMAN) | ◐ drafted (EMAIL_DRAFTS_20260710.md) — ⏳ Nurkyz to send |
+| L1 members (5×2 scratch + 2 tinit) | ✅ DONE (jobs 47434–47443, 50 min; all clean, seeds distinct) |
+| L1 arbitration + frozen recal | ✅ DONE — all12 recommended (sim-val MAE 0.0839 vs pair 0.0851); b=+0.0028″, s=0.862 frozen in l1_recal.json; E5 tinit = in-dist NULL (kept as diversity) |
+| ⛔ eval #15 | ✅ DONE (count 15) — L1 NULL on aggregates (fail 31→27%, conf-half 13→10%, rest flat/worse); bias proven structural; NEW seed-variance finding (R² +0.01…+0.33 across seeds) → paper paragraph |
+| L2+L3 (RESTRUCTURED post-#15, see §2b below) | ☐ ONE combined regeneration: θ_E rebalance + aux-head labels + provenance fix; then heads-vs-no-heads control on sim-val; ⛔ eval #16 for the winner. Awaiting Nurkyz go |
+| E3 VIS PSF | ☐ after the combined regen (kept separate — one image-affecting change at a time) |
+| L4 closers | ☐ blocked on email replies / eval #15 outcome |
+| Track N native back-port | ☐ NOT STARTED (next parallel item; pilot ≤200 img can start anytime) |
+| Track R InstrumentConfig refactor | ☐ NOT STARTED (training-downtime task) |
+| Track P housekeeping | ◐ CLAUDE.md monitor rule ✅ (added 2026-07-10); repo synced+pushed ✅ (6883ea3); merge-provenance patch ☐; stale-doc consolidation ☐; PAPER_DRAFT refresh ☐; shard-backup deletion ⏳ Nurkyz |
+| GitHub | ✅ https://github.com/nurkyzaz/strong_grav_lensing (layout convention in CLAUDE.md) |
+
+Deviations from plan: none of substance. Two additions beyond plan: sim-val bias probe
+(l0_simval_bias.py) executed as part of L0.2; ssh-banner/tar pitfall documented in
+CLAUDE.md. Known deferred bug-fixes: merge script provenance-column drop (fix BEFORE
+the next generation run — L3 depends on it).
+
 ---
 
 ## 0. LEMON Table 3 — RESOLVED (Nurkyz verified from the paper, 2026-07-10)
@@ -122,6 +147,30 @@ One regeneration (Euclidise-only reprocessing of existing renders where possible
 native renders are unchanged, so this may be combine/euclidise/select reruns, NOT new
 paltas generation → much cheaper than a full 100k regen; verify npy availability first).
 ⛔ Eval #17.
+
+### §2b — POST-EVAL-#15 RESTRUCTURE (2026-07-10 evening; replaces the L2-then-L3 ordering)
+
+Eval #15 closed the model-side avenue: ensembles, transfer-init, and recentering are
+all measured NULLs against a bias that is structural (three independent confirmations:
+benchmark θ_E-bin table, sim-val bias probe, common-mode ensemble bias). Consequence:
+stop spending on model-side levers; go straight at the dataset. To avoid paying two
+regenerations and two training cycles:
+
+**ONE combined regeneration** (needs Nurkyz go + merge-provenance patch FIRST):
+1. θ_E rebalancing: size generation waves by the measured per-bin pass fractions
+   (26/53/64/84%) so the POST-selection θ_E distribution is flat. This is the L0-
+   diagnosed fix for the +0.09″ bias and the 62%-fail small-θ_E bin.
+2. Carry the aux-head LABELS (mass e1/e2 + lens-light Re/n/m from paltas metadata)
+   through combine→euclidise→select→merge. Labels don't change images — no new
+   realism variable; the merged gate stays a one-change comparison (rebalance).
+3. Fix the merge provenance-column drop in the same pass (bug queued since eval #14).
+Then: train BOTH θ_E-only and θ_E+aux-heads models on the new dataset (5 seeds each,
+seed-honest); arbitrate heads-vs-no-heads on SIM-VAL; ⛔ eval #16 evaluates the winner
+(+ the loser as a derived column only if its predictions are made in the same pass).
+E3 (real VIS PSF) stays AFTER this — it changes images, so it must be its own gated step.
+
+Reporting rule adopted from the seed-variance finding: all future eval tables report
+seed-ensembles or seed-averages with spread, never single seeds.
 
 ### Stage L4 — closers (only for axes still short after L3)
 1. Shared-29 per-lens head-to-head (when names arrive) — likely flips RMSE/R² by itself if

@@ -27,8 +27,11 @@ curated mirrors — `docs/` (the .md/.tex docs), `pipeline/` (~/cosmos_acs/tiles
 `training/` (~/einstein_cnn scripts), `analysis/` (Mac-side scripts), `results/`
 (per-lens prediction CSVs + forensics), `tables/`, `paper_figures/`. To publish: copy
 root docs into `docs/`, pull current cluster scripts into `pipeline/`+`training/`,
-add new eval CSVs to `results/`, commit, push — only when Nurkyz asks. Data/binaries
-never enter git (*.h5, *.pt, *.npy, PDFs, epsf_library/ — cluster or Zenodo).
+add new eval CSVs to `results/`, commit, push. **Push policy (Nurkyz ruling
+2026-07-10): push whenever meaningful changes accumulate** — a logged eval, a new
+plan/stage, a new script generation, or a DECISIONS_LOG milestone; don't wait to be
+asked, and don't push mid-experiment noise. Data/binaries never enter git
+(*.h5, *.pt, *.npy, PDFs, epsf_library/ — cluster or Zenodo).
 
 ## Cluster operational facts (validated by a prior orientation pass — do not re-derive)
 
@@ -47,6 +50,13 @@ never enter git (*.h5, *.pt, *.npy, PDFs, epsf_library/ — cluster or Zenodo).
 - conda env `Stronglensing`, Python 3.8 → no backslashes inside f-strings.
 - Working dirs: `~/einstein_cnn/` (models, benchmark, metrics, diagnostics),
   `~/cosmos_acs/tiles/` (paltas config, PSF file, generation/fix toolchain).
+- **Monitors report, the session submits** (rule adopted after the 2026-07-10 merge
+  collision): completion-monitors and watcher loops must never carry submission
+  side-effects that can race a manual action. Only an explicit submit script (the
+  `sbatch --wait` wave pattern, e.g. `submit_pathb.sh`/`submit_l1.sh`) or the live
+  session may submit jobs.
+- ssh prints a quota banner on STDOUT — never pipe binary data (tar) through a plain
+  ssh channel; write to a cluster file and `scp` it instead.
 
 ## Environment pins (violating these breaks things — see DECISIONS_LOG.md for why)
 

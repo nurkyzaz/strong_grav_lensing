@@ -5,6 +5,83 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-10 (cont.) — ⛔ EVAL #15 (Nurkyz present; count → 15): L1 ensemble does NOT transfer — aggregates flat-to-slightly-worse; bias confirmed STRUCTURAL; NEW finding: seed variance on the 62-lens benchmark is comparable to method differences (R² +0.01…+0.33 across compositions) — single-seed comparisons in this literature are fragile
+
+**Protocol:** all12 TTA via the SAME predict script as eval #14 (pair_s0 recombination
+reproduces eval #14 within rounding — end-to-end consistency check PASSED); frozen
+l1_recal.json applied (b=+0.0028″, s=0.862, sim-val only). Sub-ensemble attribution
+derived from the same 24 prediction passes (eval-#14 precedent; no extra benchmark pass).
+
+| SLACS N=62 | bias | RMSE | NMAD | R² | fail | conf-half |
+|---|---|---|---|---|---|---|
+| eval #14 pair (ref) | +0.062 | 0.208 | 0.084 | +0.33 | 31% | 13% |
+| **all12 (eval #15)** | +0.092 | 0.217 | 0.091 | +0.27 | 27% | **10%** |
+| pair_s0(TTA) recombined | +0.065 | 0.209 | 0.084 | +0.32 | 29% | 13% |
+| inc5 / res5 / scratch10 | +0.104/+0.081/+0.093 | 0.252/0.208/0.220 | 0.108/0.101/0.091 | +0.01/+0.33/+0.25 | 29/29/26% | 19/10/13% |
+
+S4TM all12: +0.136 / 0.246 / 0.090 / +0.19 / 35% / 20% (flat vs #14). Small-θ_E bin
+UNCHANGED (SLACS θ_E<0.9″: 62% fail, +33% median) — the L0 diagnosis stands untouched.
+
+**Findings:**
+1. **L1 = null-to-slightly-negative on aggregates** (fail 31→27% and conf-half 13→10%
+   are the only gains). Mechanism: the positive bias is COMMON MODE across all 12
+   members (selection-skewed θ_E prior) — averaging removes compensating scatter and
+   locks the bias in. Deep ensembles cannot fix structural sim-to-real bias; with the
+   sim-val bias ≈0 result, the case that L3 (θ_E rebalance) is the ONLY remaining lever
+   for bias/tail is now closed from three independent directions.
+2. **Seed variance (NEW, paper-worthy):** across same-recipe compositions on identical
+   real lenses, NMAD spans 0.084–0.122 and R² spans +0.01…+0.33. The eval-#14 pair was
+   partly seed luck. Consequence for the paper: report seed-averaged metrics with
+   seed error bars, and flag that single-seed CNN-vs-CNN tables (incl. vs LEMON's
+   single BNN) are fragile at N≈60. This is a methodological contribution nobody in
+   the table reports.
+3. **σ-scale transfer caveat:** s=0.862 (fitted on plain-forward sim-val mixture)
+   under-covers on real TTA outputs (60/74%, S4TM 48/78%). conf-half gating is
+   unaffected (scale-invariant). Next eval: report raw AND recal coverage; consider
+   fitting s on TTA sim-val outputs (still sim-val-only).
+**Open decision (Nurkyz):** reported primary for the Euclid arm = all12
+(sim-val-selected, seed-honest; recommended) vs pair_s0 (better aggregates, but
+seed-lucky and now known to be so). Either way the seed-variance paragraph goes in
+the paper. Artifacts: preds_l15_*.csv (26 files) in brian_run/.
+
+## 2026-07-10 (cont.) — L1 COMPLETE (12-member ensemble arbitrated on sim-val; constants FROZEN in l1_recal.json): all12 MAE 0.0839 vs eval-#14 pair 0.0851; E5 transfer-init = in-distribution NULL; sim-val bias already ~0 ⇒ the +0.06″ benchmark bias is a sim-to-real effect that recentering CANNOT fix — L3 θ_E-rebalance remains the bias lever. ⛔ eval #15 READY
+
+**Chain (submit_l1.sh, jobs 47434–47443 + arbitration 47448, 50 min wall):** all 10 members
+trained clean (distinct seeds verified mid-run via distinct val curves). Arbitration
+(SIM-VAL ONLY, plain forward; TTA stays eval-time):
+
+- Members: MAE 0.0845 (res_s3, best) … 0.0962 (inc_tinit, worst); all fail ≈12% in-dist.
+- Variants: pair_s0 (=eval-#14 recipe) 0.0851 | inc5 0.0865 | res5 0.0843 |
+  scratch10 0.0839 | tinit2 0.0876 | **all12 0.0839 ← RECOMMENDED** (bias −0.16%, fail 12.2%).
+- **Frozen for ⛔ eval #15** (l1_recal.json): variant all12, recentering b = +0.0028″,
+  σ scale s = 0.862 (ensemble mixture-σ is wider → shrinks), recal coverage 68/90%
+  (95% under-covers — heavy tails, disclose as before), ρ(σ,|err|) = +0.69.
+- **Honest readings:** (1) in-distribution ensemble gain is modest (0.0851→0.0839,
+  ~1.4%); the ensemble's expected value is TAIL variance on the real benchmark — that is
+  what eval #15 tests. (2) Sim-val bias is already ≈0, so the planned "bias recentering"
+  cannot address the +0.06″ real-benchmark bias — it is a sim-to-real/population effect;
+  the L0-diagnosed θ_E-rebalance (L3) is the real bias/tail lever. (3) E5 transfer-init
+  from native checkpoints adds nothing in-distribution (inc_tinit is the worst member);
+  kept only as ensemble diversity. E5 as a strategy: NULL result, logged as such.
+
+## 2026-07-10 (cont.) — L1 LAUNCHED (10-member deep-ensemble campaign, jobs 47434+); sim-val bias probe CONFIRMS the θ_E mechanism in-distribution; repo synced & pushed
+
+- **Sim-val bias probe (job 47433, sim-val only):** ALL models show +7–8% median bias at
+  θ_E ∈ [0.45, 0.9) IN-DISTRIBUTION (inc +8.2%, res +7.0%, ens +7.8%) — the selection-skewed
+  effective prior (median 1.609″) is confirmed as the small-θ_E overestimate mechanism on
+  both sim and real sides. Within-selection SNR floor bin (0.7–1.0) fails 33% even in-dist.
+  Output: l0_simval_bias.npz.
+- **L1 launched** (`submit_l1.sh` nohup chain, waves under QOS-8): 8 scratch members
+  (seeds 1–4 × both archs, same recipe as jobs 47425/47426) + 2 E5 transfer-init members
+  (from native v3 checkpoints), then `l1_arbitrate.sbatch` — member/ensemble-composition
+  selection, bias recentering b, and σ scale s all fitted on SIM-VAL ONLY and frozen to
+  `l1_recal.json`. ⛔ eval #15 happens with Nurkyz using those frozen constants. First
+  member healthy at epoch 23 (val_MAE 0.091, in line with eval-#14 members).
+- **GitHub**: repo is https://github.com/nurkyzaz/strong_grav_lensing (noted in CLAUDE.md
+  with the layout convention). Synced & pushed commit 6883ea3: docs through today,
+  Euclid-arm pipeline/training scripts, evals #10–#14 per-lens CSVs, L0 forensics
+  artifacts, L1 campaign scripts. Root flat files stay untracked (mirror convention).
+
 ## 2026-07-10 (cont., planning session) — STAGE L0 EXECUTED (analysis-only; running count UNCHANGED at 14): B3 arc-visibility hypothesis REJECTED on the benchmark — the Euclid-arm tail is SMALL-θ_E PRIOR-PULL reintroduced by the selection's θ_E-graded pass rate; tail is NOT benchmark-intrinsic; NMAD win not yet statistically decisive
 
 **Method integrity:** `l0_tail_forensics.py` + `l0_sample_math.py` (in ~/einstein_cnn/)
