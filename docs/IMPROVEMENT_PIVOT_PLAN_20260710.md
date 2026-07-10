@@ -172,6 +172,37 @@ E3 (real VIS PSF) stays AFTER this — it changes images, so it must be its own 
 Reporting rule adopted from the seed-variance finding: all future eval tables report
 seed-ensembles or seed-averages with spread, never single seeds.
 
+### FRESH-EYES REVIEW (2026-07-10 night, requested by Nurkyz; full reasoning in session)
+
+New findings, ranked:
+1. **S4TM deflector-prior mismatch (new hypothesis for the persistent S4TM +8–13%
+   bias):** the deflector stamp library AND lens_light_empirical.csv are built from
+   SLACS-parent LRGs; S4TM deflectors are lower-σ_v (smaller, fainter, smaller θ_E).
+   Our sims may systematically over-glare S4TM-like systems. Diagnostic before fixing:
+   compare S4TM benchmark deflector photometry vs the training prior. Candidate fix:
+   population-conditioned deflector prior. (Would also sharpen the "S4TM =
+   generalization test" framing.)
+2. **Benchmark-adaptivity defense for the paper:** 16 logged evals steer development
+   (physics-motivated, sim-val-selected — but a reviewer can still ask). Strongest
+   answer: assemble a small CONFIRMATION SET of never-evaluated real lenses (e.g.
+   Bolton grade-B SLACS beyond the frozen 102, or BELLS) and evaluate the final model
+   on it EXACTLY ONCE at paper time. Cheap insurance; decide with Nurkyz.
+3. **GT-error ceiling analysis:** b_SIE has its own uncertainty; at NMAD 0.084″ (~7%)
+   we may approach the floor for some lenses. Compute the best-achievable RMSE/R²
+   given published b_SIE errors → converts "R² gap to LEMON" into "distance from the
+   ceiling". Add to the L0 sample-math script (analysis-only).
+4. **Mass–light alignment realism (unlisted ablation axis):** with real deflector
+   stamps, mass e1/e2 is drawn INDEPENDENTLY of the stamp's light orientation —
+   deliberate (anti-shortcut) but physically wrong (real lenses align). May matter for
+   aux-head e1/e2 and marginally for θ_E. Log as a candidate ablation, not a fix.
+5. **Native arm drift:** all recent effort is Euclid-arm; the paper's HEADLINE is
+   native-HST. Track N (population back-port; no selection needed natively → no
+   selection-skew issue) is still the largest untapped lever. Schedule right after
+   eval #16.
+6. Chores surfaced: PAPER_DRAFT stale since eval #9 (update through #16);
+   measure and report the REAL inference cost (ensemble × TTA = 40 forwards/lens);
+   confirm the three emails went out (shared-29 table blocks on it).
+
 ### Stage L4 — closers (only for axes still short after L3)
 1. Shared-29 per-lens head-to-head (when names arrive) — likely flips RMSE/R² by itself if
    the tail is sample-composition-driven.

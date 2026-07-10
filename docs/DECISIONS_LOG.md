@@ -5,6 +5,44 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-10 (night, cont.) — ⛔ EVAL #16 (Nurkyz go; count → 16): REBALANCE DOES NOT FIX THE REAL TAIL — small-θ_E bin UNCHANGED (62% fail, +28.7% vs baseline 62%/+33%); the residual Euclid-domain failure is a SIM-TO-REAL effect at small angular scales, not prior-pull; pretrained backbones = no decisive win; σ-recal transfer fails again (real-domain effect)
+
+Primary (resnet5, frozen constants) SLACS: bias +0.063, RMSE 0.220, NMAD 0.131,
+R² +0.25, fail 31%, conf-half 13%; S4TM: +0.116 / 0.245 / 0.095 / +0.19 / 32%.
+Bootstrap: P(RMSE<0.14)=0.00, P(NMAD<0.11)=0.41, P(R²>0.53)=0.07.
+
+**Findings (each moves the plan):**
+1. **The L0 prior-pull hypothesis is REFUTED for the real benchmark** (it was true
+   in-distribution: sim-val small-θ_E bias halved to +4.4%). Real small-θ_E lenses
+   still fail 62% with +29% pull UNDER A FLAT PRIOR → on those images the model finds
+   no usable arc signal and regresses to glare-alike population values — an
+   information/realism limit at small angular scales, NOT a training-distribution
+   artifact. Publishable negative: completes the causal chain. Prime suspect now:
+   **PSF fidelity (E3)** — a Gaussian VIS kernel is wrong exactly where θ_E is small;
+   second suspect: deflector-glare mismatch (cf. merged radial-profile +20–50% flag).
+2. **NMAD regression (0.084 → 0.131) is not clean evidence of dataset harm**:
+   P(NMAD<0.11)=0.41 and the #15 seed-variance lesson (NMAD CI [0.056,0.177]) apply;
+   but the REB set is definitively NOT better on the benchmark. The eval-#14/#15
+   model generation (old dataset; checkpoints retained) stays the best Euclid-arm
+   aggregate performer. Decision for Nurkyz: reported primary = old-generation
+   models (empirically best) with the rebalance reported as a NEGATIVE ablation
+   ("flat effective prior does not fix small-θ_E — realism, not prior") — my
+   recommendation — or REB-generation (methodologically cleaner prior, worse numbers).
+3. **Pretrained readout (derived columns): no decisive advantage either way.**
+   SLACS: cnv2_3 best bias/NMAD among #16 arms (+0.051/0.095) but R² 0.12; S4TM:
+   pretrained6 best RMSE/R² (0.210/+0.40) but NMAD 0.161. Architecture-null doctrine
+   holds; ConvNeXt V2 earns a seat in future ensembles, not a headline.
+4. **σ-recal transfer fails on real data even TTA-consistent** (RECAL 50/77 vs RAW
+   56/81 — the shrink hurt): the miscalibration is a DOMAIN effect. Adopt: report
+   RAW σ coverage as primary; recal factors labeled sim-domain-only; conformal on a
+   real-disjoint pool (DA pool has no GT — so conformal stays sim-fitted, disclosed).
+5. S4TM bias persists (+0.116) through every dataset generation → strengthens the
+   fresh-eyes S4TM deflector-prior-mismatch hypothesis (plan §FRESH-EYES #1).
+**Next, in order:** E3 real VIS PSF (both Euclidiser sides, one change, pilot→gate);
+S4TM deflector-prior diagnostic (analysis-only); Track N native back-port (headline,
+unaffected by this negative); L4 two-stage hybrid (arithmetic RMSE closer);
+shared-29 (email). Artifacts: preds_l16_* (34 files) in brian_run/.
+
 ## 2026-07-10 (night, cont.) — GRID DONE (16/16 clean) + ARBITRATION FROZEN (TTA-consistent): RECOMMENDED = resnet5 (sim-val MAE 0.0864, b≈0, s=0.923, cov 68/90, ρ=+0.66); small-θ_E in-dist bias HALVED (+7–8% → +4.4%) but not erased; pretrained backbones LOSE on sim-val → answered at eval #16 via derived columns; EVAL #16 PRE-REGISTERED & STAGED (⛔ awaiting Nurkyz)
 
 - Grid finals (40ep sim-val MAE): resnet 0.095–0.096, incnext 0.104–0.106,
