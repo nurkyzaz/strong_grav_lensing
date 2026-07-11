@@ -5,6 +5,35 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 (PM) — G4 GENERATION + MERGE + ALL GATES PASS at full scale (104,314 train / 6,907 val); quick-train sanity PASS (val_MAE 0.106); 17-member grid RUNNING
+
+- Generation: 88/88 shards (3 QOS-8 waves, jobs 47526/47534/47542), zero errors,
+  ~2 h. Library split by STAMP (g4_split_kine.py): 119 train / 20 val deflectors —
+  val stamps never seen in training (deflector-disjoint, the honest split).
+- Merge (job 47548 + 47549): `train_g4_100k.h5` 104,314 imgs, θ_E [0.45, 2.30]
+  med 1.251, tempered bins 0.15/0.31/0.35/0.20; `val_g4_5k.h5` 6,907 imgs (val-stamp
+  θ_E naturally tilts high, med 1.47 — the 20-stamp library's physics, disclosed).
+  Labels verified BEFORE shard deletion (zero-label assert + aux keys present).
+  Incident logged: 47548 died at the FJ-gate step writing to compute-node a2's FULL
+  /tmp (`set -e` aborted before any deletion — the ordering worked as designed);
+  part-2 job (merge_gate_g4_part2.sbatch, temp file on home) completed all gates.
+  Lesson: never use compute-node /tmp; scratch files go to home (quota-guarded).
+- Gates at 104k scale: **FJ ρ_sim(mag, θ_E) = −0.15** vs real −0.32 → PASS (sign +
+  within 0.25 — GEN4's core property holds at full scale, not just pilot);
+  sky-RMS ratio 0.956 PASS; peak/sky 919 vs real band [574, 1310] PASS; radial
+  profile overlays real; visual pre-screen of side-by-sides PASS (arcs on-scale at
+  all θ_E, native-amplitude deflectors natural). Review PNGs: g4_merge_review/ (Mac).
+- Superseded REB train/val deleted pre-generation (previous session); shards
+  deleted post-verification; quota 94.7/110 GB.
+- Quick-train sanity (job 47550): val_MAE 0.1058 < 0.25 gate → PASS (beats the
+  REB-era probe 0.120 at identical depth — first, weak, in-distribution hint that
+  GEN4 data trains at least as well). Grid: 17 members (5 resnet, 5 inceptionnext,
+  3 convnextv2, 3 resnet50, 1 logpolar) in QOS-safe waves via submit_grid_g4.sh;
+  then sim-val-only TTA arbitration freezes g4_recal.json; then ⛔ EVAL #17
+  (pre-authorized "run the full chain to eval #17"; count → 17; report immediately).
+
+---
+
 ## 2026-07-11 (AM, cont.) — ⛔-equivalent G2 PILOT v4: ALL GATES PASS (α=0.6 tempered prior) — GEN4's core property delivered: FJ channel in training data (ρ=−0.12 accepted / −0.15 manifest, sign correct) WITH a wide θ_E prior (survivors [0.47, 2.29], median 1.22, 21% above 1.7″) — G2 COMPLETE, chain proceeds to G4
 
 α-sweep table (manifest level): α=0.8 ρ−0.10 … α=0.5 ρ−0.19; chosen 0.6 (ρ−0.16,
