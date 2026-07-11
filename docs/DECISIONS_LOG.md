@@ -5,6 +5,21 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 (AM, cont.) — ⛔-equivalent G2 PILOT v4: ALL GATES PASS (α=0.6 tempered prior) — GEN4's core property delivered: FJ channel in training data (ρ=−0.12 accepted / −0.15 manifest, sign correct) WITH a wide θ_E prior (survivors [0.47, 2.29], median 1.22, 21% above 1.7″) — G2 COMPLETE, chain proceeds to G4
+
+α-sweep table (manifest level): α=0.8 ρ−0.10 … α=0.5 ρ−0.19; chosen 0.6 (ρ−0.16,
+P(θ>1.5)=0.21, P(θ<0.8)=0.26). Renders 610 tries/600 accepted, join 1:1 ✓; selection
+253/600 (42%), per-bin pass 26/37/53/64% (physics-graded as always); gates: sky-RMS
+0.938 PASS, peak/sky 995 PASS, θ_E range PASS, FJ PASS. Selected flatness: bins
+0.15/0.32/0.32/0.21 — mildly mid-peaked by design (tempering). Claude pre-screen of
+side-by-sides: real-galaxy deflector morphologies natural at native amplitude, arcs
+on-scale at all θ_E (incl. 1.81″/2.16″ rings), small-θ_E panels consistent with real.
+Images in g2_pilot_review/ (Mac) for Nurkyz's async review. Honest caveat for the
+paper: sim FJ ρ (−0.12) is DILUTED vs real (−0.32) — the tempering trade-off,
+disclosed; the conditional light↔mass structure per system is exact (physics).
+NEXT: G4 — val-split of the 139-stamp catalogue, full generation both arms from
+tempered manifests, training grid, ⛔ eval #17 (hard stop with Nurkyz).
+
 ## 2026-07-11 (AM, cont.) — G2 pilots v2/v3: FJ channel EXISTS (v2 ρ=−0.19, standard gates PASS) but exposed a REAL DESIGN TENSION → TEMPERED PRIOR adopted
 
 - v2: gates PASS incl. FJ (−0.19 vs real −0.32); but high-θ_E tail missing from
