@@ -5,6 +5,25 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 (AM, cont.) — G2 pilots v2/v3: FJ channel EXISTS (v2 ρ=−0.19, standard gates PASS) but exposed a REAL DESIGN TENSION → TEMPERED PRIOR adopted
+
+- v2: gates PASS incl. FJ (−0.19 vs real −0.32); but high-θ_E tail missing from
+  RENDERS despite a flat manifest → cause: sequential row consumption × bin-filler
+  appending hard bins last → FIX: shuffle. Manifest sampler also vectorized
+  (precomputed D_ls/D_s grid; was 1%-acceptance astropy loop, hopeless at G4 scale).
+- v3 (shuffled, truly flat consumption): **FJ gate FAIL (ρ=−0.00) — a physics
+  finding, not a bug: hard θ_E-flattening exploits the z_s lever (D_ls/D_s ~3×)
+  to fill tails, decoupling θ_E from σ_v and destroying the light–mass
+  correlation. Perfect flatness and a preserved FJ channel are INCOMPATIBLE
+  with a narrow-σ_v library.**
+- RESOLUTION (logged as a design decision): **tempered prior** — accept draws
+  with weight (1/density)^α; α-sweep at manifest build picks the FLATTEST α
+  whose manifest ρ(mag, θ_E) ≤ −0.15. Justification: eval #16 proved exact
+  flatness does not help the real benchmark; the light channel is what was
+  missing; a mildly peaked wide prior (span 0.45–2.3 maintained, tails as
+  physics allows) is not the m3 pathology (narrow+skewed). θ_E marginal and
+  per-bin occupancy reported by the generator at every build. Pilot v4 running.
+
 ## 2026-07-11 (AM, cont.) — G2 pilot v1 BUG caught by its own 1:1 assert: paltas draws params in config-dict order, so 'e1,e2' read the row BEFORE theta_E advanced it → mass shapes lagged one manifest row (mass of galaxy i−1 on light of galaxy i). FIX: order-agnostic row dispatcher (advance when any param repeats within a sample). Pilot v2 = job 47522; v1 renders deleted (self-consistency was broken in them by construction)
 
 ## 2026-07-11 (AM) — G2 BUILT & PILOT LAUNCHED (job 47521): the manifest-driven self-consistent population generator
