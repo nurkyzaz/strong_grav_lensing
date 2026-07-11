@@ -87,14 +87,52 @@ Status: SKELETON DRAFT — bullets + tables only, for Nurkyz to expand. Numbers 
 - **Figure 1**: real vs. simulated cutouts, identical asinh stretch —
   `previews_stage2/real_vs_train100k_v2.png` (or v2 equivalent once regenerated for the paper).
 
-### 2.3 What's explicitly NOT yet in the simulator (limitations to state, not hide)
+### 2.3 What was explicitly NOT in the v1–v2 simulator (motivates GEN4, §2.4)
 
-- Lens light is parametric Sérsic, not a real elliptical image (real ellipticals show disky/
+- Lens light was parametric Sérsic, not a real elliptical image (real ellipticals show disky/
   inclined morphology, dust, tidal features — e.g. real SLACS J1103+5322).
 - Only one COSMOS tile harvested for empty-cutout backdrops (1,317 unique cutouts, reused
   ~76× across 100k images) — more tiles downloading, not yet incorporated.
 - Mass model is SIE/PEMD only — no hydro-simulation (IllustrisTNG) mass structure yet
   (see §6, proposed extension).
+- **The decisive one (eval #16 → GEN4):** θ_E was drawn INDEPENDENTLY of the deflector light,
+  so the luminosity→σ_v→θ_E channel (Faber–Jackson) that a physical modeler falls back on
+  when the arc is faint was absent — provably unlearnable — in training.
+
+### 2.4 GEN4: physically self-consistent population (current training set, 2026-07-11)
+
+Design principle (shared with HOLISMOKES sims and LEMON, unlike either in realism): light
+and mass of every training deflector belong to ONE physical object.
+
+- **Deflector library:** 139 real HST/ACS early-type stamps (49 original + 90 from the
+  SLACS-lineage snapshot archives, visually pruned from 197 fetched), each with SDSS
+  spectroscopic σ_v (median ≈ 210 km/s, span ≈ 120–410) and measured light shape
+  (mag, R_e, q, PA per stamp).
+- **Per image (manifest generator):** pick a library galaxy → its stamp IS the lens light
+  at NATIVE amplitude (no magnitude draw); draw z_s → **θ_E computed** from σ_v(±σ_err
+  jitter) and (z_l, z_s) via SIS — no independent θ_E prior exists anywhere;
+  mass ellipticity = measured light shape ⊕ empirical misalignment (ΔPA ~ N(0, 10°),
+  q_mass = q_light ⊕ 0.08); mass+light rotated together (dihedral augmentation).
+- **Tempered effective prior:** draws accepted with weight (1/density)^α, α = 0.6 chosen by
+  sweep as the flattest α keeping manifest ρ(mag, θ_E) ≤ −0.15. Finding worth a paragraph:
+  perfect θ_E flatness and a preserved light–mass correlation are INCOMPATIBLE with a
+  narrow-σ_v library (flatness exploits the z_s lever and decouples θ_E from σ_v); the
+  tempered prior is the disclosed compromise. Sim FJ correlation ρ = −0.15 vs real SLACS
+  −0.32 (sign preserved, amplitude diluted — stated honestly); the per-system conditional
+  structure is exact by construction.
+- **New gate (FJ gate):** training-set ρ(deflector mag, θ_E) must match the real SLACS
+  relation in sign and within 0.25 — verified at full scale, not just pilot.
+- **Scale:** 104,314 train / 6,907 val (Euclid arm); split is **deflector-disjoint**
+  (119 train / 20 val stamps) AND PSF-kernel- and seed-disjoint. θ_E ∈ [0.45, 2.30],
+  train occupancy 0.15/0.31/0.35/0.20 in the [0.45, 0.8, 1.2, 1.7, 2.3] bins.
+- **Gates at full scale (same-estimator, sim vs real Euclidised SLACS):** sky-RMS ratio
+  0.956 (target 0.8–1.25); lens peak/sky 919 vs real 16–84% band [574, 1310]; FJ gate PASS;
+  radial profile overlays the real one. → Table 1 numbers now exist; Figure 1 candidate:
+  `real_vs_train_G4.png`.
+- Remaining limitations to state: Euclid arm still uses the Gaussian VIS PSF approximation
+  (real VIS PSF = plan G3, pending); σ_v library thin above ≈ 300 km/s (high-θ_E tail
+  leans on importance weights); tempered FJ amplitude diluted vs real (above); native-HST
+  arm re-renderable from the SAME retained population manifests (Track N).
 
 ---
 

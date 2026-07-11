@@ -148,10 +148,10 @@ arch. Nobody in this literature uses log-polar for θ_E regression.
 | Stage | Work | Est |
 |---|---|---|
 | G0 | ✅ DONE (above) | — |
-| G1 | Library expansion fetch + per-stamp light-shape/photometry measurement (q, PA, Re, mag) | 2–4 d |
-| G2 | ◐ BUILT & PILOTING (2026-07-11): manifest generator + manifest config + combine manifest-mode + FJ gate + join. Pilot v1 caught draw-order desync (fixed: dispatcher); v2 gates PASS w/ FJ −0.19 but tail-ordering bug (fixed: shuffle + vectorized sampler); v3 revealed flatness↔FJ incompatibility → TEMPERED prior (α-sweep, ρ ≤ −0.15 required); v4 in flight | 2–3 d |
-| G3 (∥) | Euclid-native ingredients: Q1 empty-sky harvest + VIS PSF (or HST2EUCLID) | 2–4 d |
-| G4 | Full generation ×2 arms; training grid (custom nets + GEN4-NET + ConvNeXt V2 seat); sim-val arbitration; ⛔ eval #17 (Euclid) + ⛔ native eval | 3–5 d |
+| G1 | ✅ DONE (2026-07-11): 139 σ_v-clean stamps (90 new after visual prune + 49 old), all measured (q, PA, Re, mag + σ_v/z) | — |
+| G2 | ✅ DONE (2026-07-11): manifest generator + FJ gate; pilots v1–v4 (draw-order dispatcher fix; shuffle + vectorized sampler; flatness↔FJ incompatibility → TEMPERED prior α=0.6, ρ ≤ −0.15). v4 ALL GATES PASS | — |
+| G3 (∥) | ◻ OUTSTANDING — Euclid-native ingredients: Q1 empty-sky harvest + VIS PSF (or HST2EUCLID). G4 ran with the Gaussian-VIS approximation; G3 remains the E3 suspect fix from eval #16 | 2–4 d |
+| G4 | ◐ IN PROGRESS (2026-07-11 PM): Euclid-arm generation ✅ (88/88 shards, 104,314 train / 6,907 val, deflector-disjoint split, all gates PASS at scale incl. FJ −0.15); quick-train sanity ✅ (0.106); 17-member grid RUNNING → arbitration → ⛔ eval #17 (pre-authorized). NOTE: native arm NOT rendered (intermediates deleted for quota) but all 88 manifests+assigns RETAINED → native arm re-renderable from the SAME population draws (Track N hop, ~2 h generation + quota check) | — |
 | G5 | Roman InstrumentConfig rendering (paper-2 seed; professor-endorsed) | after |
 
 Risks, stated: library size is bounded by HST∩SDSS-spectroscopy overlap (mitigation:
