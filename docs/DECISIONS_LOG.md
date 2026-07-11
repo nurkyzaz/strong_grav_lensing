@@ -5,6 +5,41 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 (night) — ⛔ EVAL #17 (pre-authorized; count → 17): GEN4 SELF-CONSISTENCY DELIVERS — SLACS R² +0.67, NMAD 0.047, fail 11% (from 31%); the small-θ_E PULL COLLAPSES (+28.7% → +9.6%); pre-registered cnv2_3 ensemble beats the LEMON reference on NMAD/R²/bias and matches the Cao bar
+
+Primary (pre-registered cnv2_3, frozen recal b=−0.0015/s=0.962) **SLACS N=62**:
+bias −0.005, RMSE 0.145, NMAD 0.047, R² +0.67, fail 11%, med frac −1.2%,
+conf-half fail 3%. Bootstrap: P(|bias|<.03)=0.89, P(RMSE<.14)=0.49,
+P(NMAD<.11)=0.99, P(R²>.53)=0.81. LEMON ref: −0.03/0.14/0.11/0.53.
+**S4TM N=40**: bias +0.050 (from +0.116 — the S4TM deflector-prior mismatch
+diagnosis CONFIRMED by its removal), RMSE 0.163, NMAD 0.081, R² +0.64, fail 30%.
+
+**Findings:**
+1. **The eval-#16 "information limit" interpretation is PARTIALLY RETRACTED:** the
+   small-θ_E failure was not purely an information limit — with the FJ channel in
+   training, the small-θ_E PULL collapses (SLACS <0.9″: 62%/+28.7% → 50%/+9.6%,
+   N=8; S4TM <0.9″: 40%/+4.9%, N=15). Residual small-θ failures are now
+   scatter-type, not bias-type. Remaining lever: G3 real VIS PSF (E3 suspect).
+2. **Dataset moved everything; the causal chain is complete:** flat prior alone
+   (#16) did nothing; self-consistency (#17) halved RMSE and tripled R² with the
+   SAME architectures, same benchmark, same protocol. Data > architecture, again.
+3. **Pretrained backbones now lead on real data too** (sim-val order preserved):
+   cnv2_3 best SLACS; r50_3 best S4TM (R² +0.77, RMSE 0.132, fail 22%) — first
+   generation where ImageNet features win; GEN4 images are realistic enough to
+   reward them. Custom10 still respectable (SLACS R² +0.51). Logpolar v1: null
+   again on real (R² 0.00) — seat retired unless v2 redesign.
+4. **Stage-4 success criteria vs Cao: MET on SLACS** (med |frac| −1.2% within ±5%;
+   R² 0.67 > 0.5; fail 11% ≈ ~10% bar). First eval to clear the paper's headline
+   bar. S4TM fail 30% still above it (small-θ-heavy sample, N=15 below 0.9″).
+5. σ coverage still under (RAW 53/89 SLACS, 48/72 S4TM) — domain miscalibration
+   persists as known; conformal-on-real remains the disclosed gap.
+Artifacts: 36 per-lens CSVs in results/ (repo); tables in slurm_l17_eval_47574.out.
+NEXT: Nurkyz decisions — (a) native-arm Track N (scripts staged, quota-gated),
+(b) G3 real VIS PSF for the residual small-θ scatter, (c) paper §4 rewrite around
+eval #17 as the headline, (d) L4 closers / shared-29 exchange with LEMON authors.
+
+---
+
 ## 2026-07-11 (PM) — G4 GENERATION + MERGE + ALL GATES PASS at full scale (104,314 train / 6,907 val); quick-train sanity PASS (val_MAE 0.106); 17-member grid RUNNING
 
 - Generation: 88/88 shards (3 QOS-8 waves, jobs 47526/47534/47542), zero errors,
