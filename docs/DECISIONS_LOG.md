@@ -5,6 +5,45 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-11 (late night) — G3 LAUNCHED (Nurkyz: "continue with b, then a if needed"): REAL VIS PSF OBTAINED from the official Euclid Q1 GRID-PSF product — measured FWHM ≈ 0.20″ (NOT the assumed 0.16″) with heavy non-Gaussian wings; matching kernel built to 0.1% accuracy; euclidise patched; benchmark re-derived; pilot A in flight
+
+- **Access route:** Euclid Q1 is public at IRSA. SIA2 finds per-tile MER products
+  incl. `EUC_MER_GRID-PSF-VIS` (the OFFICIAL per-tile PSF model — 25,590 stamps
+  on a sparse canvas) and `EUC_MER_BGSUB-MOSAIC-VIS` (0.1″/px science mosaic,
+  MAGZERO 24.6, server-side cutouts work → no tile downloads for sky harvest).
+  TAP table `euclid_q1_mer_catalogue` (477 cols incl. flux_detection_total,
+  point_like_prob) used for emptiness screening.
+- **The PSF measurement (paper-worthy):** mean of 4,000 official PSF stamps
+  (EDF-F tile 102044185): FWHM ≈ 0.195–0.20″ (official per-stamp FWHM column
+  median 0.202), ellipticity 0.03, and wings FAR above Gaussian (r=0.2″: 6.6×;
+  r=0.3″: ~500×). The 0.16″ Gaussian used since R1.2 was simultaneously too
+  narrow in core and hugely too weak in wings — exactly the small-θ_E-relevant
+  error suspected as E3 since eval #16. (0.16″ is the instrument PSF; the MER
+  mosaic PSF includes resampling/coaddition broadening.)
+- **Matching kernel:** photutils create_matching_kernel (the actual HST2EUCLID
+  method), source = mean of the 80 train-shard ACS ePSFs (single-kernel approx,
+  disclosed — their TinyTim equivalent), target = Q1 mean PSF ×2-upsampled;
+  window sweep → **Tukey(0.3): core residual 0.07%, wing 0.25%** (Gaussian-window
+  alternatives 10–90×). Kernel sum 1.000000; smoke: flux conserved (1.0000),
+  real path lower-peaked+wingier as physics demands. Artifacts:
+  vis_psf_q1.npy, acs2vis_matching_kernel.npy + provenance JSONs (repo tables/).
+- **euclidise.py patched** (patch_euclidise_realpsf.py, .bak_g3): real kernel is
+  the DEFAULT; legacy Gaussian kept behind LF_EUCLIDISE_PSF=gaussian for the
+  ablation; missing kernel file = hard error (no silent fallback). Benchmark
+  RE-DERIVED with the new operator to euclid_slacs_images_g3.h5 (seed 7) /
+  euclid_s4tm_images_g3.h5 (seed 8) — eval-#17-era euclid_* files retained for
+  comparability; frozen native real_*.h5 untouched.
+- **Pilot A (job 47606, one change only):** G4 recipe + real-PSF euclidise,
+  gates vs the re-derived benchmark (same operator both sides) + FJ + flatness
+  + side-by-sides.
+- **Sky harvest (G3-3, parallel):** g3_harvest_sky.py streaming server-side
+  cutouts with catalogue+pixel emptiness screens; note Q1 EDF sky is DEEPER
+  than EWS (σ≈0.0018 vs model 0.0048 e-/s at ZP 23.9) → backdrops will take a
+  noise top-up to EWS depth (the existing hybrid pattern), disclosed.
+- Track-N (a) remains staged; decision after G3's eval per Nurkyz's ruling.
+
+---
+
 ## 2026-07-11 (night) — ⛔ EVAL #17 (pre-authorized; count → 17): GEN4 SELF-CONSISTENCY DELIVERS — SLACS R² +0.67, NMAD 0.047, fail 11% (from 31%); the small-θ_E PULL COLLAPSES (+28.7% → +9.6%); pre-registered cnv2_3 ensemble beats the LEMON reference on NMAD/R²/bias and matches the Cao bar
 
 Primary (pre-registered cnv2_3, frozen recal b=−0.0015/s=0.962) **SLACS N=62**:

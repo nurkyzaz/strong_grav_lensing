@@ -19,9 +19,11 @@ Output images are bilinearly upsampled back to 128 px so the existing CNN
 architecture and normalization apply unchanged (information content is Euclid).
 """
 import argparse
+import os
 import numpy as np
 import h5py
 from scipy.ndimage import gaussian_filter, zoom
+from scipy.signal import fftconvolve
 
 ZP_HST = 25.94
 ZP_EUC = 23.9
@@ -42,10 +44,28 @@ def euclid_sky_variance_per_px():
     return max((total_var - counts) / n_pix, 1.0)
 
 
+MATCH_KERNEL_FILE = os.path.expanduser(
+    "~/cosmos_acs/tiles/acs2vis_matching_kernel.npy")
+_MATCH_KERNEL = None
+
+
+def _match_kernel():
+    """G3: real ACS->VIS matching kernel (Q1 GRID-PSF-VIS target, photutils
+    Tukey(0.3); see acs2vis_kernel_provenance.json). Missing file = hard
+    error - never silently fall back to the Gaussian."""
+    global _MATCH_KERNEL
+    if _MATCH_KERNEL is None:
+        _MATCH_KERNEL = np.load(MATCH_KERNEL_FILE)
+    return _MATCH_KERNEL
+
+
 def euclidise(img, rng, add_noise=True):
     f = img * 10.0 ** (0.4 * (ZP_EUC - ZP_HST))          # e-/s at Euclid ZP
-    sig_match = np.sqrt(FWHM_EUC ** 2 - FWHM_HST ** 2) / 2.355 / PIX_HST
-    f = gaussian_filter(f, sig_match)                     # PSF match
+    if os.environ.get("LF_EUCLIDISE_PSF", "real") == "gaussian":  # ablation
+        sig_match = np.sqrt(FWHM_EUC ** 2 - FWHM_HST ** 2) / 2.355 / PIX_HST
+        f = gaussian_filter(f, sig_match)                 # PSF match (legacy)
+    else:
+        f = fftconvolve(f, _match_kernel(), mode="same")  # PSF match (real)
     n2 = f.shape[0] // 2
     f = f.reshape(n2, 2, n2, 2).sum(axis=(1, 3))          # 2x2 sum -> 100 mas
     if add_noise:
