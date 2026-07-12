@@ -5,6 +5,36 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-12 — G3 PILOT + FULL REGENERATION + MERGE: ALL GATES PASS; DRAW-IDENTICAL A/B vs G4 confirmed (88/88 shards, zero assign diffs); autonomous chain driver running grid → arbitration → eval #18
+
+- Pilot A (47606) ALL GATES PASS (sky-RMS 0.906, peak/sky 691 in band, FJ −0.11,
+  θ_E PASS); visuals pre-screened (small radial-profile elevation ~+5% inside
+  2.5″ noted, within acceptance). Q1 sky harvest complete: 600/1615 accepted
+  (euclid_sky_edff_1.h5, pre-screened clean) — banked for change-2 if needed.
+- Full regen (47608/47616/47624, ~80 min): 88/88 shards from the RETAINED G4
+  manifests, same seeds — **cmp says assign files identical on all 88 shards →
+  the G3 training set is the SAME population as G4 with ONLY the PSF operator
+  changed** (the clean causal A/B for the paper). Merge (47631):
+  train_g3_100k.h5 = 104,478 / val_g3_5k.h5 = 6,894 (vs G4 104,314/6,907 —
+  selection moved 0.2% under the new PSF), labels verified, FJ −0.15 PASS
+  (identical to G4, as it must be for the same population), sky-RMS 0.903 PASS,
+  peak/sky 712 PASS, side-by-side pre-screened PASS.
+- Incidents, both handled: (1) merge script's gate_stage0 --meta pointed at a
+  placeholder path → realism gate crashed unprinted; the chain driver's
+  ≥3-PASS-marks check ABORTED as designed (safety validated); gate re-run with
+  the retained manifest_00.csv, appended to the merge log, driver relaunched.
+  (2) Superseded train_g4/val_g4 DELETED pre-merge for quota (reproducible:
+  retained manifests + deterministic seeds, now proven by the 88/88 cmp;
+  eval-#17 checkpoints kept).
+- Autonomous driver (run_g3_chain.sh, explicit sbatch --wait pattern per the
+  monitors-report rule): quick-train PASS (0.1289 < 0.25; slightly above G4's
+  0.1058 — the broader real PSF makes in-distribution slightly harder, as
+  expected) → 16-member grid (logpolar seat RETIRED after 2nd null) →
+  arbitration freezes g3_recal.json → EVAL #18 on the _g3 re-derived benchmark
+  (authorized by the "continue with b" ruling; count → 18; report immediately).
+
+---
+
 ## 2026-07-11 (late night) — G3 LAUNCHED (Nurkyz: "continue with b, then a if needed"): REAL VIS PSF OBTAINED from the official Euclid Q1 GRID-PSF product — measured FWHM ≈ 0.20″ (NOT the assumed 0.16″) with heavy non-Gaussian wings; matching kernel built to 0.1% accuracy; euclidise patched; benchmark re-derived; pilot A in flight
 
 - **Access route:** Euclid Q1 is public at IRSA. SIA2 finds per-tile MER products
