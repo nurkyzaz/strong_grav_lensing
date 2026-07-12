@@ -5,6 +5,33 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-12 (PM, cont.) — ⛔ EVAL #19 (authorized "do 1 then 2"; count → 19): the 2×2 operator cross-diagnostic RESOLVES eval #18 — the SLACS regression is TRAINING-SIDE (marginal-arc contamination), NOT benchmark difficulty; **G4-trained cnv2_3 on the REAL-op benchmark = best SLACS yet (RMSE 0.137, R² +0.71, fail 15%)**; step-2 fix identified (SNR>0.8); g3b + native chains LAUNCHED under one master driver
+
+2×2 (SLACS): G4-train/real-bench **0.137/+0.71/15%** (better than #17's own-bench
+0.145 — the faithful benchmark was never the problem); G3-train/gauss-bench
+0.243/+0.08/24% (G3 models bad everywhere). Arch-controlled addendum (G4 r50_3
+on real bench 0.176/+0.52/23% vs G3 r50_3 0.201/+0.37/23%): within-arch the
+G3-training penalty is real (+0.025 RMSE; high-θ fail 22%→44%) and separate
+from the cnv2-vs-r50 pick (0.039). S4TM stays G3-favoured within-arch
+(0.117 vs 0.163) — real-PSF training helps faint arcs, hurts extended ones.
+**Mechanism:** at fixed selection thresholds the wingier PSF admits MORE
+marginal arcs (45% vs 42%) and dims extended-arc surface brightness → high-θ
+compression. **Interim headline: G4-trained cnv2_3 evaluated on the real-op
+benchmark is the current best Euclid-domain result (0.137/+0.71/15%).**
+- Step-2 sweep (retained pilot arcs): **SNR>0.8, extent≥150** restores the
+  G4-era selection profile (41%; bins 25/40/47/64 vs target 26/37/53/64).
+- LAUNCHED under master driver run_ab_chain.sh (explicit sbatch --wait
+  pattern): native waves (running) → native merge → g3b regen (SNR 0.8, same
+  manifests) → g3b merge → g3b grid → native grid → ⛔ EVAL #20 (g3b, real-op
+  Euclid bench) → ⛔ EVAL #21 (NATIVE bench, first native GEN4 eval); each hop
+  gate-checked, aborts on failure. Quota plan: native merge deletes superseded
+  lensed_train_m2/m3 + orphan g4_merged_small_theta (flagged); g3b merge
+  deletes train_g3/val_g3 (superseded-on-PASS, reproducible).
+- Adaptation-script pattern asserts caught 2 stale patterns before any
+  wrong script ran (the discipline pays).
+
+---
+
 ## 2026-07-12 (PM) — ⛔ EVAL #18 (authorized; count → 18): SPLIT RESULT under the faithful real-PSF operator — S4TM best-ever (RMSE 0.117, R² +0.81, fail 22%); SLACS regresses vs #17 (RMSE 0.201, R² +0.37, fail 23%) driven by a NEW high-θ_E failure mode; small-θ_E PULL now fully gone on SLACS (−3.1%) but scatter unchanged (62% fail, N=8)
 
 Primary (pre-registered r50_3, frozen b=+0.0006/s=1.060) — note the #17↔#18
