@@ -158,6 +158,39 @@ Risks, stated: library size is bounded by HST∩SDSS-spectroscopy overlap (mitig
 FP-σ_v tier); importance-sampling design needs care (G0 note before any generation);
 Q1 backdrop harvest is new tooling. Kill-criteria per stage: gates + visuals as always.
 
+## AR — ARC REALISM STAGE (added 2026-07-12, Nurkyz directive: "evaluate and
+## research arc realism; update the plan")
+
+Motivation: after GEN4 (light↔mass) and G3 (real PSF), the remaining small-θ_E
+failure is SCATTER, not pull (eval #18/#19) — the network mis-reads faint arcs
+rather than ignoring them. The arc itself is now the least-realistic ingredient:
+a smooth COSMOS galaxy lensed by a PERFECT ellipsoid + independent mild shear.
+Real arcs are lensed by lumpy, boxy/disky, environment-embedded galaxies and are
+themselves knotty. Items ranked by (expected impact on the benchmark) / cost:
+
+| # | Item | Physics | Implementation | Impact | Cost | Risk |
+|---|---|---|---|---|---|---|
+| AR0 | **Arc-realism gate first** | measure before fixing (project law) | azimuthal surface-brightness contrast + arc-annulus asymmetry stats, sim vs the ~29 obvious-arc SLACS (same estimator both sides); curated arc-panel side-by-side | — (diagnostic) | low | none |
+| AR1 | **Arc shot noise, native arm** (Nurkyz c) | bright arc pixels are Poisson-noisier; Euclid arm already has Poisson(signal+sky) — the NATIVE arm composites a noiseless render | Poisson-sample the render at the calibrated 675 s before compositing | small (SLACS arcs are sky-dominated) but a correctness fix; zero downside | trivial | none |
+| AR2 | **ΔPA ↔ γ_ext coupling** (Nurkyz b; anchored at G0, never implemented — verified: γ1,γ2 ~ N(0,0.04) independent) | big light–mass misalignment is environmental → comes WITH big external shear | manifest-level: draw ΔPA ~ N(0,10°), then γ_ext = γ0 + k·|ΔPA| ⊕ scatter (calibrate k to Shajib+21/Etherington+22); shear PA random | medium-low on arcs (curvature/length tails), medium on honesty of the misalignment tail | low | low |
+| AR3 | **Mass multipoles m=3, m=4 anchored to MEASURED isophotes** (Nurkyz a) | real ellipticals are boxy/disky (a4/a ~ ±1–2%) + lopsided (m=3 ~0.5%); multipoles at observed amplitudes measurably change arc morphology (Van de Vyvere+22) and mimic substructure (O'Riordan & Vegetti) | lenstronomy MULTIPOLE profiles exist; GEN4 twist: FIT each stamp's own isophotes (photutils.isophote a4/b4) → mass multipole = light multipole ⊕ scatter, PA anchored to light. **Nobody in this literature does per-observed-galaxy multipole priors — a genuine novelty in the GEN4 spirit** | medium at small θ_E (arc-shape realism is the prime suspect post-PSF) | medium-low (isophote fits at G1-measure time + 2 profile terms) | low |
+| AR4 | **Source micro-structure (knots)** | real z~1–2 sources are clumpy star-formers; arcs show beaded knots that drive detectability and centroiding at small θ_E | tier 1: parametric knots (2–5 point-ish clumps ⊕ Sérsic host); tier 2: HUDF deep morphology library (plan P4 ablation) | medium at small θ_E | medium | low (knot statistics need a source: HUDF/CANDELS clumpiness papers) |
+| AR5 | **Companion MASS** | injected companions currently have LIGHT ONLY; real satellites perturb arcs (cf. SLACS J0946+1006) | give bright companions FJ-scaled SIS (σ_v from flux — the same channel we restored for the main deflector) | low-medium (affects the ~10–20% of systems with close bright satellites) | medium (per-companion profiles slow renders) | low |
+| AR6 | **Slope–σ_v coupling** | γ' correlates with Σ_e (denser → steeper); currently γ ~ N(2.0,0.15) independent | manifest-level conditional γ(σ_v, Re) ⊕ scatter | low for θ_E (robust to slope), cheap honesty | low | low |
+| AR7 | **LOS structure (κ_ext, LOS shear/halos)** | real beams carry κ_ext ~ ±2% | paltas has LOS classes | CAUTION: κ_ext changes the meaning of the θ_E label (SIE-fit vs true); benchmark GT is b_SIE which absorbs environment — adding LOS without redefining labels injects ~1–2% label noise | medium | **defer**: needs a label-convention decision first |
+| AR8 | **IllustrisTNG convergence maps** (professor's §6.1) | the maximal version: real simulated galaxies' full complexity (answer to "is multipoles what TNG does?" — NO: multipoles are the cheap PARAMETRIC approximation of one part of what TNG maps contain; TNG = everything at once — twists, multipoles, substructure — but with resolution limits and no correspondence to OUR observed stamps) | ray-trace TNG maps inside paltas | high generality, but breaks the per-observed-galaxy self-consistency that GEN4 just won with | high | paper-2 / ablation |
+
+**Sequencing (iteration law applies — one change, pilot, gates each):**
+AR0 gate (build the metric while chains run) → AR1 + AR2 (cheap pair, separate
+pilots) → AR3 (the substantive one; isophote fits added to the G1b measurement
+pass so the expanded library lands multipole-ready) → ⛔ eval → AR4/AR5 only if
+the arc gate still shows a sim/real arc-morphology gap. AR7 deferred pending a
+label ruling; AR8 stays paper-2.
+
+**Synergy with G1b:** the isophote fitting (AR3) should be added to the G1b
+stamp-measurement pass so the 1,982-candidate expansion is measured ONCE with
+everything we need (mag, Re, q, PA, a3/a4).
+
 ## 3. What this supersedes / keeps
 
 - Supersedes: further tuning of the REB flat-θ_E arm (its negative result is banked

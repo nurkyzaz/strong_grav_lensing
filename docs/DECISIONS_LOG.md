@@ -5,6 +5,32 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-12 (evening, cont.) — ARC-REALISM STAGE ADDED TO THE PLAN (Nurkyz directive): 8 items evaluated and ranked; sequencing AR0 gate → AR1 shot noise → AR2 ΔPA–γ_ext coupling → AR3 isophote-anchored multipoles → eval; TNG question answered
+
+Full table in DATA_OVERHAUL_GEN4_PLAN.md §AR. Key evaluations:
+- VERIFIED: the G0-anchored ΔPA↔γ_ext coupling was never implemented (γ1,γ2 ~
+  N(0,0.04) independent in config_lensfusion_acs_g2.py) — Nurkyz's suggestion
+  (b) completes it; her implementation sketch adopted (conditional γ_ext|ΔPA).
+- Nurkyz (a) multipoles vs TNG: multipoles are the cheap PARAMETRIC
+  approximation of part of what TNG convergence maps contain; TNG (professor's
+  §6.1) is the maximal, resolution-limited, non-self-consistent version —
+  paper-2/ablation. Adopted GEN4-consistent multipole design: fit each stamp's
+  OWN isophotes (a3/a4) → mass multipole = light multipole ⊕ scatter (novel
+  in this literature).
+- Nurkyz (c) arc shot noise: correct — the NATIVE arm composites a noiseless
+  render (Euclid arm already Poisson); trivial fix, queued as AR1.
+- Added by Claude: AR0 quantitative arc-realism GATE before any fix (project
+  law); AR4 source knots/HUDF; AR5 companion MASS (FJ-scaled SIS — companions
+  are currently light-only); AR6 slope–σ_v coupling; AR7 LOS deferred pending
+  a θ_E-label-convention ruling (κ_ext changes the label's meaning).
+- Synergy: AR3 isophote fits added to the G1b measurement pass (measure the
+  1,982-candidate expansion once, multipole-ready).
+- Also ruled (Nurkyz): old-training-set deletion WAITS for the quota-increase
+  answer (deletion would be safe concurrently with the running chain — nothing
+  running reads those files — but no urgency).
+
+---
+
 ## 2026-07-12 (evening) — G1b TARGET LIST BUILT (Nurkyz: "increase library size"): FOOTPRINT crossmatch unlocks 1,982 new sigma_v-clean candidates (14× the G1a list; 526 at σ_v≥250, 181 at ≥300 — the thin high-θ_E tail becomes deep)
 
 - Method change, not more-of-the-same: G1a matched SDSS galaxies to pointing
