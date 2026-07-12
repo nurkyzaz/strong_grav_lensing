@@ -5,6 +5,43 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-12 (PM) — ⛔ EVAL #18 (authorized; count → 18): SPLIT RESULT under the faithful real-PSF operator — S4TM best-ever (RMSE 0.117, R² +0.81, fail 22%); SLACS regresses vs #17 (RMSE 0.201, R² +0.37, fail 23%) driven by a NEW high-θ_E failure mode; small-θ_E PULL now fully gone on SLACS (−3.1%) but scatter unchanged (62% fail, N=8)
+
+Primary (pre-registered r50_3, frozen b=+0.0006/s=1.060) — note the #17↔#18
+comparison changes BOTH training operator AND benchmark operator (each eval is
+internally symmetric; #18's benchmark is HARDER because the real PSF is broader):
+- **SLACS N=62:** bias −0.059, RMSE 0.201, NMAD 0.083, R² +0.37, fail 23%.
+  Bins: <0.9″ 62%/−3.1% (pull GONE, scatter remains); 0.9–1.2 9%; 1.2–1.5 14%;
+  **1.5–3.0: 44% fail at −10.7% — NEW: high-θ_E under-prediction** (r50 preds
+  compress above ~1.6″; the wingier PSF dims extended arcs → tail visibility
+  drops). Derived: all16 0.166/R²0.57/19% beats the frozen pick (reported as
+  derived only, protocol respected).
+- **S4TM N=40: BEST EVER** — bias +0.027, RMSE 0.117, NMAD 0.082, R² +0.81,
+  fail 22%; P(RMSE<.14)=0.97, P(R²>.53)=1.00. The lower-mass small-θ-heavy
+  sample IMPROVED although its benchmark got harder — the realism gain is real
+  where images are arc-signal-limited.
+- **Incident:** g3_cnv2_s3 DIVERGED in training (sim-val small-θ fail 100%);
+  arbitration correctly dropped cnv2_3 and froze r50_3 (the safeguard worked);
+  the diverged member pollutes only the cnv2_3 derived column.
+**Reading:** the real-PSF operator is more faithful by construction (official
+Q1 PSF product); #17's SLACS numbers were partly flattered by a too-sharp
+Gaussian benchmark. G3 delivers where the physics said it should (faint/small
+arcs, S4TM) and exposes a high-θ_E visibility/selection weakness as the new
+dominant SLACS failure mode. NOT logged as "G3 failed" — logged as the operator
+correction relocating the frontier.
+**Options for Nurkyz (chain paused at the a-vs-next decision):**
+(1) CROSS-EVAL diagnostic (would be eval #19): G4-generation checkpoints on the
+    _g3 benchmark (and vice versa) to split operator-of-training vs
+    operator-of-benchmark in the SLACS regression — cheap, decisive;
+(2) attack the high-θ tail: selection thresholds re-tuned under the real PSF
+    (extent/SNR were tuned in the Gaussian domain) + re-select/retrain;
+(3) proceed to (a) native arm (its rationale is untouched by this result);
+(4) change-2 real Q1 sky backdrops (pool banked, 600 cutouts).
+My recommendation: (1) then (2); (3) in parallel if compute is idle.
+34 per-lens CSVs in results/ (repo). Artifacts: slurm_l18_eval_47651.out.
+
+---
+
 ## 2026-07-12 — G3 PILOT + FULL REGENERATION + MERGE: ALL GATES PASS; DRAW-IDENTICAL A/B vs G4 confirmed (88/88 shards, zero assign diffs); autonomous chain driver running grid → arbitration → eval #18
 
 - Pilot A (47606) ALL GATES PASS (sky-RMS 0.906, peak/sky 691 in band, FJ −0.11,
