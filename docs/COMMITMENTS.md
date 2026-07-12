@@ -12,15 +12,15 @@ Status: OPEN / IN-PROGRESS / DONE / RETIRED (reason).
 
 | id | commitment | origin | status | enforced/verified where |
 |---|---|---|---|---|
-| C1 | ΔPA ↔ γ_ext coupling in the generator | G0 2026-07-11 | OPEN → AR2 | manifest spec block (C10) |
+| C1 | ΔPA ↔ γ_ext coupling in the generator | G0 2026-07-11 | IN-PROGRESS (patched 07-12, AR2 pilot overnight) | manifest spec block (C10) |
 | C2 | q_mass–q_light exact relation fitted from Shajib+2021 / Etherington+2022 tables (currently ad-hoc q ⊕ 0.08) | GEN4 plan P1.3 "at G2 — flagged for verification" | OPEN | fit script + manifest spec block |
 | C3 | WFC3/UVIS 0.04″→0.05″ resample step in the stamp builder | G1b 2026-07-12 | OPEN (blocks 541 of 1,982 G1b targets) | g1b fetch/builder |
-| C4 | Known-lens catalog crossmatch (BELLS/SL2S/…) added to G1b exclusions before fetch | G1b 2026-07-12 | OPEN | g1b fetch precondition |
+| C4 | Known-lens catalog crossmatch (BELLS/SL2S/…) added to G1b exclusions before fetch | G1b 2026-07-12 | DONE (g1b_fetch_precheck.py, VizieR w/ fallback) | g1b fetch precondition |
 | C5 | AR3 isophote (a3/a4) fits added to the G1b measurement pass | AR plan 2026-07-12 | OPEN | g1b builder |
 | C6 | AR7 LOS structure needs a θ_E-label-convention ruling BEFORE implementation | AR plan 2026-07-12 | OPEN (ruling needed, then implement or retire) | this ledger |
 | C7 | HUDF deeper source-morphology tier as ablation | GEN4 plan P4 | OPEN (→ AR4 tier 2) | AR4 |
 | C8 | Emails: Busillo (shared-29), Bergamini (HST2EUCLID), TinyLensGPU authors, Brian — drafts ready, sending is Nurkyz's | 2026-07-10 | OPEN (Nurkyz action) | EMAIL_DRAFTS_20260710.md |
-| C9 | Old-generation training-set deletion (~25 GB) awaiting quota-increase answer | 2026-07-12 Nurkyz ruling | OPEN (blocked on quota answer) | quota check before G1b fetch |
+| C9 | Old-generation training-set deletion (~25 GB) | 2026-07-12 Nurkyz ruling | DONE (approved + executed by night driver) | quota check before G1b fetch |
 | C10 | Generator prints a PHYSICS SPEC block (FJ ✓/✗, misalignment ✓/✗, γ-coupling ✓/✗, multipoles ✓/✗, arc-Poisson ✓/✗ …) so pilots surface unimplemented physics mechanically | AR0/AR1 session 2026-07-12 | OPEN (implement with AR2) | pilot gate output |
 | C11 | Conformal σ on a real-disjoint pool (σ coverage still under: RAW 53/89 at #17, 50/74 at #18) | eval #16 finding 4 | OPEN (needs real-GT-disjoint pool design) | eval protocol |
 | C12 | g3_cnv2_s3 diverged member: retrain or exclude from any reused G3 ensemble | eval #18 incident | OPEN (moot if g3b supersedes G3) | arbitration MEMBERS list |

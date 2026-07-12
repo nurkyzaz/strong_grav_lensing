@@ -5,6 +5,37 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-12 (late night) — OVERNIGHT AUTONOMOUS PROGRAM LAUNCHED (Nurkyz ruling: cleanup approved; AR1/AR2 + G1b fetch start automatically after the AB chain; "when next time I check, it should be done"; she is offline ~12 h)
+
+Everything cluster-resident (Mac offline kills session monitors — by design
+nothing depends on them). run_night_chain.sh (nohup, login node) waits for
+AB_CHAIN_ALL_DONE + empty queue (aborts touching NOTHING on AB_CHAIN_ABORT):
+1. BANK: copies eval #20/#21 outputs, recals, arbitration+merge logs to
+   ~/night_bank/ before anything else.
+2. CLEANUP (approved): train_euclid_sel_100k, train_euclid_100k_v3,
+   train_hybrid_100k_v3, train_hybrid_100k_pathb_v2 (~25 GB) + pilot render
+   dirs. Explicit never-touch list: real_*, euclid_*, train_g3b*/g4native*,
+   checkpoints, retained manifests/assigns, Q1 sky pool.
+3. G1b PHASE-1 FETCH (parallel, login node): precheck (C4 known-lens VizieR
+   crossmatch w/ graceful fallback; ACS-only, C3 UVIS deferred) → 800 targets,
+   chunks of 20, cache purged per chunk, quota guard 100 GB.
+4. AR1 PILOT (one change: --arc_poisson) → gates; AR2 PILOT (one change:
+   --couple_shear manifests; patch applied + smoke-verified: median |γ| 0.043
+   ≈ legacy marginal, coupling present 0.055 vs 0.040) → gates. Either FAIL →
+   chain stops (no regen).
+5. Both PASS → g4ar COMBINED regeneration (fresh coupled manifests, seeds
+   9700+S — new population version, draw-identity intentionally broken,
+   FJ/flatness re-gated; arc_poisson in combine; thresh 0.8 selection) →
+   merge+gates (NO deletions — g3b kept for comparison) → 16-member grid →
+   arbitration → ⛔ EVAL #22 (authorized by this ruling; count → 22; results
+   in slurm_l22_eval_*.out for immediate report on reconnect).
+Physics-spec block (C10) now prints in every manifest build. Ledger updated:
+C1 in-progress (AR2), C4 implemented in precheck, C9 executed, C13 pilot
+scheduled. Expected morning state: evals #20/#21/#22 done, ~25 GB freed,
+800 G1b stamps fetched + auto-screened, all gates logged.
+
+---
+
 ## 2026-07-12 (night) — AR0 BASELINE + AR1 PATCH + COMMITMENTS LEDGER (process fix for the "anchored but never implemented" failure mode)
 
 - **COMMITMENTS.md adopted** (+ CLAUDE.md rule): every deferring decision gets
