@@ -134,6 +134,11 @@ asked, and don't push mid-experiment noise. Data/binaries never enter git
 - **Log like a scientist**: dated entries in `DECISIONS_LOG.md` for every decision,
   fix, retraction, and benchmark evaluation. RETRACTED, not silently edited, when a
   hypothesis is disproven.
+- **Commitments ledger (`COMMITMENTS.md`)**: any decision that defers work ("later",
+  "at stage X", "flagged for verification") gets a ledger row AT DECISION TIME.
+  Before any full generation and at every ⛔: reconcile every OPEN row — implement,
+  re-defer with a reason, or retire with a reason. (Adopted 2026-07-12 after the
+  G0-anchored ΔPA↔γ_ext coupling was found unimplemented at eval #19.)
 - Evolve `config_lensfusion_acs.py` with backups (the `.bak`/`.bak2` pattern already
   in use), don't rewrite it from scratch. Don't touch anything under `~/einstein_cnn/`
   starting with `real_`.

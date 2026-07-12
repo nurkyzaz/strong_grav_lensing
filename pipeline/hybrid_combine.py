@@ -128,6 +128,11 @@ def main():
                         "(use the benchmark-disjoint DA pool once P4 lands)")
     p.add_argument("--out", required=True)
     p.add_argument("--seed", type=int, default=4)
+    p.add_argument("--arc_poisson", action="store_true",
+                   help="AR1: Poisson shot noise on the noiseless arc render "
+                        "(exposure --arc_exptime); default OFF until pilot-gated")
+    p.add_argument("--arc_exptime", type=float, default=675.0,
+                   help="calibrated e-/s exposure for --arc_poisson")
     p.add_argument("--no-backdrop", action="store_true",
                    help="ablation A2: skip the real empty-cutout backdrop and "
                         "use pure Gaussian noise at the SAME per-image target "
@@ -148,6 +153,9 @@ def main():
                    help="PATH B: h5 of REAL elliptical deflector-light cutouts "
                         "(build_deflector_from_lrg.py), pasted centred as the "
                         "foreground lens light; requires the arc-only Path B config")
+    p.add_argument("--deflector_manifest", default=None,
+                   help="GEN4-G2 assignment csv (file_row,stamp_id,dihedral_k): "
+                        "paste EXACTLY that stamp/orientation at NATIVE amplitude")
     p.add_argument("--deflector_mag_csv", default="lens_light_empirical.csv",
                    help="CSV with 'mag'/'mag_aper'/'re' columns of real SLACS "
                         "deflectors; each stamp's flux within the measurement "
@@ -267,6 +275,14 @@ def main():
     fo = h5py.File(out, "w")
     d_img = fo.create_dataset("lensed", (N, n_px, n_px), dtype="float32")
     fo.create_dataset("theta_E", data=theta.astype("float64"))
+    # aux-head labels (2026-07-10, plan 2b): mass ellipticity from paltas
+    # metadata (same row order as theta_E). Labels only -- images unchanged.
+    for _c in ("e1", "e2"):
+        _col = "main_deflector_parameters_" + _c
+        if _col in meta.columns:
+            fo.create_dataset("mass_" + _c, data=meta[_col].values.astype("float64"))
+        else:
+            print("WARNING: %s not in metadata -- mass_%s label skipped" % (_col, _c))
     fo.create_dataset("image_fov", data=np.full(N, 6.4))
     d_cut = fo.create_dataset("cutout_index", (N,), dtype="int64")
     d_tgt = fo.create_dataset("target_rms", (N,), dtype="float32")
@@ -299,6 +315,38 @@ def main():
             img[y0:y0 + sp, x0:x0 + sp] += st
             placed += 1
         return placed
+
+    g2_assign = None
+    if args.deflector_manifest:
+        import csv as _csv
+        g2_assign = {int(r["file_row"]): (int(r["stamp_id"]), int(r["dihedral_k"]))
+                     for r in _csv.DictReader(open(args.deflector_manifest))}
+        print("G2 manifest mode: %d assignments, native amplitude, no mag draw"
+              % len(g2_assign))
+
+    def inject_deflector_g2(sim, i):
+        """GEN4-G2: the assigned real galaxy at its own brightness."""
+        di, k = g2_assign[i]
+        st = deflectors[di]
+        st = np.rot90(st, k % 4)
+        if k >= 4:
+            st = np.fliplr(st)
+        st = np.ascontiguousarray(st).copy()
+        sp = st.shape[0]
+        jy = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
+        jx = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
+        if sp >= n_px:
+            c0 = (sp - n_px) // 2
+            y0, x0 = c0 + jy, c0 + jx
+            sim += st[y0:y0 + n_px, x0:x0 + n_px]
+        else:
+            y0 = (n_px - sp) // 2 + jy
+            x0 = (n_px - sp) // 2 + jx
+            ys, xs = max(y0, 0), max(x0, 0)
+            ye, xe = min(y0 + sp, n_px), min(x0 + sp, n_px)
+            sim[ys:ye, xs:xe] += st[ys - y0:ye - y0, xs - x0:xe - x0]
+        mag_native = args.zeropoint - 2.5 * np.log10(max(float(np.clip(st, 0, None).sum()), 1e-9))
+        return di, mag_native
 
     def inject_deflector(sim):
         """PATH B (P1b): paste one real elliptical scaled so its flux WITHIN the
@@ -359,11 +407,20 @@ def main():
     dmag_all = []
     for i, fn in enumerate(files):
         sim = np.load(fn).astype("float32")
+        if args.arc_poisson:
+            # AR1: arc-only shot noise (deflector stamp + backdrop carry their
+            # own real noise; render here is the noiseless lensed source)
+            counts = np.clip(sim, 0, None) * args.arc_exptime
+            sim = (rng.poisson(counts).astype("float32") / args.arc_exptime
+                   + np.minimum(sim, 0.0))
         target = float(rng.choice(real_rms))
         nc = 0
         di, dmag = -1, 0.0
         if deflectors is not None:
-            di, dmag = inject_deflector(sim)
+            if g2_assign is not None:
+                di, dmag = inject_deflector_g2(sim, i)
+            else:
+                di, dmag = inject_deflector(sim)
             dmag_all.append(dmag)
         if args.no_backdrop:
             ci = -1

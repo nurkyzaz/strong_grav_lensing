@@ -5,6 +5,29 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-12 (night) — AR0 BASELINE + AR1 PATCH + COMMITMENTS LEDGER (process fix for the "anchored but never implemented" failure mode)
+
+- **COMMITMENTS.md adopted** (+ CLAUDE.md rule): every deferring decision gets
+  a ledger row at decision time; reconciled before any full generation and at
+  every ⛔. Seeded with 14 rows from a log audit — including C2, a SECOND
+  silently-dropped item found by the audit (q_mass–q_light exact relation
+  "fitted at G2" was never fitted; ad-hoc ⊕0.08 in use).
+- **AR0 arc-realism gate built + BASELINE RECORDED (same estimator both
+  sides; metrics: arc contrast, 90° asymmetry, knot count, radial width on
+  azimuthal-median-subtracted annuli): ALL 4 METRICS PASS IN BOTH DOMAINS**
+  (Euclid_g3: sim 9.1/0.62/5/5 vs real 6.1/0.63/4/5 within 16–84% bands;
+  native: 7.8/0.58/9/3 vs 5.8/0.58/7/4). Honest read: the FIRST-ORDER arc
+  morphology gap is SMALL — AR1–AR3 are refinements, not gaping holes, and
+  the residual small-θ_E scatter may be information-content-limited or live
+  in metrics AR0 doesn't capture (arc–deflector blending at small radii).
+  Tempers AR expectations; the gate is now a standing pilot gate (C14).
+- **AR1 applied** (patch_combine_arc_poisson.py, .bak_ar1): --arc_poisson
+  flag in hybrid_combine (DEFAULT OFF until pilot-gated), smoke-verified
+  (flux ratio 0.9985; per-px scatter matches √(f/t)). Pilot queued after the
+  running AB chain (no SLURM submissions while the driver owns the queue).
+
+---
+
 ## 2026-07-12 (evening, cont.) — ARC-REALISM STAGE ADDED TO THE PLAN (Nurkyz directive): 8 items evaluated and ranked; sequencing AR0 gate → AR1 shot noise → AR2 ΔPA–γ_ext coupling → AR3 isophote-anchored multipoles → eval; TNG question answered
 
 Full table in DATA_OVERHAUL_GEN4_PLAN.md §AR. Key evaluations:
