@@ -5,6 +5,36 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-12 (evening) — G1b TARGET LIST BUILT (Nurkyz: "increase library size"): FOOTPRINT crossmatch unlocks 1,982 new sigma_v-clean candidates (14× the G1a list; 526 at σ_v≥250, 181 at ≥300 — the thin high-θ_E tail becomes deep)
+
+- Method change, not more-of-the-same: G1a matched SDSS galaxies to pointing
+  CENTERS (5″) — the general archive looked dead. G1b inventories ALL public
+  F814W frames in one bulk MAST query (48,121 ACS/WFC + WFC3/UVIS frames,
+  calib_level 3, 100–20,000 s) and crossmatches the full SDSS σ_v pool
+  (1,360,025 galaxies, tiers A `ve<vd/5` 1.17M / B `ve<vd/2.5` 0.19M) against
+  frame FOOTPRINTS (cKDTree, 1.55′ radius): any galaxy anywhere inside an
+  archival frame is harvestable. (Not a re-litigation of the G0 dead-end —
+  that tested per-target queries; this is a bulk-inversion of the same search.)
+- Result: 2,278 in-frame → 1,999 after benchmark/LRGDEFL/G1a exclusions →
+  **1,982 after self-dedupe** (tier A 1,710; median σ_v 216; 541 on WFC3/UVIS
+  — those need a 0.04″→0.05″ resample step in the stamp builder, flagged).
+  lrgdefl2b_labels.csv (repo tables/ + Mac root). Priority order: σ_v≥250
+  first, then tier, then frame depth.
+- Caveats logged: candidates sit in frames pointed at OTHER targets (edge
+  cutouts will fail; builder auto-screens); some frames are cluster fields
+  (visual prune handles); exclusion list does NOT yet cover non-SLACS lens
+  compilations (BELLS/SL2S…) — the prune's ring/arc screen is the backstop,
+  a catalog crossmatch is cheap to add before fetch.
+- NEXT (needs Nurkyz + quota): phased fetch — phase 1 = the 526 σ_v≥250 +
+  top tier-A (~800 targets, ~10 h nohup, chunked+cache-purged, chunks of 20
+  given current headroom) AFTER the running chain completes. Quota ask:
+  deleting the four superseded old-generation training sets
+  (train_euclid_sel_100k, train_euclid_100k_v3, train_hybrid_100k_v3,
+  train_hybrid_100k_pathb_v2 ≈ 25 GB; all models retained, all reproducible)
+  would fund the fetch and the next library build comfortably.
+
+---
+
 ## 2026-07-12 (PM, cont.) — ⛔ EVAL #19 (authorized "do 1 then 2"; count → 19): the 2×2 operator cross-diagnostic RESOLVES eval #18 — the SLACS regression is TRAINING-SIDE (marginal-arc contamination), NOT benchmark difficulty; **G4-trained cnv2_3 on the REAL-op benchmark = best SLACS yet (RMSE 0.137, R² +0.71, fail 15%)**; step-2 fix identified (SNR>0.8); g3b + native chains LAUNCHED under one master driver
 
 2×2 (SLACS): G4-train/real-bench **0.137/+0.71/15%** (better than #17's own-bench
