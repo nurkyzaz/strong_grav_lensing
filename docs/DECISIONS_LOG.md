@@ -32,6 +32,30 @@ Corrections/retractions are logged explicitly rather than silently edited.
   native-HST per-lens θ_E vs uniform spectroscopic b_SIE with full-sample stats
   remains claimed by nobody but us. Full details in LITERATURE.md
   ("2026-07-13 systematic sweep" section).
+- **Follow-up 2 (same session, Nurkyz): LEMON Q1 section EXTRACTED from the PDF
+  (arXiv:2503.15329v2 pp. 13–16) — the real-Euclid head-to-head is now fully
+  spec'd.** (a) Their 60-lens Euclidised sample: the 31 non-SLACS lenses ARE
+  identifiable from their Sect. 2.2 citations (13 EELs = all of Oldham 2017
+  Table 2; 5 COSMOS = Faure 2008 Table 2 + errata; 13 ACS = Pawase 2014 Table 3
+  spec-confirmed subset) — but 13/60 (the ACS set) have NO true θ_E, LEMON used
+  the ARC RADIUS as GT (22% of their sample; honesty point for the paper). The
+  29 SLACS remain non-derivable (Bolton Table 5 has 63 grade-A) → **Nurkyz has
+  SENT the Busillo email (logged here; reply pending)**; meanwhile our 62 ⊇
+  their 29 superset comparison stands. (b) REAL Q1: LEMON modeled 354/578
+  candidates (Walmsley 500 + Rojas 78, filtered on classical-modeling success);
+  GT = PyAutoLens SIE from the Euclid pipeline on the same images. Their θ_E
+  numbers to beat: bias 0.01″, RMSE 0.17″, NMAD 0.07″, R² 0.71 (mass
+  ellipticities R² −0.31/−0.44 — no correlation; mag needs −0.22 ZP fudge;
+  "worse than on simulated lenses" admitted in their Sect. 7). Q1 data public
+  → NEW evaluation track proposed (LEMON-60 reconstruction + native-Q1-354);
+  plan below in this entry's session report; first verification item =
+  per-lens PyAutoLens params in the public Walmsley/Rojas catalogues.
+  NOTE: my 2026-07-13 morning statements used stale eval #14 numbers — the
+  current Euclid-domain headline is eval #19 (0.137/0.056/+0.71/15%), which
+  beats LEMON Table 3 on ALL θ_E aggregates; LITERATURE.md re-corrected.
+  Branch state: this literature work is on claude/sad-lalande-9b4e69; the
+  modeling consolidation (evals #17–21) is on claude/admiring-rubin-872990;
+  both edit DECISIONS_LOG → merge to main needs a two-entry union, flagged.
 - **Follow-up (same session, Nurkyz asked for the LEMON head-to-head):**
   (1) LITERATURE.md contradiction FIXED — its Tier-1 line "HST2EUCLID is public"
   conflicted with this log (2026-07-09 R1.2: NOT public); log wins, line corrected.

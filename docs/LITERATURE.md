@@ -35,13 +35,31 @@ comparator (Cao 2025) has public per-lens data. These four facts define our diff
   GT. Direct head-to-head route: Euclidise our benchmark and compare in THEIR domain.
   [CORRECTED 2026-07-13: "HST2EUCLID is public" was WRONG — DECISIONS_LOG (authoritative,
   2026-07-09 R1.2) verified NO public-code statement (Bergamini et al., arXiv:2508.20860);
-  our euclidise.py is a disclosed reimplementation. Status: already EXECUTED at
-  distribution level — eval #14 ensemble on all 62 Euclidised SLACS: bias +0.062, RMSE
-  0.208, NMAD 0.084 (beats their 0.11), R² +0.33 (behind their 0.53; gap isolated to the
-  31% catastrophic tail, confident-half fail 10–13%). The exact shared-29 table stays
-  blocked on the Busillo email: re-verified 2026-07-13 on the PUBLISHED A&A version
-  (aa54538-25, July 2026) — still no lens names, no per-subsample (SLACS-only) metrics,
-  and no data-availability release.]**
+  our euclidise.py is a disclosed reimplementation (real Q1 VIS PSF since G3). Status:
+  EXECUTED — ⛔ eval #19 (G4-trained cnv2_3, real-PSF Euclidised benchmark, 62 SLACS,
+  uniform b_SIE GT): bias −0.010″, RMSE 0.137″, NMAD 0.056″, R² +0.71, fail 15% —
+  **beats LEMON's Table 3 (−0.03/0.14/0.11/0.53) on every aggregate θ_E metric.** The
+  exact shared-29 table stays blocked on the Busillo email (SENT by Nurkyz ~2026-07-12/13):
+  re-verified on the PUBLISHED A&A version (aa54538-25, July 2026) — no lens names, no
+  per-subsample metrics, no data release. Their Sect. 2.2 does pin the OTHER 31 of 60:
+  13 EELs = ALL of Oldham et al. 2017 Table 2 (GT = power-law+shear, not SIE); 5 COSMOS =
+  Faure et al. 2008 Table 2 + errata θ_E (Lenstool SIE+shear); 13 ACS = Pawase et al. 2014
+  Table 3 spectroscopically-confirmed subset — **with NO θ_E GT at all: LEMON substituted
+  the ARC RADIUS for 13/60 = 22% of their sample** (their Fig. 8 caption confirms). The
+  29 SLACS are NOT uniquely derivable (Bolton 2008 Table 5 has 63 grade-A; selection
+  criterion unstated).]**
+  **LEMON on REAL Euclid Q1 (their Sect. 6.3 + Fig. 12, extracted from the PDF 2026-07-13):
+  354 of 578 Q1 candidates (Walmsley 500 + Rojas 78), "filtered such that the classical
+  modelling is successful"; GT = PyAutoLens SIE run by the Euclid pipeline on the SAME
+  images (model-family-matched GT — much friendlier than literature GT). θ_E: bias 0.01″,
+  RMSE 0.17″, NMAD 0.07″, R² 0.71. Mass ellipticities DO NOT correlate (R² −0.31/−0.44);
+  light ellipticity 0.78/0.74; R_e R² −0.03 (systematic underprediction >1″, their n≤5
+  Sérsic cap); Sérsic n R² −0.79; magnitude R² 0.90 only after an ad-hoc −0.22 mag
+  zero-point shift (sim-to-real flux miscalibration, disclosed in their Fig. 12 caption).
+  Their Sect. 7: "on real images the predictions from LEMON are worse than on simulated
+  lenses." Q1 data ARE public (their words) → native-Euclid head-to-head on the same 354
+  is feasible; per-lens PyAutoLens parameter availability in the Walmsley/Rojas catalogues
+  is the first thing to verify.**
 - **Cao et al. 2025 (MNRAS 540 3121; arXiv:2503.08586)** — conventional GPU pixel modeling
   (TinyLensGPU + nautilus), 63 SLACS, ≲5% deviation, ~10% catastrophic failures, ~3 min/lens.
   **[CORRECTED 2026-07-09: only the CODE is public (github.com/caoxiaoyue/TinyLensGpu); the
