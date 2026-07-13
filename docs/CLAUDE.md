@@ -6,6 +6,51 @@ It is project memory. **`DECISIONS_LOG.md` in this folder is the single most
 authoritative file — if anything here conflicts with it, DECISIONS_LOG.md wins,
 and say so out loud rather than silently picking one.**
 
+## CONTINUATION PROMPT (state as of 2026-07-13; delete this block when superseded)
+
+You are mid-campaign. Read the top ~8 entries of DECISIONS_LOG.md, then
+COMMITMENTS.md (reconcile every OPEN row at every ⛔ and before any full
+generation — that rule caught two silently-dropped physics items already),
+then MODELS_AND_RESULTS.md for the current numbers.
+
+WHERE WE ARE: the GEN4 self-consistent population (real HST galaxies as
+deflectors, measured SDSS σ_v → θ_E, FJ channel in training) delivered the
+paper's central result on the frozen benchmark (62 SLACS + 40 S4TM, Bolton
+b_SIE, eval count 21): native SLACS R² +0.64 / fail 15% (S4TM r50 R² +0.90 /
+8%), Euclid-domain (real-Q1-PSF operator) R² +0.71 / RMSE 0.137″. Both
+match/beat Cao 2025's conventional pipeline and lead LEMON on NMAD/R²/bias.
+
+LIKELY IN FLIGHT OR JUST LANDED (check first):
+- run_night_resume.sh on the cluster: g4ar (AR1 arc-Poisson + AR2 coupled
+  shear) regen → grid → ⛔ EVAL #22 (authorized; count → 22; report
+  immediately; log + push CSVs to results/).
+- g1b_fetch.log: 800-target phase-1 stamp fetch (of a 1,982-candidate
+  footprint-crossmatch list; 526 at σ_v≥250).
+
+THE SET DIRECTION (Nurkyz-ruled, in order):
+1. Harvest/report eval #22; decide the production Euclid recipe (current
+   holder: G4-trained cnv2_3 on the real-PSF bench, 0.137/+0.71/15%).
+2. G1b library build: Nurkyz's visual prune (preview pages), measurement pass
+   INCLUDING isophote a3/a4 (C5, feeds AR3) and the C15a/b σ_v corrections
+   (f_SIS = σ_fiber/0.948; +7% intrinsic scatter) baked into the next
+   manifests; C15c validation figure (θ_SIS(σ_fiber) vs b_SIE, analysis-only)
+   can be made immediately.
+3. AR3 isophote-anchored multipoles (one pilot, gates incl. AR0 arc gate) →
+   regen with the BIG G1b library + C15 corrections → the next eval pair
+   (native + Euclid) — expect less tempering (stronger training FJ ρ).
+4. THEN G5 ROMAN, full focus: Roman InstrumentConfig (WFI 0.11″/px, STPSF
+   PSF models, survey depths) as the third rendering of the same population
+   — no real GT exists, so the claim is "cross-domain-validated, Roman-ready".
+5. Paper §4 rewrite in parallel (skeleton + tables already in PAPER_DRAFT.md
+   §4.0); the LEMON email (EMAIL_DRAFTS, updated with eval #19/#21 numbers)
+   is ready for Nurkyz to send.
+
+STANDING OPERATIONAL PATTERN: chain stages with explicit nohup driver scripts
+on the CLUSTER (sbatch --wait waves, ≤8 jobs, gate-check between hops, abort
+markers, bank results before any deletion); session monitors are convenience
+only. Benchmark evals count and get reported immediately. One config change →
+one pilot → gates. Push to git at every milestone.
+
 ## Superseded document warning
 
 A document titled "Project Instructions for Claude" describing CNN training data

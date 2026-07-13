@@ -154,6 +154,37 @@ and mass of every training deflector belong to ONE physical object.
 
 ## 4. Results
 
+### 4.0 CURRENT HEADLINE RESULTS (2026-07-13 — restructure §4 around these; evals #17–#21 in DECISIONS_LOG)
+
+**Table: two-domain performance of the GEN4 self-consistent population
+(frozen benchmark, Bolton 2008 b_SIE GT, pre-registered ensembles):**
+
+| domain | sample | bias | RMSE | NMAD | R² | fail>15% |
+|---|---|---|---|---|---|---|
+| native HST | SLACS 62 | +0.005″ | 0.152″ | 0.048″ | +0.64 | 15% |
+| native HST | S4TM 40 (r50_3) | +0.013″ | 0.088″ | 0.047″ | +0.90 | 8% |
+| Euclid (real-Q1-PSF operator) | SLACS 62 | −0.010″ | 0.137″ | 0.056″ | +0.71 | 15% |
+| Euclid | S4TM 40 (G3 r50_3) | +0.027″ | 0.117″ | 0.082″ | +0.81 | 22% |
+
+vs Cao et al. 2025 (conventional modeling, same lenses/GT: ≲5% dev., ~10%
+fail — we match the accuracy class at ~10⁶× the speed) and LEMON Q1
+(synthetic-trained CNN, own-model GT: RMSE 0.14 / NMAD 0.11 / R² 0.53 —
+we lead on NMAD/R²/bias with independent GT).
+
+**The causal chain (the paper's spine; each step = one measured ablation):**
+prior (−1.02→~0) → real-unit realism (→+0.27) → PHYSICAL SELF-CONSISTENCY
+(→+0.64/+0.67, the decisive step; eval #16 proved prior alone does nothing)
+→ real VIS PSF (faithful benchmark; faint-arc gains; #18/#19 2×2) → selection
+dial (#20: high-θ bias vs faint-arc trade-off). Small-θ_E pull: +29% → ~0.
+
+New methods novelties to write up: the FJ gate; the tempered prior (flatness↔
+FJ incompatibility finding); the measured Q1 mosaic PSF (0.20″ + wings, not
+0.16″ Gaussian); deflector-disjoint validation; the operator 2×2 diagnostic;
+the selection-dial ablation; COMMITMENTS/pre-registration discipline.
+Known-limitations section: σ coverage under (C11); f_SIS ~11% normalization +
+7% intrinsic scatter queued (C15, with validation figure); tempered FJ ρ
+diluted (−0.15 vs −0.32, improves with G1b library).
+
 ### 4.1 Sim-to-real failure diagnosis (baseline "m3", pre-paltas)
 
 - **Table 2** — locked baseline, native-forward-operator-trained model, before this paper's fix:

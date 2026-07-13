@@ -189,9 +189,12 @@ arch. Nobody in this literature uses log-polar for θ_E regression.
 | G0 | ✅ DONE (above) | — |
 | G1 | ✅ DONE (2026-07-11): 139 σ_v-clean stamps (90 new after visual prune + 49 old), all measured (q, PA, Re, mag + σ_v/z) | — |
 | G2 | ✅ DONE (2026-07-11): manifest generator + FJ gate; pilots v1–v4 (draw-order dispatcher fix; shuffle + vectorized sampler; flatness↔FJ incompatibility → TEMPERED prior α=0.6, ρ ≤ −0.15). v4 ALL GATES PASS | — |
-| G3 (∥) | ◻ OUTSTANDING — Euclid-native ingredients: Q1 empty-sky harvest + VIS PSF (or HST2EUCLID). G4 ran with the Gaussian-VIS approximation; G3 remains the E3 suspect fix from eval #16 | 2–4 d |
-| G4 | ◐ IN PROGRESS (2026-07-11 PM): Euclid-arm generation ✅ (88/88 shards, 104,314 train / 6,907 val, deflector-disjoint split, all gates PASS at scale incl. FJ −0.15); quick-train sanity ✅ (0.106); 17-member grid RUNNING → arbitration → ⛔ eval #17 (pre-authorized). NOTE: native arm NOT rendered (intermediates deleted for quota) but all 88 manifests+assigns RETAINED → native arm re-renderable from the SAME population draws (Track N hop, ~2 h generation + quota check) | — |
-| G5 | Roman InstrumentConfig rendering (paper-2 seed; professor-endorsed) | after |
+| G3 | ✅ DONE (2026-07-12/13): real Q1 VIS PSF obtained (official GRID-PSF product; FWHM ~0.20″ + heavy wings vs the 0.16″ Gaussian assumption), Tukey-0.3 matching kernel (0.1% residual), euclidise patched both sides, benchmark re-derived (_g3), evals #18/#19/#20 (see log). Q1 empty-sky pool banked (600, change-2 real backdrops still ◻ optional) | — |
+| G4 | ✅ DONE incl. TRACK N (2026-07-13): Euclid arm → eval #17 (R² +0.67/fail 11%); native arm from the SAME retained manifests → ⛔ eval #21: SLACS +0.005″/0.152″/0.048″/R² +0.64/15%; S4TM r50 0.088″/R² +0.90/8% (project best). TWO-DOMAIN CLAIM MEASURED. g3b selection variant → eval #20 (high-θ bias fixed; selection dial documented). g4ar (AR1+AR2) grid → eval #22 in flight | — |
+| AR | ◐ AR0 gate baselined (first-order arc gap SMALL, both domains); AR1+AR2 pilots PASS, combined g4ar → eval #22 running; AR3 isophote-anchored multipoles NEXT (with the G1b measurement pass); AR4+ gated on need | — |
+| G1b | ◐ 1,982-candidate footprint-crossmatch list built (526 σ_v≥250); phase-1 fetch (800 ACS-only, lens-crossmatched) RUNNING; then build+measure(+a3/a4)+prune → library ~10× | 1–2 d |
+| C15 | ◻ σ_v→θ_E corrections (f_SIS 0.948 + 7% intrinsic scatter + benchmark validation figure) — with the next data build | small |
+| G5 | ◻ NEXT MAJOR: Roman InstrumentConfig rendering (WFI 0.11″/px, STPSF PSF, survey depths) — the P5 third rendering; paper-2 seed (professor-endorsed). Starts after eval #22 + G1b library land | 2–3 d |
 
 Risks, stated: library size is bounded by HST∩SDSS-spectroscopy overlap (mitigation:
 FP-σ_v tier); importance-sampling design needs care (G0 note before any generation);

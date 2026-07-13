@@ -1,0 +1,7 @@
+{
+  "source": "EUC_MER_GRID-PSF-VIS_TILE102044185 (Q1, IRSA)",
+  "n_stacked": 4000,
+  "fwhm_arcsec": 0.11283791670955126,
+  "ellipticity": 0.028998347877883333,
+  "pix": "0.1 (native) / 0.05 (upsampled)"
+}

@@ -1,0 +1,16 @@
+{
+  "_comment": "Frozen evaluation protocol constants (2026-07-09). sigma_recal factors are fitted on SIM-VAL ONLY (recalibrate_sigma.py) and FROZEN before any benchmark evaluation. Reporting structure per Nurkyz ruling: SLACS primary, S4TM secondary. Exclude J0955+0101 (bad cutout). Benchmark eval running count lives in DECISIONS_LOG.md.",
+  "exclude_lenses": ["J0955+0101"],
+  "reporting": {"primary": "SLACS", "secondary": "S4TM"},
+  "sigma_recal": {
+    "einstein_cnn_pathb_v2_inceptionnext.pt": 1.575,
+    "einstein_cnn_pathb_v2_resnet.pt": 1.998,
+    "einstein_cnn_euclid_v3_inceptionnext.pt": 0.906,
+    "einstein_cnn_euclid_v3_resnet.pt": 0.980
+  },
+  "arc_snr_thresholds": {
+    "eye_visible": 0.7,
+    "clear": 1.83,
+    "calibration_note": "v2 metric (azimuthal-residual denominator), eye-calibrated on real_vs_pathb_pilot_v7run.png panels; approximate ranks, not absolutes"
+  }
+}
