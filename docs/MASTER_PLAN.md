@@ -127,11 +127,13 @@ admits real < sim performance.
   (i) Tuning subset: the 10-lens pilot set, extendable to a random 20%
   split (seeded, logged) if 10 is too noisy. These lenses are BURNED for
   tuning — Q2e reports full-sample AND excluding-tuning rows (disclose).
-  (ii) Sweep ≥12 combos: rescale factor ∈ {8, 10, 11.4 (skyRMS-matched),
-  12, 14, 1.91 (ZP-only control)} × pedestal ∈ {none, +bench-median sky,
-  +per-image bench-matched}; select on lowest RMSE / best R² vs PyAutoLens
-  θ_E on the tuning subset (script: pipeline/q2_norm_sweep.py, prepared —
-  runs only on Nurkyz go-ahead; every model pass on Q1 data logged per C18).
+  (ii) Sweep ≥12 combos — **EXECUTED 2026-07-13 (job 47907, logged):
+  factor response nearly flat (RMSE 0.414→0.385 over 1.9–14×), pedestal
+  zero effect; nominal winner f14_none is grid-edge noise driven by one
+  lens's FJ response; C17 re-check passes at f11.4 (skyRMS 1.05×, peak/sky
+  0.92×) and fails at f14 (1.29×). RECOMMENDED FREEZE: f11.4 × no-pedestal
+  — ruling pending. Per-lens: 5/9 within ±12%; one −67% outlier
+  (102018666, suspect GT or faint-arc miss → Q2d case).**
   (iii) FREEZE the winning normalization; re-run the C17 gate to verify
   skyRMS/peak-sky distributions align with the benchmark.
   (iv) Only then ⛔ Q2e (eval #24), EXACTLY ONCE, full Q1 set.

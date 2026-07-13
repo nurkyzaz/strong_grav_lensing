@@ -5,6 +5,38 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-13 (late evening) — Q2c2 NORMALIZATION SWEEP EXECUTED (Nurkyz go-ahead): factor response nearly FLAT — normalization is NOT the binding constraint; C17 gate PASSES at the physically-anchored ×11.4; nominal lowest-RMSE winner f14 is edge-of-grid noise; RECOMMEND FREEZE f11.4 × no-pedestal (ruling pending); benchmark eval count UNCHANGED at 23
+
+- Job 47907 (first submit 47902 crashed on empty-GT rows in
+  modeling_lens_mass.csv — guarded, resubmitted). **36 model passes on the
+  9-lens BURNED tuning subset logged per C18** (10th pilot lens 102019125
+  has no converged GT row). This is the pre-registered tuning stage, NOT an
+  eval; ⛔ Q2e stays eval #24. Preds banked: results/q2tune/ (36 CSVs).
+- **Grid (G4 cnv2_3 ens + frozen recal, TTA; N=9 vs PyAutoLens
+  einstein_radius_median_pdf):** RMSE 0.414→0.385 monotone over factor
+  1.9→14×; R² −0.09→+0.06; fail 44% EVERYWHERE; **pedestal has ZERO effect**
+  (model insensitive to the sky constant). Nominal winner by the
+  pre-registered lowest-RMSE rule: f14.0_none (0.385/+0.06) — but it is the
+  GRID EDGE, Δ vs f11.4 = 0.016 (noise at N=9), and its gain comes almost
+  entirely from ONE lens whose prediction rises with brightness (the FJ
+  dial — tuning the prior, not matching domains).
+- **Per-lens (f11.4): 5/9 within ±12%** (−6.2/−11.7/+1.5/−4.8/+8.6%);
+  tail: three at ~−27%; one catastrophic −67% (102018666: their GT 1.582″
+  with an implausibly tight ±0.005″ 1σ posterior, we say 0.51″ —
+  own-pipeline-referee suspect OR a faint-wide-arc miss at Q1 depth;
+  Q2d-audit case, NOT a normalization issue).
+- **C17 gate re-check (image stats only): f11.4 PASSES — skyRMS 1.05×
+  bench, peak/sky 0.92×; f14.0 overshoots (skyRMS 1.29×).** Pedestal only
+  moves the sky median.
+- **RECOMMENDATION: freeze f11.4 × no-pedestal** (gate-aligned, physically
+  anchored; the empirical Δ to f14 is noise and FJ-contaminated).
+  Options for the ruling: (a) freeze f11.4 [recommended], (b) literal
+  lowest-RMSE f14, (c) extend grid upward to bracket — flagged as
+  prior-exploitation risk. After freeze: Q2d population/support audit +
+  outlier inspection (no model passes), then ⛔ Q2e ONCE, full set.
+
+---
+
 ## 2026-07-13 (evening) — ⛔ EVAL #23 (count → 23, DERIVED — no new benchmark passes): two-model ensemble mean(G4 cnv2_3, g4ar r50_3) per Nurkyz ruling — a COMPROMISE row, not a new best; NURKYZ RULINGS: no headline freeze (multi-domain reporting), Q2 = Option A with a normalization-SWEEP stage before the single official eval, C10 now BLOCKS AR3
 
 **EVAL #23 (derived from banked CSVs `results/preds_l19_g4_cnv2_s*` +

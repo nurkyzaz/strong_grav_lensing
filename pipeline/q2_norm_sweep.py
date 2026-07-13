@@ -52,8 +52,13 @@ def tag(f, p):
 def gt_table():
     fn = glob.glob(os.path.join(BASE, "modeling_lens_mass*.csv"))[0]
     gt = {}
+    skipped = 0
     for r in csv.DictReader(open(fn)):
-        gt[r["id_str"]] = float(r["einstein_radius_median_pdf"])
+        try:
+            gt[r["id_str"]] = float(r["einstein_radius_median_pdf"])
+        except (ValueError, KeyError):
+            skipped += 1  # rows without a converged SIE median
+    print("GT table: %d usable, %d skipped (empty theta_E)" % (len(gt), skipped))
     return gt
 
 
