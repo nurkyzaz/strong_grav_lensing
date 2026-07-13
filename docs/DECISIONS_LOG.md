@@ -344,6 +344,67 @@ eval #17 as the headline, (d) L4 closers / shared-29 exchange with LEMON authors
   3 convnextv2, 3 resnet50, 1 logpolar) in QOS-safe waves via submit_grid_g4.sh;
   then sim-val-only TTA arbitration freezes g4_recal.json; then ⛔ EVAL #17
   (pre-authorized "run the full chain to eval #17"; count → 17; report immediately).
+## 2026-07-13 — Literature sweep (Nurkyz-directed session): competitive map RE-VERIFIED and HOLDS; Roman NN gap confirmed OPEN; one attribution CORRECTED
+
+- Checked Nurkyz's 5 links: 2603.06339 (CSST dropout CNN) = sims-only confirmed;
+  2502.09802 = Euclid ERO lens-FINDING (not params); 2404.18897 (Gawade) = exact
+  real numbers extracted (182 SuGOHI vs YattaLens GT: θ_E 10–20%, bias <5%,
+  outliers ~10%); 2606.23781 (weak-lensing 3×2pt) and 2605.18959 (Hyrax ML
+  framework) = irrelevant, logged so nobody re-checks.
+- arXiv API sweep (6 keyword combos, newest-first) + targeted follow-ups. NEW
+  adjacent competitors: **LensAgent** (2604.03691, LLM agent + lenstronomy on 20
+  real SLACS Grade A, χ²_red 0.994–1.150, σ_v within 1σ; NO θ_E accuracy numbers)
+  and **dolphin** (2503.22657, NN segmentation → lenstronomy; real demos
+  qualitative only). Both compete with Cao (automation), not with our regressor.
+- **CORRECTION (logged per retraction discipline): the 31 real SuGOHI lenses are
+  in HOLISMOKES X (2207.10124), not IX (2206.11279) — IX is sims-only. X reports
+  NO aggregate real-lens accuracy stats (qualitative match θ_E ≲ 2″,
+  underprediction above).** LITERATURE.md Tier 2 fixed.
+- STRIDES NPE exact numbers extracted (14 real HST quasars; population
+  γ = 2.13±0.06 vs forward-modeling 2.03±0.04; doppelganger sims 5.0%/lens γ
+  error + overconfident posteriors; no per-lens real GT).
+- **Roman: nobody has built a parameter-estimation network.** Wedig et al. 2025
+  (2506.03390) forecasts ~160k lenses and publishes sims explicitly "to support
+  training neural networks" — training data exists, network doesn't. Positioning
+  opportunity for the paper's discussion; gap unlikely to stay open long.
+- Net effect on the four differentiators: UNCHANGED, all four still stand;
+  native-HST per-lens θ_E vs uniform spectroscopic b_SIE with full-sample stats
+  remains claimed by nobody but us. Full details in LITERATURE.md
+  ("2026-07-13 systematic sweep" section).
+- **Follow-up 2 (same session, Nurkyz): LEMON Q1 section EXTRACTED from the PDF
+  (arXiv:2503.15329v2 pp. 13–16) — the real-Euclid head-to-head is now fully
+  spec'd.** (a) Their 60-lens Euclidised sample: the 31 non-SLACS lenses ARE
+  identifiable from their Sect. 2.2 citations (13 EELs = all of Oldham 2017
+  Table 2; 5 COSMOS = Faure 2008 Table 2 + errata; 13 ACS = Pawase 2014 Table 3
+  spec-confirmed subset) — but 13/60 (the ACS set) have NO true θ_E, LEMON used
+  the ARC RADIUS as GT (22% of their sample; honesty point for the paper). The
+  29 SLACS remain non-derivable (Bolton Table 5 has 63 grade-A) → **Nurkyz has
+  SENT the Busillo email (logged here; reply pending)**; meanwhile our 62 ⊇
+  their 29 superset comparison stands. (b) REAL Q1: LEMON modeled 354/578
+  candidates (Walmsley 500 + Rojas 78, filtered on classical-modeling success);
+  GT = PyAutoLens SIE from the Euclid pipeline on the same images. Their θ_E
+  numbers to beat: bias 0.01″, RMSE 0.17″, NMAD 0.07″, R² 0.71 (mass
+  ellipticities R² −0.31/−0.44 — no correlation; mag needs −0.22 ZP fudge;
+  "worse than on simulated lenses" admitted in their Sect. 7). Q1 data public
+  → NEW evaluation track proposed (LEMON-60 reconstruction + native-Q1-354);
+  plan below in this entry's session report; first verification item =
+  per-lens PyAutoLens params in the public Walmsley/Rojas catalogues.
+  NOTE: my 2026-07-13 morning statements used stale eval #14 numbers — the
+  current Euclid-domain headline is eval #19 (0.137/0.056/+0.71/15%), which
+  beats LEMON Table 3 on ALL θ_E aggregates; LITERATURE.md re-corrected.
+  Branch state: this literature work is on claude/sad-lalande-9b4e69; the
+  modeling consolidation (evals #17–21) is on claude/admiring-rubin-872990;
+  both edit DECISIONS_LOG → merge to main needs a two-entry union, flagged.
+- **Follow-up (same session, Nurkyz asked for the LEMON head-to-head):**
+  (1) LITERATURE.md contradiction FIXED — its Tier-1 line "HST2EUCLID is public"
+  conflicted with this log (2026-07-09 R1.2: NOT public); log wins, line corrected.
+  (2) Re-verified on the PUBLISHED A&A LEMON version (aa54538-25, July 2026): the
+  29 SLACS names are STILL not listed, Table 3 has NO per-subsample breakdown, and
+  there is NO data-availability release → the exact shared-29 table remains
+  hard-blocked on the Busillo email (drafted 2026-07-10, no send recorded —
+  Nurkyz action). Distribution-level head-to-head already exists (eval #14);
+  GEN4 ⛔ eval #17 will refresh it; when names arrive the shared-29 table is a
+  subset of the saved per-lens CSVs in results/ — NO new benchmark eval needed.
 
 ---
 

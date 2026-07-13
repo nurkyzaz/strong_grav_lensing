@@ -32,8 +32,34 @@ comparator (Cao 2025) has public per-lens data. These four facts define our diff
   sim-to-real), uniform spectroscopic-survey GT vs their 4-catalogue mix (their own paper
   flags "differing modelling assumptions"), 1.7× real-GT sample, REAL sources + REAL
   deflector light + realism ablations (they are fully parametric, no ablations), DA on real
-  GT. Direct head-to-head route: HST2EUCLID is public → Euclidise our 29 shared SLACS and
-  compare in THEIR domain.**
+  GT. Direct head-to-head route: Euclidise our benchmark and compare in THEIR domain.
+  [CORRECTED 2026-07-13: "HST2EUCLID is public" was WRONG — DECISIONS_LOG (authoritative,
+  2026-07-09 R1.2) verified NO public-code statement (Bergamini et al., arXiv:2508.20860);
+  our euclidise.py is a disclosed reimplementation (real Q1 VIS PSF since G3). Status:
+  EXECUTED — ⛔ eval #19 (G4-trained cnv2_3, real-PSF Euclidised benchmark, 62 SLACS,
+  uniform b_SIE GT): bias −0.010″, RMSE 0.137″, NMAD 0.056″, R² +0.71, fail 15% —
+  **beats LEMON's Table 3 (−0.03/0.14/0.11/0.53) on every aggregate θ_E metric.** The
+  exact shared-29 table stays blocked on the Busillo email (SENT by Nurkyz ~2026-07-12/13):
+  re-verified on the PUBLISHED A&A version (aa54538-25, July 2026) — no lens names, no
+  per-subsample metrics, no data release. Their Sect. 2.2 does pin the OTHER 31 of 60:
+  13 EELs = ALL of Oldham et al. 2017 Table 2 (GT = power-law+shear, not SIE); 5 COSMOS =
+  Faure et al. 2008 Table 2 + errata θ_E (Lenstool SIE+shear); 13 ACS = Pawase et al. 2014
+  Table 3 spectroscopically-confirmed subset — **with NO θ_E GT at all: LEMON substituted
+  the ARC RADIUS for 13/60 = 22% of their sample** (their Fig. 8 caption confirms). The
+  29 SLACS are NOT uniquely derivable (Bolton 2008 Table 5 has 63 grade-A; selection
+  criterion unstated).]**
+  **LEMON on REAL Euclid Q1 (their Sect. 6.3 + Fig. 12, extracted from the PDF 2026-07-13):
+  354 of 578 Q1 candidates (Walmsley 500 + Rojas 78), "filtered such that the classical
+  modelling is successful"; GT = PyAutoLens SIE run by the Euclid pipeline on the SAME
+  images (model-family-matched GT — much friendlier than literature GT). θ_E: bias 0.01″,
+  RMSE 0.17″, NMAD 0.07″, R² 0.71. Mass ellipticities DO NOT correlate (R² −0.31/−0.44);
+  light ellipticity 0.78/0.74; R_e R² −0.03 (systematic underprediction >1″, their n≤5
+  Sérsic cap); Sérsic n R² −0.79; magnitude R² 0.90 only after an ad-hoc −0.22 mag
+  zero-point shift (sim-to-real flux miscalibration, disclosed in their Fig. 12 caption).
+  Their Sect. 7: "on real images the predictions from LEMON are worse than on simulated
+  lenses." Q1 data ARE public (their words) → native-Euclid head-to-head on the same 354
+  is feasible; per-lens PyAutoLens parameter availability in the Walmsley/Rojas catalogues
+  is the first thing to verify.**
 - **Cao et al. 2025 (MNRAS 540 3121; arXiv:2503.08586)** — conventional GPU pixel modeling
   (TinyLensGPU + nautilus), 63 SLACS, ≲5% deviation, ~10% catastrophic failures, ~3 min/lens.
   **[CORRECTED 2026-07-09: only the CODE is public (github.com/caoxiaoyue/TinyLensGpu); the
@@ -50,19 +76,89 @@ comparator (Cao 2025) has public per-lens data. These four facts define our diff
 
 ## Tier 2 — cite and position against
 
-- **Schuldt et al. 2023b, HOLISMOKES IX (arXiv:2206.11279)**: ResNet θ_E+σ on 31 real SuGOHI
-  lenses, but ground-based and GT = their own MCMC models (not uniform spectroscopic-survey b_SIE).
-- **Gawade et al. 2025 (MNRAS 540 3384; arXiv:2404.18897)**: HSC CNN, ~10–20% θ_E scatter on
-  real ground-based lenses vs modeling-based GT. Our prior "benchmark to beat" — now superseded
-  by LEMON as the sharpest comparison.
+- **Schuldt et al. 2023, HOLISMOKES IX (arXiv:2206.11279) + X (arXiv:2207.10124)**:
+  **[CORRECTED 2026-07-13: the 31 real SuGOHI lenses are in paper X, not IX — IX is
+  sims-only (sim test-set θ_E median diff 0.003″ +0.21/−0.24). Verified against both
+  A&A full texts.]** X applies the ResNet to 31 real HSC lenses vs their own GLEE
+  traditional models and reports **NO aggregate accuracy statistics** — only
+  qualitative: "good match" for θ_E ≲ 2″, systematic underprediction above (worst:
+  3.1″ modeled → 1.8″ network), ellipticity compressed toward zero, shear ~0 with
+  large σ. Per-lens values in their Tables B.1–B.2. Ground-based; GT = their own
+  MCMC models, not spectroscopic-survey b_SIE.
+- **Gawade et al. 2025 (MNRAS 540 3384; arXiv:2404.18897)**: HSC CNN (sims = lensed
+  sources injected into real empty HSC cutouts — closest recipe-cousin to our hybrid).
+  Real test (verified 2026-07-13, full text): **182 Grade A+B SuGOHI lenses, GT =
+  their own YattaLens automated pipeline** (not spectroscopic b_SIE): θ_E accuracy
+  "10–20%", bias "<5%", outlier fraction "~10%" — headline numbers only, no
+  aggregate table; ellipticities show "systematic uncertainties beyond quoted errors"
+  even between conventional methods. Plus 10 lenses vs literature models: θ_E
+  consistent, ellipticity scatter large. Ground-based seeing-limited.
 - **Wagner-Carena et al. 2023 / paltas (ApJ; arXiv:2203.00690)**: closest simulator recipe
   (real COSMOS sources, HST PSF/drizzle) but target = substructure, and uses *modeled* PSF +
   *simulated* correlated noise. Our recipe adds: empirical focus-diverse ePSF (per-exposure
   focus states), REAL empty-field backdrops, per-image sky-RMS draws from the real distribution,
   and the joint empirical lens-light prior — each of which we ablate (they don't ablate realism).
-- **STRIDES NPE 2025 (AJ)**: documents sim→real breakage on native HST (quasar lenses, γ) —
-  perfect motivation citation for why native-HST θ_E was still open.
+- **STRIDES NPE 2025 (Erickson et al., AJ 170; arXiv:2410.10123)**: documents sim→real breakage
+  on native HST (quasar lenses, γ) — perfect motivation citation for why native-HST θ_E was
+  still open. **Exact numbers (verified 2026-07-13, full text): 14 real HST lensed quasars;
+  population mean γ_lens = 2.13 ± 0.06 (SNPE) vs 2.03 ± 0.04 (Schmidt et al. 2023 forward
+  modeling) — consistent but offset; per-lens γ error 4.2% on "shifted" sims vs 5.0% on
+  realistic "doppelganger" sims, with doppelganger posteriors MORE overconfident (their
+  sim-to-real miscalibration finding); no per-lens ground truth on real data (galaxy-quasar,
+  no b_SIE equivalent). Population-level only — no real-lens θ_E accuracy claim.**
 - **Zhang et al. 2023 (MNRAS 527 4183)**: real SLACS + matched sims, but substructure target.
+
+## 2026-07-13 systematic sweep (Nurkyz's 5 links + arXiv keyword sweep + Roman check)
+
+**Bottom line: the competitive map HOLDS.** After a multi-keyword arXiv sweep (API queries:
+strong lensing×NN×θ_E; SBI×strong lens; NPE×lens; Roman×strong lens; Euclid×lens modelling×
+network; SLACS×NN — all sorted newest-first), the complete set of NN-parameter papers tested
+on REAL lenses is still: LEMON/Busillo (Euclidised, aggregate stats), Gawade (ground-based,
+GT = own pipeline), HOLISMOKES X (ground-based, NO aggregate stats), STRIDES NPE (14 quasars,
+population-level γ only). **Native-HST galaxy-galaxy θ_E regression scored per-lens against
+uniform spectroscopic-survey b_SIE with full-sample statistics remains UNCLAIMED except by us.**
+
+New adjacent competitors found (both are AUTOMATION of conventional modeling, not sim-trained
+regressors — they compete with Cao, not with our network):
+- **LensAgent (arXiv:2604.03691, Apr 2026)**: LLM-driven agent (ReAct loop) proposing
+  parameters to lenstronomy; training-free. Real data: **20 SLACS Grade A** systems,
+  reduced χ² 0.994–1.150, predicted σ_v within 1σ of SDSS for all 20; 5 subhalo candidates
+  (e.g. ~5.6×10⁹ M☉ near J1029−0420's θ_E). **No θ_E-vs-b_SIE accuracy numbers, no speed
+  claim comparable to amortized ms/lens.** Cite in the automation paragraph next to Cao;
+  monitor for a v2 with per-lens tables.
+- **dolphin (arXiv:2503.22657, Shajib group)**: NN = semantic segmentation only (F1 > 86%,
+  sims) to auto-configure lenstronomy forward modeling. Real data: 6 SLACS + 6 STRIDES,
+  **qualitative demos only — zero quantitative real-lens validation** (verified full text).
+
+**Roman status — the gap is OPEN (checked directly, multiple queries):**
+- **Wedig et al. 2025, "The Roman View of Strong Gravitational Lenses" (arXiv:2506.03390,
+  ApJ)**: yield forecast (~160k detectable lenses, ~500 substructure-quality); explicitly
+  releases sim products "to support … training neural networks" — i.e. the training data
+  is being laid out, but **no Roman parameter-estimation network exists yet**.
+- Kirmani et al. (arXiv:2512.19886): lensed-SN DETECTION CNN aimed at Roman, sims-only.
+- Everything else Roman×lensing is forecasting/substructure-survey design (2010.15173,
+  2306.12864) or weak lensing. ⇒ Positioning: our recipe (real ePSF + real backdrops +
+  self-consistent population) is exactly what a Roman network will need; we can claim the
+  method transfers and cite Wedig as the waiting application. Risk: this gap will not stay
+  open long — Wedig's sims are public.
+
+**Nurkyz's 5 links, resolved (do not re-check):**
+- arXiv:2603.06339 (dropout CNN): **CSST sims ONLY**, confirmed — 76,396 synthetic images,
+  R² up to ~0.96 for SIE params, errors ≲9% at 90% CL, all on their own sims. No real test.
+- arXiv:2502.09802 (Euclid ERO): lens FINDING CNN (detection), not parameter regression;
+  ends at 97 visually-vetted candidates + 1 spectroscopic confirmation. Not a competitor.
+- arXiv:2404.18897 (Gawade): updated in Tier 2 above with exact real-lens numbers.
+- arXiv:2606.23781: Roman/Rubin **weak-lensing 3×2pt** model-approximation study — irrelevant.
+- arXiv:2605.18959 (Hyrax): general ML infrastructure framework; lens-related content is
+  cluster-lens candidate clustering demo — irrelevant to parameter estimation.
+
+Also checked, sims-only (Tier 3 material): Huang et al. ViT (arXiv:2210.04143, 31,200 sim
+quasar lenses, γ'/e/center, no real test); Poh et al. NPE-vs-BNN (arXiv:2501.08524, DES-like
+sims, NPE calibration <10% of optimal vs BNN rarely <20%); Poh et al. 2022 SBI
+(arXiv:2211.05836, sims); HOLISMOKES XVI (arXiv:2503.07733) = lens search, not modeling;
+Euclid Q1 AgileLens (arXiv:2604.06648) = detection. CNN substructure on real SLACS exists
+(arXiv:2403.13881, 23 lenses, GRF power spectrum) but takes main-deflector params from prior
+traditional fits — not a θ_E competitor.
 
 ## Tier 3 — background/history
 
