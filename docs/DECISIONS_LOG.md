@@ -5,6 +5,36 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-13 — Literature sweep (Nurkyz-directed session): competitive map RE-VERIFIED and HOLDS; Roman NN gap confirmed OPEN; one attribution CORRECTED
+
+- Checked Nurkyz's 5 links: 2603.06339 (CSST dropout CNN) = sims-only confirmed;
+  2502.09802 = Euclid ERO lens-FINDING (not params); 2404.18897 (Gawade) = exact
+  real numbers extracted (182 SuGOHI vs YattaLens GT: θ_E 10–20%, bias <5%,
+  outliers ~10%); 2606.23781 (weak-lensing 3×2pt) and 2605.18959 (Hyrax ML
+  framework) = irrelevant, logged so nobody re-checks.
+- arXiv API sweep (6 keyword combos, newest-first) + targeted follow-ups. NEW
+  adjacent competitors: **LensAgent** (2604.03691, LLM agent + lenstronomy on 20
+  real SLACS Grade A, χ²_red 0.994–1.150, σ_v within 1σ; NO θ_E accuracy numbers)
+  and **dolphin** (2503.22657, NN segmentation → lenstronomy; real demos
+  qualitative only). Both compete with Cao (automation), not with our regressor.
+- **CORRECTION (logged per retraction discipline): the 31 real SuGOHI lenses are
+  in HOLISMOKES X (2207.10124), not IX (2206.11279) — IX is sims-only. X reports
+  NO aggregate real-lens accuracy stats (qualitative match θ_E ≲ 2″,
+  underprediction above).** LITERATURE.md Tier 2 fixed.
+- STRIDES NPE exact numbers extracted (14 real HST quasars; population
+  γ = 2.13±0.06 vs forward-modeling 2.03±0.04; doppelganger sims 5.0%/lens γ
+  error + overconfident posteriors; no per-lens real GT).
+- **Roman: nobody has built a parameter-estimation network.** Wedig et al. 2025
+  (2506.03390) forecasts ~160k lenses and publishes sims explicitly "to support
+  training neural networks" — training data exists, network doesn't. Positioning
+  opportunity for the paper's discussion; gap unlikely to stay open long.
+- Net effect on the four differentiators: UNCHANGED, all four still stand;
+  native-HST per-lens θ_E vs uniform spectroscopic b_SIE with full-sample stats
+  remains claimed by nobody but us. Full details in LITERATURE.md
+  ("2026-07-13 systematic sweep" section).
+
+---
+
 ## 2026-07-11 (AM, cont.) — ⛔-equivalent G2 PILOT v4: ALL GATES PASS (α=0.6 tempered prior) — GEN4's core property delivered: FJ channel in training data (ρ=−0.12 accepted / −0.15 manifest, sign correct) WITH a wide θ_E prior (survivors [0.47, 2.29], median 1.22, 21% above 1.7″) — G2 COMPLETE, chain proceeds to G4
 
 α-sweep table (manifest level): α=0.8 ρ−0.10 … α=0.5 ρ−0.19; chosen 0.6 (ρ−0.16,
