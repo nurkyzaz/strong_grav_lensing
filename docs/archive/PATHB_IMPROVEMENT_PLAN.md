@@ -1,3 +1,6 @@
+> **ARCHIVED 2026-07-13.** Superseded by docs/MASTER_PLAN.md (the single live plan).
+> All undone items were carried into MASTER_PLAN.md at archive time. Historical record only.
+
 # PATH B IMPROVEMENT PLAN — real deflector light, done right
 
 Date: 2026-07-09. Author: Claude session with Nurkyz (pilot-v3 diagnosis session).

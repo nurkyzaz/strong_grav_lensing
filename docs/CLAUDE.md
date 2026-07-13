@@ -41,9 +41,11 @@ THE SET DIRECTION (Nurkyz-ruled, in order):
 4. THEN G5 ROMAN, full focus: Roman InstrumentConfig (WFI 0.11″/px, STPSF
    PSF models, survey depths) as the third rendering of the same population
    — no real GT exists, so the claim is "cross-domain-validated, Roman-ready".
-5. Paper §4 rewrite in parallel (skeleton + tables already in PAPER_DRAFT.md
-   §4.0); the LEMON email (EMAIL_DRAFTS, updated with eval #19/#21 numbers)
-   is ready for Nurkyz to send.
+5. Q program (MASTER_PLAN §2): LEMON head-to-head on their exact lenses —
+   Q1 SLDE cutouts + PyAutoLens GT are downloaded (~/cosmos_acs/q1_slde/);
+   Busillo email SENT by Nurkyz 2026-07-12/13 (nudge ~07-20 if silent).
+6. Paper §4 rewrite in parallel (skeleton + tables already in PAPER_DRAFT.md
+   §4.0).
 
 STANDING OPERATIONAL PATTERN: chain stages with explicit nohup driver scripts
 on the CLUSTER (sbatch --wait waves, ≤8 jobs, gate-check between hops, abort
@@ -89,7 +91,7 @@ asked, and don't push mid-experiment noise. Data/binaries never enter git
   dataset generation) go through **SLURM batch scripts**, not tmux. Write an
   `.sbatch` file, `sbatch` it, poll with `squeue -u nurkyz`, read logs from the
   SLURM output file — do not block a foreground ssh session on a long job.
-- **Quota 75/100 GB** (as of last check — re-verify with `quota -s` or the cluster's
+- **Quota 104/150 GB, limit 160** (raised 2026-07-13; as of last check — re-verify with `quota -s` or the cluster's
   equivalent before any large generation run). A ~3 GB pilot fits; delete superseded
   datasets/checkpoints before generating a new full (50–100k image) set.
 - conda env `Stronglensing`, Python 3.8 → no backslashes inside f-strings.
@@ -204,63 +206,14 @@ On the Mac (this folder): `epsf_retrieve.py` + `.venv_epsf/` retrieve STScI
 focus-diverse ePSFs into `epsf_library/{benchmark,broad}/` (169 + 52 cubes
 retrieved 2026-07-05, manifests alongside).
 
-## Staged plan with human checkpoints (STOP and report at each ⛔)
+## The plan
 
-**STATUS (2026-07-06): Stages 0–2 DONE — see DECISIONS_LOG for the full record.**
-`~/einstein_cnn/train_hybrid_100k.h5` (100k) + `val_hybrid_5k.h5` (5k, kernel- and
-seed-disjoint) exist, merged from 22 SLURM shards, gated on the FULL merged set
-(not just a 200-pilot) — all PASS. Next: Stage 3 training, gated on Nurkyz's
-go-ahead (>30 min run, standing rule).
-Config `config_lensfusion_acs.py` now runs: real STScI focus-diverse ePSF
-(`acs_psf_epsf23_extended.npy`, wings extended, square-diagnostic 2.3), noise
-calibrated (exposure_time 675 s), JOINT empirical lens-light prior
-(`lens_light_empirical.csv`, per-lens Bolton-Re × aperture-corrected total mag,
-sampled via `cross_object`). The **hybrid is the default training image**:
-noiseless paltas render + real empty COSMOS cutout + Gaussian topup to a
-per-image draw from the real SLACS sky-RMS distribution (`hybrid_combine.py`).
-Hybrid pilot F passed ALL gates (sky-RMS 1.16, peak/sky 607, θ_E flat U[0.6,2.2])
-with radial-profile overlay lying on the real one.
-
-**Iteration law (learned the hard way, C→F):** ANY config change → 200-image
-pilot → `gate_stage0.py` + `side_by_side_real_sim.py` must pass BEFORE any
-larger run. One change at a time. Never trust a preview folder without checking
-its embedded config copy and date (the `paltas_smoke8` lesson).
-
-Stage 2 — full training set (IN PROGRESS):
-  a. Config completion (each re-gated): decouple mass center from light center
-     (light ≈ cutout center, mass jittered ~0.05″); widen source offsets to
-     U(±0.25″); open source selection to full COSMOS depth (mag 23.5, smaller
-     min sizes — the compact-source regime is a paper deliverable, don't
-     exclude it); γ ~ N(2.0, 0.15).
-  b. PSF diversity: per-SLURM-shard kernels drawn from the benchmark-matched
-     ePSF bank (random exposure/chip/position/rotation, wings extended). The
-     broad (non-benchmark) ePSF pool is reserved for the PSF-source ablation
-     dataset (PAPER_PLAN "PSF-source design and ablation").
-  c. Scale: 100k train = 20 SLURM shards × 5k (disjoint seeds, one kernel per
-     shard) + 5k sim-val (disjoint seeds AND disjoint kernels). Per shard:
-     generate noiseless → hybrid combine → h5 → preview first 16 → DELETE the
-     intermediate npy (quota!). Merge to `train_hybrid_100k.h5` + `val_hybrid_5k.h5`.
-  ⛔ merged-set gate table + per-shard previews + side-by-side before training.
-
-Stage 3 — training: keep the m3 architecture (scale-conditioned ResNet, asinh
-  input norm), Huber loss, Adam; optional (μ, log σ²) Gaussian-NLL head (per-lens
-  error bars for the paper + Phase-2 weighting; drop it if it destabilizes).
-  Flips/rotations OK for θ_E. Selection on sim-val ONLY. Target: sim-val median
-  |frac err| ≲ 3%. ⛔ curves + sim-val metrics BEFORE any real-lens evaluation.
-
-Stage 4 — the real evaluation (WITH Nurkyz, logged with running count):
-  `metrics_real.py` on the frozen 62 SLACS + 40 S4TM; bootstrap CIs; per-lens
-  scatter vs Cao et al. 2025 (their per-lens θ_E is public). SUCCESS = median
-  within ±5%, R² > 0 (ideally > 0.5), failure (>15%) ≲ 10% — i.e. match/beat
-  Cao on the same lenses; that is the paper's headline.
-  Ablations (each = one dataset variant + one retrain, in this order):
-  (1) flat vs m3-skewed θ_E prior (the causal spine); (2) benchmark-matched vs
-  broad ePSF pool (the circularity answer); (3) real backdrop vs pure Gaussian
-  noise; (4) real ePSF vs Gaussian PSF.
-
-Stage 5 — multi-parameter (θ_E + e1/e2 + center) only after Stage 4 passes.
-  Path B escalation criterion unchanged: only if the full-realism model still
-  has R² < 0 on real lenses (then: real LRG cutouts as deflectors).
+**docs/MASTER_PLAN.md is the SINGLE live plan** (consolidated 2026-07-13: the
+priority ladder, the Q program vs LEMON, the AR ladder, and every open item
+inherited from the archived plans). Superseded plan documents live in
+`docs/archive/` with banners — read them only for history. Deferred-work rows
+live in COMMITMENTS.md (reconcile at every ⛔). If MASTER_PLAN conflicts with a
+newer DECISIONS_LOG entry, the log wins; update the plan when that happens.
 
 ## Benchmark / literature context
 

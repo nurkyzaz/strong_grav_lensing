@@ -1,3 +1,6 @@
+> **ARCHIVED 2026-07-13.** Superseded by docs/MASTER_PLAN.md (the single live plan).
+> All undone items were carried into MASTER_PLAN.md at archive time. Historical record only.
+
 # LEMON HEAD-TO-HEAD PLAN — same lenses, both domains
 
 Date: 2026-07-13. Authorized by Nurkyz ("start the Q1 plan, get the euclid images;

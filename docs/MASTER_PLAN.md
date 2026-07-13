@@ -1,455 +1,188 @@
-# MASTER PLAN — From m3 Failure to a Publishable Real-Lens Model
+# MASTER PLAN — the single live plan (consolidated 2026-07-13)
 
----
+This file replaces ALL previous plan documents. Everything undone from them is
+carried here; their full text lives in `docs/archive/` (MASTER_PLAN_20260702,
+IMPROVEMENT_PIVOT_PLAN_20260710, PATHB_IMPROVEMENT_PLAN, DATA_OVERHAUL_GEN4_PLAN,
+PAPER_PLAN, LEMON_HEADTOHEAD_PLAN). Authority order is unchanged:
+**DECISIONS_LOG.md > this plan**; COMMITMENTS.md is the deferred-work ledger
+(reconciled at every ⛔ and before any full generation); MODELS_AND_RESULTS.md
+holds current numbers; PAPER_DRAFT.md is the manuscript; CLAUDE.md holds the
+operating rules. If a stage here conflicts with a newer DECISIONS_LOG entry,
+the log wins — update this file when that happens.
 
-## ⚡⚡ 2026-07-09 STRATEGY REWRITE — post-LEMON-correction roadmap (supersedes the D-campaign ORDERING below; D-item content still valid where referenced)
+## 0. Where we are (2026-07-13, eval count 21; details in MODELS_AND_RESULTS.md)
 
-**Trigger:** (a) LEMON's real-lens numbers were mis-recorded in our review (their true Table 3:
-bias −0.03″, RMSE 0.14″, NMAD 0.11″, R²=0.53 on 60 Euclidised HST lenses, NO filtering —
-comparable to our v2, NOT 2–3× worse; see LITERATURE.md retraction). (b) Professor's meeting
-suggestions: revisit IllustrisTNG κ-map training; try pretrained backbones (ConvNeXt V2 / DINO).
-(c) Nurkyz's directive: fastest path to publishable results that beat LEMON or carry clear
-novelty.
+GEN4 (self-consistent population: real HST galaxy = light AND mass, SDSS σ_v →
+θ_E, FJ channel) delivered the central result on the frozen benchmark:
 
-**Honest position after correction:** we cannot claim aggregate-metric superiority over LEMON.
-Our defensible, unclaimed assets: (1) NATIVE-HST domain (higher resolution, harder sim-to-real)
-with UNIFORM spectroscopic-survey b_SIE ground truth (their GT mixes 4 catalogues, which their
-own paper flags); (2) the CAUSAL REALISM DECOMPOSITION — nobody in the field ablates simulation
-ingredients (LEMON: fully parametric sims, zero ablations); (3) REAL deflector light + real
-sources + real backdrops + focus-diverse ePSFs as training ingredients (first for θ_E
-regression); (4) sim-to-REAL domain adaptation validated on real GT (all published DA is
-sim-to-sim); (5) honest σ-calibration ON real GT. The paper leads with (1)+(2)+(3); (4) is the
-second pillar if it moves metrics.
+| domain | bias | RMSE | NMAD | R² | fail |
+|---|---|---|---|---|---|
+| Native HST SLACS (eval #21) | +0.005″ | 0.152″ | 0.048″ | +0.64 | 15% |
+| Native HST S4TM (eval #21) | +0.013″ | 0.088″ | 0.047″ | +0.90 | 8% |
+| Euclid-domain SLACS (eval #19) | −0.010″ | 0.137″ | 0.056″ | +0.71 | 15% |
 
-### R0 — THIS WEEK (decides the paper's primary model; blocking)
-1. ⛔ Benchmark evals #10/#11 (Path-B-v2 InceptionNeXt + ResNet, Nurkyz present, TTA,
-   running count 9→11) + protocol additions already queued: ensemble column, Etherington
-   subset, arc-SNR-stratified sim-val, sky-RMS-1.26 ruling.
-2. σ recalibration (old D3) fitted on sim-val, reported at the same evals.
-3. DECISION: primary model = best of {v3-parametric, pathb-v2} × {archs, ensemble} on the
-   full-sample benchmark. Path B v2's realism story is preferred IF within noise of v3.
+Beats/matches Cao 2025 (conventional, same lenses); beats LEMON Table 3 on every
+θ_E aggregate in their Euclidised domain. In flight on the cluster:
+run_night_resume.sh → g4ar (AR1 arc-Poisson + AR2 coupled shear) regen → grid →
+⛔ eval #22 (pre-authorized, count → 22); g1b 800-target stamp fetch; Q1 SLDE
+cutouts downloaded + unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs, 4.7 GB).
 
-### R1 — PAPER CORE (~2 weeks; nothing below blocks submission)
-1. **LEMON comparison, corrected framing:** honest side-by-side table (native-HST vs
-   Euclidised domains stated), emphasize uniform GT, 102-lens sample, no filtering.
-2. **Euclidised-SLACS cross-domain figure (NEW — the direct head-to-head):** HST2EUCLID is
-   public; degrade our 29 shared SLACS benchmark images to Euclid resolution, evaluate our
-   model (zero-shot; optionally + a quick Euclidised-sim fine-tune) and compare against
-   LEMON's published Table 3 on the SAME lenses. Either outcome is a result; if we transfer
-   well, it directly answers "but Euclid is the future".
-3. **Causal decomposition completed:** D1 ablations A3 (prior), A1 (PSF), A2 (backdrop),
-   A4 (ePSF pool) + the lens-light axis (v3-parametric vs pathb-v2 — already trained, free).
-   One 100k variant + one training + one logged eval each; batch the evals.
-4. **Cao et al. 2025 comparison:** email (Nurkyz/Brian) for per-lens θ_E; fallback = run
-   their public TinyLensGpu on the 63 lenses ourselves. Summary-level comparison suffices
-   for submission if per-lens stalls.
-5. Write the paper (PAPER_DRAFT skeleton exists; §2.3 → Path B method; calibration-
-   disjointness sentence; corrected LEMON table).
+## 1. Priority ladder (Nurkyz-set direction + Q program; work top-down,
+   parallel where independent)
 
-### R2 — PROFESSOR'S EXPERIMENTS (parallel, controlled, non-blocking; each = one run + sim-val + joins evals only at a ⛔ batch)
-1. **Pretrained backbones (professor #2):** (a) ConvNeXt V2 (FCMAE-pretrained, timm),
-   grayscale-adapted, scale-conditioning + NLL head retained — one controlled run on the
-   pathb-v2 dataset. (b) DINOv2 frozen-features + regression head as a cheap probe of
-   whether generic pretraining helps this domain at all. Full ViT fine-tune only if the
-   probe is promising. Rationale: architecture was NOT the diagnosed failure axis, but
-   pretrained features may specifically help sim-to-real robustness — test it as a
-   pretraining ablation row, not a rebuild.
-2. **Mass-model realism arm (professor #1, reframed):** do NOT wholesale return to the
-   κ̄=1 pipeline (label mismatch with b_SIE GT, weaker prior control, and m3's failure was
-   prior-pull + realism, not SIE-ness). Instead: render IllustrisTNG κ maps through
-   lenstronomy INTERPOL inside the CURRENT hybrid pipeline (same sources/ePSF/backdrops/
-   deflector light), flat effective-θ_E prior via κ rescaling, labels calibrated
-   κ̄=1→SIE-equivalent on a fitted subsample. One dataset variant + one training. If it
-   beats SIE on the benchmark → adopt mixed-mass training for the final model AND gain the
-   "mass-realism ablation" — a 6th decomposition axis nobody has. This honors the
-   professor's physical intuition (real arcs come from non-SIE mass) as a measured
-   experiment instead of a pivot.
+1. **Harvest ⛔ eval #22** (g4ar) → decide the production Euclid recipe
+   (incumbent: G4-trained cnv2_3 on the real-PSF bench, 0.137/+0.71/15%).
+2. **Q program — LEMON head-to-head on their exact lenses** (§2; C16). Q2 is
+   unblocked NOW and is pure evaluation-side work (no retraining) — run it
+   alongside 3–4.
+3. **G1b library build**: Nurkyz visual prune of the 800-target fetch →
+   measurement pass INCLUDING isophote a3/a4 (C5, feeds AR3) → C15a/b σ_v
+   corrections (f_SIS = σ_fiber/0.948, +7% intrinsic scatter) in the next
+   manifests; C15c validation figure (analysis-only) can be made immediately.
+4. **AR3 isophote-anchored multipoles** (one pilot, gates incl. AR0 arc gate)
+   → regen with the BIG G1b library + C15 corrections → ⛔ eval pair
+   (native + Euclid). Expect less tempering (stronger training FJ ρ).
+5. **G5 ROMAN** — full focus after 4: Roman InstrumentConfig (WFI 0.11″/px,
+   STPSF PSF models, HLWAS depths) as the third rendering of the same
+   population. No real GT exists → the claim is "cross-domain-validated,
+   Roman-ready"; cite Wedig et al. 2025 (arXiv:2506.03390) as the waiting
+   application (their sim products are public — the gap will not stay open).
+6. **Paper §4 rewrite + release assets** (§5) — continuous, parallel.
 
-### R1.2b — Euclid arm: source-population fix + full run (added 2026-07-09 evening, Nurkyz: option B)
+## 2. Q program — beat LEMON on their exact lenses, both domains (C16)
 
-**Diagnosed chain:** Euclidised eval negative (evals #12/#13) → error is monotonic in
-post-degradation arc SNR → selection needed → at eye-honest threshold small-θ_E sims never
-pass (2%/6%) while REAL small-θ_E lenses show arcs → because SLACS sources are COMPACT/HIGH-SB
-(Newton et al. 2011: F814W 22–26, mean 24.3, sub-kpc → SB ~18–21 mag/arcsec²) vs our
-unselected COSMOS draw (~22.4). **Fix = population-matched SB selection**
-(`config_lensfusion_acs_pathb_euclid.py`, HighSBCOSMOSCatalog, SB ≤ 21; 7,808/56,062 catalog
-galaxies pass) — measured selection, not the banned v0 flux boost.
+Scoreboards (verified from their PDF 2026-07-13):
+(A) 60 Euclidised HST lenses, Table 3: θ_E bias −0.03″/RMSE 0.14″/NMAD 0.11″/
+R² 0.53 — heterogeneous literature GT, and 13/60 (ACS/Pawase) have NO θ_E at
+all (arc radius substituted; disclose this).
+(B) 354 real Euclid Q1 lenses vs PyAutoLens SIE (Fig. 12a): bias 0.01″/
+RMSE 0.17″/NMAD 0.07″/R² 0.71. Their mass ellipticities on Q1 do NOT correlate
+(R² −0.31/−0.44); magnitudes needed an ad-hoc −0.22 ZP shift; their Sect. 7
+admits real < sim performance.
 
-**STATUS 2026-07-10: R1.2b EXECUTED THROUGH EVAL #14.** Final recipe (pilots v2j1→B2→C→C2→D→
-threshold scan): HighSB + Newton mags + SLACS-z sources, selection (0.7, 150)
-prominence-matched, expanded screened backdrops (3,796), 1px light jitter. Dataset
-102,174+4,903 (label-verified). **Eval #14: ensemble SLACS NMAD 0.084 (LEMON 0.11 — BEATEN),
-bias +0.06, R² +0.33 (was 0.00), fail 31% (conf-half 10–13%).** Remaining gap to LEMON's
-RMSE/R² = catastrophic tail only → next levers E3/E4/E5 below + shared-29 per-lens table
-(author email). Full table + caveats: DECISIONS_LOG 2026-07-10.
+### Q1 — their 60-lens Euclidised HST sample
+- **Q1a sample identity**: EELs 13/13 IDENTIFIED (Oldham 2017 Table 2 —
+  J0837 0.56″, J0901 0.67″, J0913 0.42″, J1125 0.86″, J1144 0.68″, J1218
+  0.68″, J1323 0.31″, J1347 0.43″, J1446 0.41″, J1605 0.64″, J1606 0.52″,
+  J1619 0.50″, J2228 0.60″; GT = power-law+shear, disclose). COSMOS 5 = the
+  spectroscopically-confirmed subset of Faure 2008 (VizieR table pulled; pick
+  the spec-z 5). ACS 13 = spec-confirmed subset of Pawase 2014 Table 3 (not
+  on VizieR — extract from paper; NO true θ_E, dual-report vs arc radius or
+  exclude, flagged). SLACS 29: NOT uniquely derivable — Ring=32,
+  Ring∩σ_good=31 (tables/bolton08_table5.csv), Auger-photometry cut RULED OUT
+  (all 31 have I-band). Routes: (i) Busillo reply (email SENT ~07-12/13;
+  nudge ~07-20), (ii) digitize their Fig. 9 (z_lens, log θ_E) 29 points and
+  match against the 63 Bolton pairs. Until resolved: 62-superset row
+  (defensible; already beats their aggregate). Gate: any claimed 29-list must
+  reproduce their Fig. 9 scatter. Deliverable: tables/lemon60_targets.csv
+  (skeleton exists).
+- **Q1b imaging (31 non-SLACS)**: MAST F814W fetch (g1/g1b driver pattern;
+  COSMOS 5 may be in local COSMOS tiles — check first) → benchmark-grid
+  cutouts → files FROZEN at creation (`real_lemon31_*`, C18) → euclidise
+  (real Q1 VIS PSF) → three-stretch previews on ALL before any eval. Pilot 3
+  lenses (1/subsample) first.
+- **Q1c ⛔ eval (logged)**: current Euclid primary + TTA; LEMON-convention
+  table per subsample + combined; SLACS row = 29-exact when resolved (then it
+  is a ROW-FILTER on saved per-lens CSVs — no re-run). Bar: beat their 60-lens
+  NMAD and R² on the matched composition.
 
-**Pilot B (job 47381):** ONLY change vs pilot v2 = source population. PASS criterion: per-θ_E
-selection pass fractions rise materially (v2 baseline: 2%/6%/15%/34%), gates + side-by-side
-hold. Then FULL RUN: (1) waves of arc-only generation sized by the measured pass fraction
-(target ~100k selected + 5k val, val = disjoint seeds/kernels/stamps as always, npys kept per
-shard until selection); (2) per-shard combine (screened backdrops) → euclidise → select →
-delete intermediates (quota); (3) merged gate vs Euclidised benchmark + side-by-side + Nurkyz
-visual; (4) quick-train sanity → full train both archs → σ recal on Euclid sim-val;
-(5) ⛔ Euclidised-benchmark eval (θ_E validity scope DECLARED BEFORE the eval from the
-selection statistics) + LEMON-convention table.
+### Q2 — native real Euclid Q1 (their 354; the unplayed board) — UNBLOCKED
+- **Q2a GT: ✅ RESOLVED.** Zenodo 15025832 publishes everything: per-lens
+  PyAutoLens SIE θ_E (`modeling_lens_mass.csv`, 335 rows, mirrored to
+  tables/q1_slde_mass_models.csv), the 2,584-candidate catalog with grades,
+  and lens.zip = per-lens dirs each holding the VIS cutout FITS, an
+  extra-galaxies MASK, and the full PyAutoLens result JSONs. All on the
+  cluster (~/cosmos_acs/q1_slde/lens/lens/, 336 dirs). LEMON's 354 vs 335:
+  remainder presumably Rojas high-σ_v systems — find that release or
+  reconcile/disclose at eval.
+- **Q2b format inspection**: FITS pixel scale/size/units; info.json contents;
+  mask conventions. THEN preprocessing to the 128px @ 0.05″ grid the g4
+  Euclid arm expects (same 2× upsample as euclidise.py output side).
+- **Q2c gates BEFORE eval (C17)**: flux/ZP sanity (aperture mags vs catalog
+  I_E — we predict a smaller offset than their −0.22 since G3 calibrates on
+  real Q1 PSF+sky; MEASURE it); sky-RMS + peak/sky distributions vs the
+  training arm (gate_stage0-style); 10-lens pilot with three-stretch previews.
+- **Q2d population-shift audit (disclose)**: Q1 deflectors not all LRGs; θ_E
+  skews small; z_l higher than SLACS. Report training-support overlap; flag
+  out-of-support systems in the per-lens table.
+- **Q2e ⛔ eval (logged)**: our θ_E vs PyAutoLens θ_E on their sample, LEMON
+  conventions + bootstrap CIs. Bar: R² > 0.71, NMAD < 0.07″. Secondary: σ
+  coverage on real Euclid (ours conformal C11 vs their sim-Platt). Caveat to
+  carry: PyAutoLens = own-pipeline GT (same critique we make of Gawade) —
+  "their game, their referee, their field".
+- Optional bonus: 5 Perseus ERO lenses (Acevedo Barroso classical models).
 
-**E-diagnosis program — closing the remaining gap to LEMON's Euclidised numbers (execute in
-order, one change at a time, each gated):**
-- E1 source SB population — pilot B, running.
-- E2 source REDSHIFT prior: we fix z_source=1.5; SLACS sources sit at z≈0.6–0.8 →
-  (1+z)⁴ SB dimming + size scaling penalize us. Legitimate population fix: z_source ~ the
-  measured SLACS source-z distribution. (paltas θ_E label is set directly by the deflector
-  prior, so this changes appearance only.) Pilot C if B insufficient.
-- E3 PSF fidelity: replace the Gaussian VIS approximation with the public Euclid VIS PSF
-  model in BOTH the Euclidiser and (if obtainable) compare against Bergamini's original code.
-- E4 multi-parameter auxiliary heads (LEMON predicts 7 params jointly — auxiliary tasks
-  regularize and force explicit lens-light modeling): add e1/e2 + lens-light outputs using
-  the existing Stage-5 ellipticity-label machinery; orientation-aware augmentation required
-  (the corrected e1/e2 transform).
-- E5 transfer-init: initialize Euclid-arm training from the best NATIVE checkpoint
-  (fine-tune) instead of scratch — cheap, likely helps.
-- E6 pretrained backbone (= R2.1 ConvNeXt V2) on the Euclid arm.
-- E7 eval-sample honesty: LEMON's 60 mix four catalogues incl. compact high-SB EELs (easier);
-  get their 29 SLACS names (author email) for the exact shared-lens table; report per-subset.
+### Q3 — paper integration
+"One physical population model, three real-GT domains" section (native-HST
+b_SIE / Euclidised-HST / real-Euclid-Q1) — the claim nobody else can make.
+Honesty box: their arc-radius GT 13/60; our Euclidiser = disclosed
+reimplementation; own-pipeline-GT caveats cut both ways.
 
-### R3 — SECOND PILLAR / FOLLOW-UP
-1. DA on real GT (old D4; style-MMD path exists in train_cnn_paltas.py) — retry on the
-   real-light model where the residual domain gap is smaller.
-2. Euclid Q1 zero-shot/adapted evaluation (old D5) — candidate SECOND paper on LEMON's
-   home turf; do not let it delay paper #1.
+## 3. AR ladder (arc realism; full table archived in
+   DATA_OVERHAUL_GEN4_PLAN §AR)
 
-**Rules unchanged:** benchmark evals only at ⛔ with running count; one change per dataset;
-gates before scale; sim-val-only model selection; log everything in DECISIONS_LOG.
+| item | what | status |
+|---|---|---|
+| AR0 | quantitative arc-realism gate | baseline DONE (sim/real gap SMALL); wire into every pilot chain (C14) |
+| AR1 | arc shot noise, native arm | patch applied; in g4ar → eval #22 (C13) |
+| AR2 | ΔPA↔γ_ext coupling | in g4ar → eval #22 (C1) |
+| AR3 | mass multipoles m=3,4 anchored to each stamp's MEASURED isophotes (novelty) | NEXT after G1b measurement (C5); pilot + AR0 gate |
+| AR4 | source knots / HUDF deep-morphology tier | only if arc gate still shows a gap after AR3 (C7) |
+| AR5 | companion MASS (FJ-scaled SIS) | conditional, after AR3 |
+| AR6 | slope–σ_v coupling | cheap honesty, bundle with a regen |
+| AR7 | LOS structure | DEFERRED until a θ_E-label-convention ruling (C6) |
+| AR8 | TNG convergence maps (professor §6.1) | paper-2 / ablation (breaks per-observed-galaxy self-consistency) |
 
----
+## 4. Inherited open items (deduped from ALL archived plans — nothing else
+   from them remains undone; if you think something is missing, check the
+   archive and ADD IT HERE)
 
-## ⚡ 2026-07-06 ADDENDUM — Differentiator campaign (supersedes the Stage-4 ablation list below; informed by the systematic literature review, see LITERATURE.md)
+| id | item | origin | status/next |
+|---|---|---|---|
+| I1 | Cao per-lens θ_E comparison: email sent chain (C8) OR re-run public TinyLensGpu on the 63 lenses ourselves (~3 min/lens GPU), labeled as our reproduction | MASTER D2 / PATHB Q7 | email pending; fallback ready to build |
+| I2 | Two-stage hybrid "system" row: σ-gated fallback CNN → TinyLensGpu init at CNN prediction; headline = full-sample failure 15% → X% at ~ms average cost; doubles as the I1 fallback | PIVOT L4.2 | open, paper-value high |
+| I3 | Aux heads (θ_E + e1/e2 + lens-light Re/n/m): labels flow through the pipeline; NEVER TRAINED (deferred at REB). LEMON's n_lens R²=−0.47 and Q1 mass-ϵ R²<0 are soft targets; real-GT for ϵ exists (Bolton q/PA) | PIVOT L2/E4, GEN4 keeps | open; train on GEN4/G1b data when grid slots free |
+| I4 | σ calibration: conformal on a real-disjoint pool (RAW coverage still under) | C11 | open — needs pool design |
+| I5 | Confirmation set: never-evaluated real lenses (Bolton grade-B / BELLS), evaluated EXACTLY ONCE at paper time (benchmark-adaptivity defense; 21+ logged evals make this cheap insurance) | PIVOT fresh-eyes #2 | open — assemble with Nurkyz before submission |
+| I6 | GT-error ceiling analysis: best-achievable RMSE/R² given published b_SIE errors (converts "gap to X" into "distance from ceiling") | PIVOT fresh-eyes #3 | open, analysis-only, cheap |
+| I7 | Inference-cost measurement (ensemble × TTA forwards/lens) for the speed claim | PIVOT chores | open, trivial |
+| I8 | Ablation table for the paper: pre-GEN4 causal bundle exists (backdrops ≫ prior ≈ PSF > pool ≈ DA ≈ companions ≈ lens light, evals ≤ #11); DECIDE: report as-is (historical recipe) vs re-run key rows (prior, PSF, backdrop) on the GEN4 recipe | MASTER D1 / PATHB Q6 | decision with Nurkyz at paper time |
+| I9 | DA retry on the GEN4-era model (pre-Path-B DA was NULL vs parametric light; sim-to-real DA on real GT is still unclaimed in the literature) | MASTER D4 / PATHB Q4 | optional second pillar; only if a real gap remains |
+| I10 | TNG-κ mixed-mass arm (professor) = AR8 | MASTER R2.2 / PATHB Q14 | paper-2/ablation |
+| I11 | BELLS GALLERY / COWLS JWST cross-instrument generalization | MASTER D5 / PATHB Q12 | follow-up paper |
+| I12 | Universal inference loader (any FITS+WCS → model grid) — InstrumentConfig generation side is DONE via GEN4 P5; the inference-side loader is what Q2b partially builds | PIVOT R1 | fold into Q2b, then generalize |
+| I13 | Companion realism v2 (speckle texture) | PATHB P8 | dormant — re-judge on current side-by-sides |
+| I14 | Release package: benchmark ("SLACS-102"), weights, per-lens predictions, eval protocol → Zenodo DOI (website REMOVED by ruling) | PIVOT P4 | at submission |
+| I15 | Brian: authorship + GEN4 direction paragraph | everywhere | Nurkyz, overdue |
+| I16 | Emails: Bergamini (HST2EUCLID code), Cao/Li (per-lens) still unsent; Busillo SENT | C8 | Nurkyz; nudge Busillo ~07-20 if silent |
+| I17 | Etherington gold-subset reporting alongside full benchmark | PATHB Q8 | verify it's in the eval protocol; add if not |
+| I18 | Sam PSF ask | old standing item | RETIRED (superseded by STScI focus-diverse ePSFs + Q1 VIS PSF) unless Nurkyz revives |
 
-**Context:** hybrid v2 already achieves full-sample R² +0.45 on 102 native-HST real lenses
-(bias −0.059″, RMSE 0.210″, NMAD 0.096″ — every metric 2–3× better than LEMON/Busillo 2026,
-the nearest competitor, who report R² ≈ −0.03 full-sample in the Euclidised domain). The review
-identifies exactly four unclaimed differentiators. Execute in this order:
+## 5. Paper assembly (continuous; PAPER_DRAFT.md §4.0 has the tables)
 
-**D1 — Causal realism ablations (converts the recipe into science; nobody in the literature
-isolates ingredients).** Each = one dataset variant (100k, same pipeline, ONE change) + one
-training run + one benchmark evaluation (logged, batched as the ablation bundle):
-  - A3 θ_E prior: flat U[0.45,2.3] → m3-like skewed (truncated normal at ~1.0″) — the paper's
-    causal spine (prior-pull diagnosis → fix → proof). RUN FIRST.
-  - A1 PSF: empirical focus-diverse ePSF bank → single Gaussian FWHM 0.10″.
-  - A2 backdrop: real empty COSMOS cutouts → pure Gaussian noise at the same per-image RMS draws.
-  - A4 ePSF pool: benchmark-matched → broad non-benchmark pool (the circularity answer).
-  Quota discipline: delete each ablation's dataset after its training+eval; keep ckpt+CSVs.
+- §4 rewrite around the GEN4 result + causal chain (prior → realism → physics
+  self-consistency → real PSF → selection trade-off).
+- Q3 three-domain section when Q evals land; LEMON six-column table if I3
+  (aux heads) trains in time.
+- Reliability: conformal σ (I4), coverage figure, ρ(σ,|err|), failure-rate CIs.
+- Negatives-as-findings: Euclidisation ≠ fix; deflector-light null; DA null;
+  ensembles/recentering null; flatness-vs-FJ incompatibility (tempering).
+- Comparisons: Cao (same-lens, conventional), LEMON (both domains, same
+  lenses where resolvable), Gawade/HOLISMOKES X/STRIDES (context, with their
+  GT caveats — see LITERATURE.md 2026-07-13 sweep for exact numbers).
+- Success bars (all already met at eval #21 — protect them): median ≤ ±5%,
+  R² > 0.5 native, fail ≤ 15%, NMAD ≤ 0.06″.
 
-**D2 — Per-lens matched comparison vs Cao et al. 2025** (conventional pipeline, same 63 SLACS).
-Deliverable: per-lens scatter (us-vs-Cao), agreement statistics, speed contrast (~ms vs
-~3 min/lens). **[CORRECTED 2026-07-09: the per-lens θ_E results are NOT public — the GitHub
-repo (github.com/caoxiaoyue/TinyLensGpu) contains only the code, and the paper's data-availability
-line points back at that repo; checked repo + author's other repos. Paths: (a) the email to Cao
-(P8 chore, still the primary route); (b) fallback that needs no cooperation: their code is public
-and runs ~3 min/lens on GPU — re-run TinyLensGpu ourselves on the same 63 lenses and compare
-against our reproduction of their pipeline (label it as such in the paper).]**
+## 6. Standing rules (full text in CLAUDE.md — this is the checklist)
 
-**D3 — σ recalibration + honest coverage.** Our σ under-covers on real data (52%/83% vs 68%/95%).
-Fit a single temperature/scale factor on SIM-VAL ONLY (never the benchmark), report raw AND
-recalibrated real-lens coverage; cite LEMON's Platt scaling and Busillo's σ-filtering as prior
-art for gating; our additions = ρ(σ, |err|) on real GT + failure-rate CIs + domain-aware σ.
-
-**D4 — Sim-to-real domain adaptation (THE unclaimed peak; all prior DA work is sim-to-sim).**
-  - Assemble a benchmark-DISJOINT unlabeled real pool (HST ACS F814W): non-benchmark SLACS
-    grades, S4TM candidates beyond our 40, SLACS-extension programs; target ≥100 cutouts through
-    the existing fetch pipeline. HARD RULE: zero overlap with the frozen 62+40 (name-level check
-    logged).
-  - Method v1: MMD feature alignment added to the v2 training recipe (MVE+UDA pairing mirrors
-    Agarwal 2025, who stopped at sim-to-sim); DANN as v2 if MMD underwhelms.
-  - Metrics that DA must move: compression slope (0.72/0.71 → 1), full-sample failure rate
-    (23%/38% → ≲15%), σ coverage. Evaluate ONCE per DA variant, logged.
-  - This is the paper's second novelty pillar; if it works, consider titling around it.
-
-Sequencing note: D1–D3 are independent of D4 and feed the "before-DA gap fully characterized"
-requirement; run D1 generation/training on the cluster while D2/D3 (analysis-only) complete
-locally, then D4.
-
-**D5 — multi-domain generalization (added 2026-07-06 after colleague input; runs AFTER D4).**
-Colleague-proposed real-lens sources that are the WRONG instrument domain for the HST-targeted
-DA pool (ruling logged in DECISIONS_LOG) but ideal for a cross-instrument generalization
-experiment: ~250 Euclid Q1 grade-A lenses (A&A aa55141-25 — also the future LEMON home-turf
-arena), BELLS GALLERY (WFC3/UVIS F606W), COWLS JWST (M25/S12-09). Design sketch: multi-target
-MMD or per-domain adapters; evaluate zero-shot vs adapted per domain. Separate paper section or
-follow-up paper. ALSO: report the Etherington et al. 2022 (arXiv:2202.09201) literature-defined
-SLACS subset alongside the full frozen benchmark (never shrink the benchmark itself post-hoc).
-
----
- 
-_Date: 2026-07-02. Supersedes nothing; consolidates PAPER_PLAN + DATA_PIPELINE next steps into one
-ordered campaign with hard gates. Rule #1 of this plan: **no run larger than 200 images until the
-previous gate passes numerically.** This is the anti-blob discipline._
- 
----
- 
-## 0. Two new findings from direct paltas source inspection (2026-07-02)
- 
-These were verified by reading the actual paltas code (pip wheel 0.1.1 vs GitHub main), not guessed.
- 
-### Finding 1 — the `magnitude` convention DEPENDS ON WHICH PALTAS YOU INSTALLED. This is the #1 suspect for the invisible lens light.
- 
-- **pip `paltas==0.1.1`** (`pip install paltas`): `SingleSersicSource.draw_source()` passes
-  `magnitude` straight to `mag_to_amplitude()`. → `magnitude` is **APPARENT** magnitude.
-  Apparent 16.5–18.5 with zeropoint 25.94 = very bright lens. Good.
-- **GitHub `main`**: `draw_source()` calls `absolute_to_apparent(magnitude, z_source, cosmo)`
-  (plus a k-correction). → `magnitude` is **ABSOLUTE** magnitude. If you feed it 16.5–18.5,
-  at z=0.5 the distance modulus is ~+42 mag → apparent ~58 → **the lens light renders at
-  literally zero flux. Arcs visible, lens invisible — exactly your symptom.**
-Check which one you have (run on the cluster, env `Stronglensing`):
- 
-```
-python -c "import inspect; from paltas.Sources import sersic; import paltas; print(paltas.__file__); src = inspect.getsource(sersic.SingleSersicSource.draw_source); print('ABSOLUTE convention' if 'absolute_to_apparent' in src else 'APPARENT convention')"
-```
- 
-- If it prints `ABSOLUTE convention` → mystery solved. Fix = either (a) `pip install paltas==0.1.1
-  --force-reinstall --no-deps` to get the apparent-magnitude version, or (b) keep main and set
-  lens-light `magnitude` to absolute values (elliptical galaxies: roughly −21 to −23) **and** make
-  sure `z_source` for lens light equals z_lens (main uses it for the distance modulus). Option (a)
-  is simpler and matches the config you already wrote.
-- If it prints `APPARENT convention` → the two "fallback" hypotheses in DECISIONS_LOG are red
-  herrings: in pip 0.1.1 the lens-light `z_source` is **discarded** (config_handler does
-  `..., _ = draw_source()`, the redshift is never used for lens light), and the combined `'e1,e2'`
-  key is the **standard** paltas pattern (the Horton config itself uses `'e1,e2'` with
-  `dist.EllipticitiesTranslation` for lens light). So neither can suppress the light. The
-  color-scale-artifact hypothesis then becomes near-certain → run `diagnose_paltas_lens_light.py`
-  and expect core/edge ≫ 1.
-### Finding 2 — acceptance rate 1.000 means the magnification cut is probably NOT active.
- 
-paltas only rejects draws when a config defines `mag_cut` (module-level variable; e.g. the Horton
-config sets `mag_cut = 2.0`). With `mag_cut` set, some draws must fail (source outside caustic,
-low magnification) and acceptance < 1. **Acceptance exactly 1.0 strongly suggests no `mag_cut` in
-`config_lensfusion_acs.py`** — which means the training set will contain barely-lensed blobs
-(source far from caustic → one faint smudge, no arc). This is precisely the "blobs, not lenses"
-failure class you're worried about. Fix: add at module level
- 
-```python
-mag_cut = 3.0   # require total magnification >= 3; expect acceptance ~0.5-0.9 afterwards
-```
- 
-and confirm the acceptance rate drops below 1.0 on the next test run. (Note: this is a total-
-magnification cut, which the standing decision said is weak *as a detectability criterion* —
-here it serves a different purpose: guaranteeing a genuinely lensed geometry in every training
-image. Keep it moderate; do not use it as the detectability filter.)
- 
-### Finding 3 (paper framing correction) — Cao et al. 2025 is NOT a CNN.
- 
-Cao et al. 2025 (arXiv:2503.08586) is an **automated conventional lens-modeling pipeline**
-(pixel-based modeling + nautilus nested sampler, ~3 minutes per lens), applied to 63 SLACS lenses,
-≲5% deviation, ~10% catastrophic failures on SLACS. Two consequences:
- 
-1. **Better positioning for us, not worse.** The claim becomes: a millisecond-inference CNN
-   matches (or beats) a full likelihood-based automated modeling pipeline on the identical lens
-   sample — a ~10⁵× speedup at comparable accuracy. And Cao et al. explicitly say their failures
-   "can be mitigated by incorporating prior knowledge from machine learning techniques" — our
-   paper is literally the thing they call for. Quote-mine that for the intro.
-2. **The CNN-vs-CNN comparisons are separate:** Hezaveh et al. 2017 (Nature; CNN SIE parameters
-   from HST) and Gawade et al. 2025 (ground-based HSC). Cite all three but keep the head-to-head
-   table honest about method class.
-3. **Their code and per-lens data are public** (linked from the arXiv abstract). Download their
-   per-lens θ_E results → per-lens scatter plot of us-vs-Cao on the same lenses. That figure is
-   far stronger than comparing two summary statistics.
----
- 
-## Stage 0 — Diagnose & fix the generator (NO compute beyond 200 images)
- 
-**Goal:** a config that provably produces SLACS-lookalikes. Everything here runs in minutes.
- 
-0.1 Run the version check (Finding 1). Apply the fix if needed.
- 
-0.2 Run `diagnose_paltas_lens_light.py` on the existing 64-image test run.
-    Interpretation:
-    - core/edge ≫ 1 (say > 10): lens light present; problem was the display stretch. Proceed.
-    - core/edge ≈ 1: light truly absent → almost certainly Finding 1 (absolute-magnitude
-      version). Fix and re-run.
- 
-0.3 Add `mag_cut = 3.0` (Finding 2). Re-run 64 images; confirm acceptance < 1.0.
- 
-0.4 Preview discipline forever after: every preview panel gets **three stretches** —
-    linear, 1–99 percentile clip, and asinh — side by side. Most historical "blobs" and
-    "missing light" scares were stretch artifacts. Bake this into `paltas_to_train.py --preview`.
- 
-0.5 **200-image pilot** with the fixed config, then run the numeric realism gate
-    (adapt `diagnose_simct.py`; targets from the real-SLACS diagnostics you already measured):
- 
-    | Gate metric                     | Target (from real SLACS)     |
-    |---------------------------------|------------------------------|
-    | Lens peak / sky                 | median inside 93–197         |
-    | Arc thickness FWHM              | 0.1–0.4″                     |
-    | PSF FWHM (from unresolved src)  | ≈ 0.10″                      |
-    | Grid                            | exactly 128 px @ 0.05″/px    |
-    | Sky RMS                         | within ~20% of `sky_rms` col |
-    | Acceptance rate                 | < 1.0 (mag_cut active)       |
-    | Visible arc by eye (16-panel)   | most images                  |
- 
-    Plus one cheap, decisive domain check: **overlay the pixel-value histogram and the
-    azimuthally-averaged radial profile of the 200 pilot images vs. the 62 real SLACS cutouts,
-    both passed through the exact CNN input normalization (asinh + scale conditioning).**
-    If those two distributions don't overlap, the CNN sees the domain gap on day one and no
-    amount of training fixes it. This one plot is the honest gatekeeper.
- 
-**Gate to Stage 1: all table rows pass + histogram/profile overlap looks sane.**
- 
----
- 
-## Stage 1 — Noise & photometric calibration (still small runs)
- 
-The last mile between "looks right" and "is right".
- 
-1.1 **Sky/noise:** tune `exposure_time`, `sky_brightness`, `read_noise`, `num_exposures` until
-    empty-corner RMS of generated images matches the `sky_rms` distribution from
-    `failure_features_slacs.csv`. Don't assume the SLACS exposure times from memory — calibrate
-    empirically against your own measured column. Then **randomize** noise within the observed
-    real range (±~30%) rather than fixing one value: domain randomization makes the CNN
-    insensitive to residual miscalibration.
- 
-1.2 **Lens-light magnitude prior from data, not guesswork:** Bolton 2008 (your VizieR table)
-    includes deflector I-band photometry. Build the apparent-magnitude histogram of the actual
-    62 deflectors and set the lens-light `magnitude` prior to cover it (slightly wider). Same for
-    `R_sersic`: use the effective radii from Bolton 2008 if present, else keep ~1.2″ ± spread.
- 
-1.3 **Optional but high-value realism upgrade — real backdrops:** you already own
-    `empty_cutouts.h5` (1317 real empty COSMOS cutouts, 0.05″/px, 6.4″). Generate paltas images
-    with `no_noise = True`, then add each to a randomly drawn real empty cutout (after matching
-    units — flag: paltas outputs counts/s; confirm the empty cutouts' units before adding).
-    This injects **correlated drizzled noise, faint field neighbors, and background structure**
-    that no Gaussian noise model captures — the same trick the HOLISMOKES/Cañameras lens-finding
-    pipelines use, and the one realism axis pure paltas lacks. Keep Poisson noise on the lensed
-    flux itself (source shot noise) if feasible; if not, the sky-dominated regime makes the
-    approximation acceptable — state it in the paper.
-    Do a 200-image pilot of this variant too, re-run the Stage-0 gate on it.
- 
-**Gate to Stage 2: sky RMS within ~10–20% of real, lens-light magnitudes data-driven, and (if
-using 1.3) the hybrid pilot passes the same gates.**
- 
----
- 
-## Stage 2 — Training-set design & generation (first big compute)
- 
-2.1 **Priors (the anti-prior-pull core):**
-    - θ_E ~ U[0.55, 2.3] — flat, and slightly WIDER than the benchmark's 0.7–1.7″ so the real
-      range sits in the interior (regressors bias toward the prior interior at the edges;
-      padding the range keeps the benchmark away from the edge effect).
-    - γ (power-law slope) ~ N(2.0, 0.15); q, PA, shear as in the Horton pattern.
-    - Source: full COSMOS_23.5 catalog, position offsets ~ U(−0.25, 0.25)″ per axis (with
-      mag_cut doing the lensing-geometry enforcement), source magnitudes spanning the faint end
-      (real SLACS arcs are faint — do NOT bias sources bright, that's the old v0 mistake in
-      photometric clothing).
-    - **Decouple lens light from mass:** sample lens-light (e1,e2, PA) independently from mass
-      (e1,e2), or with only partial correlation, and jitter light center vs. mass center by a few
-      hundredths of an arcsec. This (a) prevents the CNN from learning the θ_E-irrelevant
-      light↔mass shortcut, and (b) is the honest-training prerequisite for the e1/e2 leakage
-      test later.
-    - PSF: real ACS kernel, but randomly rotate it (90° multiples + small interpolated angles)
-      per image so the CNN doesn't memorize one diffraction-spike orientation.
- 
-2.2 **Size:** 100k images (50k floor). paltas generation is CPU-parallel — shard it:
-    run 4–8 `generate` processes with different `--seed`/output dirs in tmux, merge in
-    `paltas_to_train.py`. Preview-check EACH shard's first 16 images (cheap paranoia).
- 
-2.3 **Held-out sim validation split:** 5k images from the same config, generated with a
-    disjoint seed, never trained on. This is the in-distribution yardstick (expect ~1–3%
-    median error, like m3 achieved in-distribution).
- 
-**Gate to Stage 3: 16-panel visual per shard passes; metadata θ_E histogram is flat over the
-intended range; no shard has anomalous acceptance rate.**
- 
----
- 
-## Stage 3 — Training
- 
-3.1 **Keep the m3 architecture.** The diagnosis was explicit: the failure was distributional,
-    not architectural. Scale-conditioned ResNet + asinh input norm, Huber loss, Adam. The only
-    required change: read per-image `theta_E` directly from the new h5 (no `kappa_index` join —
-    that whole hazard class is gone).
- 
-3.2 **Same normalization for sim and real, verified once:** recompute scale_mean/scale_std on
-    the new training set; apply the identical transform in `metrics_real.py`'s loader; re-plot
-    the Stage-0 normalized-histogram overlay with the final constants.
- 
-3.3 **Uncertainty head (cheap, high paper value):** train the output as (μ, log σ²) with a
-    Gaussian NLL loss instead of a point estimate. Costs one extra output unit; gives per-lens
-    error bars, a calibration plot for the paper, and — crucially — the natural per-sample weight
-    for Brian's Phase-2 regularizer (penalize by CNN confidence). If it destabilizes training,
-    fall back to Huber and note it; don't fight it.
- 
-3.4 **Model selection ONLY on the sim validation split.** The frozen 62+40 is evaluated once
-    per major experiment version, logged in DECISIONS_LOG with a running count. Every extra
-    peek at the benchmark is a small act of fitting it; keeping the peek-count low and
-    documented is what makes the final number credible.
- 
-3.5 Augmentation: flips/rotations fine for θ_E; if training multi-output, apply the
-    already-established e1/e2 label transformation (the corrected augmentation code).
- 
-**Gate to Stage 4: sim-val median |frac error| ≲ 3% and no train/val divergence.**
- 
----
- 
-## Stage 4 — Evaluation, ablations, and the "beats the literature" case
- 
-4.1 **Primary result:** `metrics_real.py` on the frozen 62 SLACS + 40 S4TM. Success bars are
-    already fixed in PAPER_PLAN (median within ±5%, R² > 0, failure ≲ 10%).
- 
-4.2 **Uncertainty on every headline number (reviewers WILL ask at N=62):**
-    percentile bootstrap (10k resamples) for median fractional error, 16–84 interval, and
-    failure rate; report as e.g. "failure rate 8% (95% CI 3–16%)". For failure-rate comparison
-    with Cao's ~10%: at N=63 the binomial CI is wide — a claim of "fewer failures" needs the CI,
-    a claim of "comparable" is safe earlier.
- 
-4.3 **Matched per-lens comparison with Cao:** pull their released per-lens θ_E (code/data
-    public), restrict to the intersection lens list, and make the per-lens us-vs-them scatter.
-    Also state clearly: same lenses, same b_SIE ground truth, different method class
-    (amortized CNN vs. per-lens sampling).
- 
-4.4 **Ablations (each = one dataset variant + one training run; ranked by narrative value):**
-    1. **θ_E prior: flat vs. m3-like skew** — this closes the paper's causal loop: the diagnosis
-       said prior-pull, the fix flattened the prior, the ablation proves that specific change
-       drives the recovery. Highest priority; it's the paper's spine.
-    2. **Lens light on/off** in training (off ≈ old v0 regime) — shows arc-realism matters.
-    3. **Real backdrop (Stage 1.3) vs. Gaussian noise** — quantifies the correlated-noise gap.
-    4. Real ACS PSF vs. Gaussian PSF (cheapest, fold into 2 or 3 if compute-tight).
-    5. (Optional) COSMOS sources vs. Sérsic sources.
- 
-4.5 **Kill-criterion / escalation:** if the full-realism model still has R² < 0 on real lenses
-    after passing every Stage-0/1 gate → the residual gap is the parametric-Sérsic lens light →
-    escalate to **Path B** (paltas noiseless arcs injected onto REAL deflector cutouts —
-    which needs real SLACS-sized ellipticals; the intersection trick: use the 40 S4TM... no —
-    those are benchmark. Realistic Path B sourcing: non-lens LRG cutouts from HST archives, ask
-    Sam). Decision point is here and no earlier — do not pre-build Path B.
- 
----
- 
-## Stage 5 — Multi-parameter extension (after θ_E lands)
- 
-- Because Stage 2 decoupled light from mass, the leakage question becomes measurable: evaluate
-  e1/e2 on sim subsets where light and mass ellipticity agree vs. disagree. The gap between
-  those two numbers IS the leakage, quantified — that's the honest caveat turned into a result.
-- Real-lens e1/e2 check against Bolton 2008 SIE q/PA (convert q,PA → e1,e2 consistently;
-  watch the PA convention — verify against 2–3 lenses by eye before batch evaluation).
-- Centroid: report in pixels as before.
-## Stage 6 — Paper assembly + LensFusion tie-ins
- 
-- Figures 1–6 as already planned in PAPER_PLAN, with Figure 4 upgraded to the per-lens Cao
-  comparison (4.3) and a new small calibration figure if the uncertainty head (3.3) works.
-- Intro framing: Cao et al.'s own "mitigated by ML priors" line → our contribution.
-- Compact-source result and Phase-2 regularizer stay as the downstream-application section.
-- Separately (not in this paper's critical path): Brian's source-amplitude CNN — still blocked
-  on confirming which amplitude definition he wants.
-- Authorship conversation with Brian — do this early, not after results exist.
----
- 
-## The anti-blob checklist (pin above the terminal)
- 
-1. **Never** launch > 1k images before the 200-image pilot passes the numeric gate table.
-2. Every preview = three stretches (linear / percentile / asinh). A blob under one stretch is
-   often a lens under another.
-3. Acceptance rate 1.000 = your magnification cut is not active = blobs incoming.
-4. Verify the magnitude convention of the *installed* paltas (Finding 1) after ANY reinstall.
-5. FOV sanity: θ_E max 2.3″ → ring diameter 4.6″ < 6.4″ FOV ✓; source offsets ≤ 0.25″ ✓.
-   Never widen θ_E or source-offset priors without redoing this arithmetic.
-6. One normalized-histogram + radial-profile overlay (sim vs. real) per dataset version.
-   If they don't overlap, stop — the CNN will fail before you train it.
-7. Units check before ANY image addition (paltas counts/s vs. empty-cutout electrons/s).
+- One config change → 200-image pilot → gate_stage0 + AR0 + FJ gate +
+  side-by-side (three stretches) → only then scale.
+- Benchmark evals ONLY at ⛔ human checkpoints, logged with the running count
+  (now 21). New real-lens files (real_lemon31, Q1 cutouts) are frozen test
+  data from birth (C18).
+- Model/recal selection on sim-val ONLY. Seed-ensembles or seed-averages with
+  spread in every table.
+- COMMITMENTS.md reconciled at every ⛔ and before any full generation.
+- Quota check before every fetch/generation (150 GB; mast_cache purges).
+- csh login → bash -lc; SLURM needs --gres=gpu:1 always; QOS cap 8 → waves;
+  monitors report, the session submits; push git at every milestone.

@@ -5,6 +5,35 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-13 (PM, cont.) — DOC CONSOLIDATION (Nurkyz directive: "one plan"): MASTER_PLAN.md rewritten as the SINGLE live plan; five plan docs + the superseded LensFusion instructions ARCHIVED to docs/archive/ with banners; root folder synced
+
+- New MASTER_PLAN.md = priority ladder (eval #22 → Q program → G1b → AR3 →
+  G5 Roman → paper) + Q program detail + AR-ladder status + an
+  inherited-open-items table (I1–I18) carrying EVERY undone item from the
+  archived plans (Cao per-lens, two-stage hybrid row, aux heads, conformal σ,
+  confirmation set, GT-ceiling, inference cost, ablation-table decision, DA
+  retry, TNG-κ, BELLS/COWLS, universal loader, companion v2, release package,
+  Brian authorship, emails, Etherington subset, Sam-PSF retired).
+- Archived: MASTER_PLAN_20260702 (the 07-02/06/09 layered plan),
+  IMPROVEMENT_PIVOT_PLAN_20260710, PATHB_IMPROVEMENT_PLAN,
+  DATA_OVERHAUL_GEN4_PLAN (AR table preserved in archive; status table in the
+  new plan), PAPER_PLAN, LEMON_HEADTOHEAD_PLAN (folded into §2), LensFusion
+  project instructions (the κ̄=1-era doc, already superseded-flagged).
+- CLAUDE.md: stale "Staged plan" section replaced with a pointer to
+  MASTER_PLAN.md; quota line updated (150 GB); continuation prompt updated
+  (Busillo email sent; Q program active).
+- INTEGRITY RESCUE during the sync: the root DECISIONS_LOG contained one
+  entry missing from the docs version ("2026-07-11 (midday) — G4 LAUNCHED,
+  full chain to eval #17 armed") — dropped in the 07-13 doc consolidation;
+  reinserted at its chronological position. Root .md set is now identical to
+  docs/ (live) with superseded plans removed from root.
+- Q1 data staged meanwhile: lens.zip downloaded AND unzipped on the cluster
+  (336 per-lens dirs: VIS cutout FITS + extra-galaxies mask + full PyAutoLens
+  result JSONs + rgb previews). Next: Q2b format inspection → preprocessing
+  pilot → C17 flux gate.
+
+---
+
 ## 2026-07-13 (PM) — LEMON HEAD-TO-HEAD PROGRAM LAUNCHED (C16; Nurkyz directive): plan doc written, branches merged to main, **Q1 GT + IMAGES VERIFIED PUBLIC and downloading** — the native-real-Euclid domain is open
 
 - `docs/LEMON_HEADTOHEAD_PLAN.md` created (stages Q0-Q3 + don't-forget checklist);
@@ -429,6 +458,27 @@ eval #17 as the headline, (d) L4 closers / shared-29 exchange with LEMON authors
   Nurkyz action). Distribution-level head-to-head already exists (eval #14);
   GEN4 ⛔ eval #17 will refresh it; when names arrive the shared-29 table is a
   subset of the saved per-lens CSVs in results/ — NO new benchmark eval needed.
+
+---
+
+## 2026-07-11 (midday) — G4 LAUNCHED, FULL CHAIN TO ⛔ EVAL #17 ARMED (pre-authorized: "run the full chain to eval #17")
+
+- Generation: 88 sub-shards (80 train × 3000 + 8 val × 1500 renders ≈ 252k),
+  per-sub-shard tempered manifests (seeds 9700+S / renders 10100+S / combine
+  10600+S / euclidise 11100+S — disjoint from all prior); val = val-STAMP manifests
+  (g4_split_kine.py: 8 legacy val + every-8th new by σ_v rank) + val kernels 80–87.
+- Staged for one-hop submissions at each monitor wake-up: merge_gate_g4.sbatch
+  (quota guard, label verify before shard rm, MERGED FJ gate), submit_grid_g4.sh
+  (quick-train sanity gate → 16 members + logpolar seat → arbitration →
+  g4_recal.json frozen), l17 package PRE-REGISTERED (primary = frozen variant;
+  derived arch columns incl. logpolar; per-θ_E table vs the 62%/+29% baseline;
+  bootstrap P(beats LEMON); RAW+RECAL coverage). Eval #17 counts as 17, results
+  to Nurkyz immediately.
+- QUOTA NOTE: peak ≈ 99 GB during merge (guard aborts >101). Nurkyz cleanup that
+  unblocks comfortably (superseded, models kept, regenerable):
+  `rm -f ~/einstein_cnn/train_euclid_reb_100k.h5 ~/einstein_cnn/val_euclid_reb_5k.h5` (−7 GB).
+- Parallel-work slots adopted (Nurkyz's directive): each job window is used for
+  the next stage's prep or paper work — see session report for the standing list.
 
 ---
 

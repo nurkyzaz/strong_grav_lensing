@@ -1,3 +1,6 @@
+> **ARCHIVED 2026-07-13.** Superseded by docs/MASTER_PLAN.md (the single live plan).
+> All undone items were carried into MASTER_PLAN.md at archive time. Historical record only.
+
 # IMPROVEMENT / PIVOT PLAN — 2026-07-10 (rev 2, after Nurkyz's rulings)
 
 Status: ADOPTED DIRECTION (Nurkyz 2026-07-10): beat-LEMON-on-every-axis is an explicit
