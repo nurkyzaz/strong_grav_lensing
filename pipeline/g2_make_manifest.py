@@ -205,6 +205,30 @@ from scipy.stats import spearmanr
 rho, _ = spearmanr(mg, th)
 print("manifest rho(stamp mag, theta_E) = %+.2f (physical FJ channel; real ~ -0.3..-0.5)"
       % rho)
-print("PHYSICS SPEC: fj_channel=ON misalignment=ON(N10,clip30) "
-      "q_scatter=adhoc0.08(C2-open) gamma_coupling=%s multipoles=OFF(AR3) "
-      "tempered_alpha=swept" % ("ON" if a.couple_shear else "OFF(AR2)"))
+# C10 (2026-07-13, blocks AR3): PHYSICS SPEC — every physics axis, printed
+# AND written as a machine-checkable sidecar next to the manifest. Pilot
+# scripts (AR3 onward) must FAIL HARD if the sidecar is missing or lacks a
+# key. The CSV itself stays comment-free (render toolchain reads it raw).
+import json as _json
+SPEC = dict(
+    spec_version="C10v1",
+    fj_channel="ON (measured sigma_v -> theta_E, SIS)",
+    c15a_sigma_norm="ON (sigma_SIS = sigma_fiber/%.3f)" % F_SIS,
+    c15b_intrinsic_scatter="ON (%.0f%% multiplicative)" % (100 * SIG_INT),
+    misalignment="ON (dPA ~ N(0,10deg), clip +-30)",
+    q_scatter="AD-HOC (q_light + N(0,0.08); C2 OPEN — exact relation unfitted)",
+    gamma_coupling=("ON (AR2: rayleigh(0.03) + 0.0012|dPA|, cap 0.25)"
+                    if a.couple_shear else "OFF (AR2 available via --couple_shear)"),
+    multipoles="OFF (AR3 NOT IMPLEMENTED — isophote-anchored m=3,4 pending)",
+    arc_poisson="COMBINE-STAGE (AR1 lives in hybrid_combine --arc_poisson, not here)",
+    slope_sigma_coupling="OFF (AR6 not implemented)",
+    los_structure="OFF (AR7 deferred, C6 ruling needed)",
+    tempered_alpha=float(alpha), manifest_rho_mag_theta=float(round(rho, 3)),
+    n_rows=len(rows), seed=int(a.seed), kine_files=list(a.kine),
+)
+spec_fn = a.out + ".physics_spec.json"
+with open(spec_fn, "w") as f:
+    _json.dump(SPEC, f, indent=1)
+print("PHYSICS SPEC (C10, sidecar %s):" % spec_fn)
+for k, v in SPEC.items():
+    print("  %-24s %s" % (k, v))

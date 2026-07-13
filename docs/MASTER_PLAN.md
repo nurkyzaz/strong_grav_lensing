@@ -52,6 +52,11 @@ Q1 SLDE cutouts unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs).
 4. **AR3 isophote-anchored multipoles** (one pilot, gates incl. AR0 arc gate)
    → regen with the BIG G1b library + C15 corrections → ⛔ eval pair
    (native + Euclid). Expect less tempering (stronger training FJ ρ).
+   **HARD GATE (C10, Nurkyz ruling 2026-07-13): the AR3 pilot script must
+   verify `<manifest>.physics_spec.json` exists and contains every physics
+   axis (incl. multipoles=ON) and FAIL IMMEDIATELY otherwise — AR3 does not
+   launch without it.** Generator side shipped 07-13 (g2_make_manifest.py
+   prints the block + writes the sidecar).
 5. **G5 ROMAN** — full focus after 4: Roman InstrumentConfig (WFI 0.11″/px,
    STPSF PSF models, HLWAS depths) as the third rendering of the same
    population. No real GT exists → the claim is "cross-domain-validated,
@@ -116,6 +121,20 @@ admits real < sim performance.
   **NEXT: rescale ruling (skyRMS-matched ×~11 vs ZP-derived) + pedestal
   handling, then rerun the gate to confirm distributions align. No eval
   before that.**
+- **Q2c2 NORMALIZATION SWEEP (Nurkyz ruling 2026-07-13; Option A — rescale
+  the Q1 cutouts to the training domain; NO retraining/Option B):** the
+  measured ~11× factor is NOT applied blindly.
+  (i) Tuning subset: the 10-lens pilot set, extendable to a random 20%
+  split (seeded, logged) if 10 is too noisy. These lenses are BURNED for
+  tuning — Q2e reports full-sample AND excluding-tuning rows (disclose).
+  (ii) Sweep ≥12 combos: rescale factor ∈ {8, 10, 11.4 (skyRMS-matched),
+  12, 14, 1.91 (ZP-only control)} × pedestal ∈ {none, +bench-median sky,
+  +per-image bench-matched}; select on lowest RMSE / best R² vs PyAutoLens
+  θ_E on the tuning subset (script: pipeline/q2_norm_sweep.py, prepared —
+  runs only on Nurkyz go-ahead; every model pass on Q1 data logged per C18).
+  (iii) FREEZE the winning normalization; re-run the C17 gate to verify
+  skyRMS/peak-sky distributions align with the benchmark.
+  (iv) Only then ⛔ Q2e (eval #24), EXACTLY ONCE, full Q1 set.
 - **Q2d population-shift audit (disclose)**: Q1 deflectors not all LRGs; θ_E
   skews small; z_l higher than SLACS. Report training-support overlap; flag
   out-of-support systems in the per-lens table.
