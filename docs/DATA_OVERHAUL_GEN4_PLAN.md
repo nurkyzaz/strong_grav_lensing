@@ -73,6 +73,45 @@ idea (population self-consistency), keep our realism advantages.
    New gate: the light–θ_E correlation in the training set must match the
    SLACS-measured relation.
 
+### P1-AUDIT (2026-07-13, Nurkyz directive: "is our self-consistency good; how to improve") — the σ_v→θ_E mapping vs the literature
+
+What we implement: θ_E = 4π(σ_fiber/c)² D_ls/D_s (pure SIS), σ = SDSS fiber
+velDisp jittered within min(σ_err, 0.2σ), z_s ~ truncN(0.65, 0.15) on
+[max(0.55, z_l+0.05), 1.10], flat ΛCDM (70, 0.3). HOLISMOKES uses exactly this
+route (SDSS z + σ_v → SIE painted on real LRG images; HUDF sources) — our
+approach is the state-of-the-art recipe, plus things they don't do (native
+amplitude, misalignment ⊕ scatter, tempered wide prior, FJ gate). LEMON's
+stellar-mass+DM-fraction route is the fully synthetic alternative.
+
+**Finding 1 (correctable NORMALIZATION bias):** SLACS measured
+σ_fiber = 0.948 ± 0.008 σ_SIE — SDSS fiber dispersions under-read the lensing
+(SIE) dispersion. Since θ_E ∝ σ², our computed θ_E is **systematically ~11%
+LOW at fixed light** ((1/0.948)² = 1.11). This does NOT bias the arc-reading
+channel (labels are self-consistent within each image) but mis-calibrates the
+LIGHT-prior channel — the network's luminosity→θ_E fallback is taught ~11%
+low relative to nature. Fix (C15a): σ_SIS = σ_fiber/0.948 in the manifest
+generator (one line). Side benefit: every galaxy's θ_E range shifts up ~11%,
+deepening the thin θ_E>1.5″ tail.
+
+**Finding 2 (UNDER-SCATTER):** the stellar-vs-lensing dispersion relation has
+~7% intrinsic scatter (≈14% in θ_E) BEYOND measurement error; we currently
+jitter by measurement error only. Fix (C15b): add 7% intrinsic scatter in
+quadrature — honest label noise that also softens the FJ-vs-flatness tension.
+
+**Finding 3 (free validation figure, C15c):** for the 62 benchmark lenses we
+hold both SDSS σ_fiber and true b_SIE → plot θ_SIS(σ_fiber) vs b_SIE and
+measure the mapping's bias+scatter directly. VALIDATION ONLY: the
+normalization comes from the literature (0.948), never fitted on the
+benchmark (no leakage). Expected: ~−11% offset confirming Finding 1 — a
+paper figure that grounds the whole GEN4 design.
+
+**Ranked improvement queue:** C15a+b (one-line physics corrections; pilot →
+regen with next data build) → C15c figure (analysis-only, immediate) →
+G1b library scale-up (structural: less tempering → training FJ ρ moves from
+−0.15 toward the real −0.32) → AR6 γ'(σ,Σ) slope coupling (medium; SIS→EPL)
+→ z-dependent fiber-aperture correction (small; Jorgensen-style) →
+two-component stellar+DM mass (defer; σ inside R_e already captures most).
+
 ### P2 — Best PSF per instrument
 - Native HST: focus-diverse ePSF bank (already best-in-class — done).
 - Euclid arm: **real VIS PSF** (public Euclid PSF model and/or Q1 star stacks)

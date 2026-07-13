@@ -1,139 +1,55 @@
-# Email drafts — 2026-07-10 (L0 item 4; Nurkyz to review, personalize, and send)
+# Email drafts — updated 2026-07-13 (Nurkyz ruling: keep only what the paper
+# needs → the LEMON email. Bergamini email RETIRED: we now use the official
+# Q1 GRID-PSF-VIS product directly, which supersedes the HST2EUCLID code ask
+# (and keeps our operator fully independent). TinyLensGPU and Brian emails
+# RETIRED per the same ruling. Prior drafts live in git history.)
 
-**VERIFIED ADDRESSES (2026-07-10 night, from the papers' own footnotes):**
+**VERIFIED ADDRESS (from the paper's footnote):**
 - LEMON corresponding author: **valerio.busillo@inaf.it** (V. Busillo, INAF-Capodimonte)
-- HST2EUCLID corresponding author: **pietro.bergamini@inaf.it** (Euclid prep. LXXIV,
-  arXiv:2508.20860; the paper has NO public-code statement → email required)
-- TinyLensGPU paper corresponding authors: **liran@bnu.edu.cn** (Ran Li) and
-  **nan.li@nao.cas.cn** (Nan Li); first author Xiaoyue Cao — no email in the paper,
-  reachable via github.com/caoxiaoyue → address the two correspondents, mention Cao.
-
-Send order: LEMON first (blocks the shared-29 table), Bergamini second (HST2EUCLID
-gates the exact-degradation comparison AND GEN4-G3), Cao/Li third, Brian whenever.
-A fourth draft (Bergamini) is appended below.
 
 ---
 
-## 1. To the LEMON team (Euclid Collaboration: Busillo et al. 2026, A&A — corresponding author per the paper)
+## To the LEMON team (Euclid Collaboration: Busillo et al. 2026, A&A)
 
-Subject: Shared SLACS sample and per-lens predictions — LEMON (Q1) comparison from an HST-trained θ_E CNN
+Subject: Shared SLACS sample and per-lens predictions — LEMON (Q1) comparison from a two-domain θ_E CNN with spectroscopic-lensing ground truth
 
 Dear Dr. Busillo and the LEMON team,
 
 I am a researcher working on CNN-based Einstein-radius estimation for real
-galaxy-galaxy lenses, trained on simulations with HST-native realism (real COSMOS
-sources, empirical focus-diverse ACS ePSFs, real empty-sky backdrops) and evaluated
-against the uniform spectroscopic-survey b_SIE values of Bolton et al. (2008) for
-62 SLACS and 40 S4TM lenses.
+galaxy-galaxy lenses. Our training simulations follow the same structural
+principle as LEMON — the deflector's light and mass belong to one physical
+object — but implemented with real observed ingredients: real HST images of
+SDSS-spectroscopic early-type galaxies as deflectors (each galaxy's measured
+σ_v sets its θ_E), real COSMOS sources, and the measured Euclid Q1 VIS PSF
+(from the released MER GRID-PSF product) in the degradation operator. We
+evaluate against the independent, uniform spectroscopic-lensing b_SIE values
+of Bolton et al. (2008) for 62 SLACS and 40 S4TM lenses, in two domains from
+one population model:
 
-Your Q1 LEMON paper is the closest published work to ours, and we would like to
-compare against it as carefully and fairly as possible — in your conventions and in
-your evaluation domain. We have reimplemented the HST2EUCLID-style degradation from
-the published description and evaluate in a LEMON-convention table (bias, RMSE,
-NMAD, R²), but three things would make the comparison exact rather than
-distribution-level, and we would of course make clear in the paper that they came
-from you:
+- Euclid-like domain (Q1-PSF-degraded real HST cutouts):
+  bias −0.010″, RMSE 0.137″, NMAD 0.056″, R² = 0.71, catastrophic rate 15%;
+- native HST domain: bias +0.005″, RMSE 0.152″, NMAD 0.048″, R² = 0.64
+  (and RMSE 0.088″ / R² = 0.90 on the lower-mass S4TM sample).
 
-1. The list of the 29 SLACS systems in your 60-lens Euclidised HST validation set,
-   so we can report a same-lens head-to-head table.
-2. If possible, your per-lens θ_E predictions (and σ) for the 60 Euclidised HST
-   lenses — aggregate metrics hide sample-composition effects, and a per-lens
-   scatter plot of the two methods would be far more informative for both papers.
-3. A pointer to the HST2EUCLID code (Bergamini et al. 2025), if it is available to
-   collaborators — we want to replace our disclosed reimplementation with the
-   original operator.
+Your Q1 LEMON paper is the closest published work to ours, and we would like
+to compare with it as carefully and fairly as possible — in your conventions
+and your evaluation domain. Two things would make the comparison exact rather
+than distribution-level, and we would of course credit them explicitly:
 
-We would be happy to share our per-lens predictions on the same systems in return.
-Our current results are competitive with yours on typical-lens accuracy, and we
-believe a careful cross-validation between an HST-native and a Euclid-native
-pipeline would strengthen confidence in both ahead of DR1.
+1. The list of the 29 SLACS systems in your 60-lens Euclidised-HST validation
+   set, so we can report a same-lens head-to-head table.
+2. If possible, your per-lens θ_E predictions (and uncertainties) for those
+   systems — aggregate metrics hide sample-composition effects, and a
+   per-lens scatter plot of the two methods would be more informative for
+   both papers.
 
-Thank you for the impressive work — the Q1 modeling papers are a real service to
-the community.
+We would gladly share our per-lens predictions on the same systems in return
+(they are ready). We believe a careful cross-validation between a fully
+synthetic Euclid-native pipeline and a real-ingredient HST-anchored one would
+strengthen confidence in both ahead of DR1.
 
-Best regards,
-Nurkyz Ydyrysova
-[affiliation]
-
----
-
-## 2. To Xiaoyue Cao (Cao et al. 2025, MNRAS, TinyLensGpu on 63 SLACS)
-
-Subject: Per-lens θ_E results for the 63 SLACS lenses — comparison with an amortized CNN
-
-Dear Dr. Cao,
-
-I am working on a CNN-based Einstein-radius estimator trained on physically
-calibrated simulations and evaluated on the SLACS sample against the Bolton et al.
-(2008) b_SIE values — the same lenses and ground truth as your TinyLensGpu paper,
-which we use as our primary conventional-modeling comparison (and whose suggestion
-that failures "can be mitigated by incorporating prior knowledge from machine
-learning techniques" is a direct motivation for our work).
-
-Would you be willing to share your per-lens θ_E results (point estimates and
-uncertainties) for the 63 SLACS systems? The repository contains the code but not
-the per-lens outputs, as far as we could find. A per-lens comparison would let us
-report where the two method classes agree and disagree on identical data — much
-more informative than comparing summary statistics. We are particularly interested
-in the systems where both approaches struggle (e.g. SDSSJ0841+3824 appears
-problematic for both pipelines), since those are informative about the lenses
-rather than the methods.
-
-We would gladly share our per-lens predictions in return, and will of course cite
-the data as a private communication or as you prefer.
-
-Best regards,
-Nurkyz Ydyrysova
-[affiliation]
-
----
-
-## 3. To Brian (authorship + status; personalize freely — this is just a skeleton)
-
-Subject: θ_E CNN paper — status and authorship
-
-Hi Brian,
-
-Quick status on the Einstein-radius CNN work: the realism program paid off. On the
-frozen real-lens benchmark (62 SLACS + 40 S4TM, Bolton b_SIE) the current models
-reach positive full-sample R² with no filtering, and in the Euclidised domain we
-now beat the LEMON Q1 paper (Euclid Collaboration, A&A 2026) on typical-lens
-accuracy (NMAD 0.084″ vs their 0.11″), with the remaining gap isolated to a
-catastrophic tail we know how to attack (it is a small-θ_E training-distribution
-effect, not an arc-visibility one — we have the forensics). The causal ablations
-(which simulation-realism ingredient matters) are the novelty spine; nobody in the
-literature isolates them.
-
-Two things I'd like to settle with you:
-1. Authorship and manuscript placement for this paper — we had flagged early on
-   that this should be discussed before results exist; they now do.
-2. I'm emailing Cao (TinyLensGpu) for their per-lens SLACS results — if you know
-   the group, an introduction would help.
-
-Happy to walk you through the result tables whenever suits.
-
-Nurkyz
-
----
-
-## 4. To Pietro Bergamini (HST2EUCLID — Euclid preparation LXXIV, arXiv:2508.20860)
-
-Subject: HST2EUCLID code access for a strong-lensing CNN validation study
-
-Dear Dr. Bergamini,
-
-I am working on CNN-based Einstein-radius estimation for galaxy-galaxy lenses,
-validated on real SLACS/S4TM systems against Bolton et al. (2008) spectroscopic
-b_SIE values. To compare against the Euclid Q1 LEMON results in their evaluation
-domain, we Euclidise our HST benchmark images — currently with our own
-reimplementation of the procedure described in your Euclid preparation LXXIV paper
-(flux conversion, PSF matching, rebinning to 100 mas, EWS-depth noise), which we
-disclose as an approximation (single-band, Gaussian matching kernel).
-
-Would it be possible to obtain access to the HST2EUCLID code, or to a degraded
-version of public HST galaxy-scale lens fields produced with it? Using the original
-operator would remove our largest disclosed systematic and would let us credit the
-tool properly. We would of course cite the paper and acknowledge any assistance.
+Thank you for the impressive work — the Q1 modeling papers are a real service
+to the community.
 
 Best regards,
 Nurkyz Ydyrysova
@@ -142,12 +58,9 @@ Nurkyz Ydyrysova
 ---
 
 Notes for Nurkyz before sending:
-- LEMON: check the corresponding-author email on the A&A page (Busillo et al. 2026,
-  aa54538-25); the Euclid Collaboration papers sometimes route through a
-  collaboration contact — if so, CC the first author's institutional address.
-- If Brian knows anyone in the Euclid strong-lensing SWG, a CC there may speed up
-  the HST2EUCLID code request (Bergamini et al. 2025 is an Euclid Collaboration
-  paper too).
-- Do NOT state specific unpublished numbers beyond what you are comfortable
-  sharing; the LEMON draft above mentions NMAD-level competitiveness only
-  implicitly ("competitive on typical-lens accuracy") — adjust to taste.
+- The per-lens numbers quoted are eval #19 (Euclid domain, G4-trained cnv2_3
+  on the real-PSF benchmark) and eval #21 (native) — update if a later eval
+  supersedes them before you send.
+- Euclid Collaboration papers sometimes route through a collaboration
+  contact — if the footnote address bounces, CC the first author's
+  institutional address from the A&A page.
