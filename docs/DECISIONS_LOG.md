@@ -29,8 +29,17 @@ Corrections/retractions are logged explicitly rather than silently edited.
   docs/ (live) with superseded plans removed from root.
 - Q1 data staged meanwhile: lens.zip downloaded AND unzipped on the cluster
   (336 per-lens dirs: VIS cutout FITS + extra-galaxies mask + full PyAutoLens
-  result JSONs + rgb previews). Next: Q2b format inspection → preprocessing
-  pilot → C17 flux gate.
+  result JSONs + rgb previews).
+- **Q2b FORMAT INSPECTED (q2b_inspect.py): each FITS = 13 HDUs — VIS_FLUX
+  300×300 @ 0.100″/px (30″ FOV), VIS_RMS, and a PER-LENS VIS_PSF (21×21)!
+  Plus NIR Y/J/H flux/RMS/PSF. MAGZERO = 24.6 (NB: our euclidise.py assumed
+  ZP_Euclid 23.9 from the HST2EUCLID description — 0.7 mag apart; the C17
+  flux gate will measure the net offset empirically, exactly what it exists
+  for). Per-lens PyAutoLens posteriors in result_lens_mass.json (θ_E median
+  + 1σ/3σ). Preprocessing spec: center-crop 64×64 @ 0.1″ around the lens →
+  2× upsample to 128 @ 0.05″ (mirrors euclidise.py's output side); per-lens
+  real PSFs enable a PSF-matched variant later. Next: preprocessing script →
+  10-lens pilot with three-stretch previews → C17 gate → ⛔ Q2e eval.**
 
 ---
 
