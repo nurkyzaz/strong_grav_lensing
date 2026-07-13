@@ -32,6 +32,16 @@ Corrections/retractions are logged explicitly rather than silently edited.
   native-HST per-lens θ_E vs uniform spectroscopic b_SIE with full-sample stats
   remains claimed by nobody but us. Full details in LITERATURE.md
   ("2026-07-13 systematic sweep" section).
+- **Follow-up (same session, Nurkyz asked for the LEMON head-to-head):**
+  (1) LITERATURE.md contradiction FIXED — its Tier-1 line "HST2EUCLID is public"
+  conflicted with this log (2026-07-09 R1.2: NOT public); log wins, line corrected.
+  (2) Re-verified on the PUBLISHED A&A LEMON version (aa54538-25, July 2026): the
+  29 SLACS names are STILL not listed, Table 3 has NO per-subsample breakdown, and
+  there is NO data-availability release → the exact shared-29 table remains
+  hard-blocked on the Busillo email (drafted 2026-07-10, no send recorded —
+  Nurkyz action). Distribution-level head-to-head already exists (eval #14);
+  GEN4 ⛔ eval #17 will refresh it; when names arrive the shared-29 table is a
+  subset of the saved per-lens CSVs in results/ — NO new benchmark eval needed.
 
 ---
 

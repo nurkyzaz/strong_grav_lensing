@@ -32,8 +32,16 @@ comparator (Cao 2025) has public per-lens data. These four facts define our diff
   sim-to-real), uniform spectroscopic-survey GT vs their 4-catalogue mix (their own paper
   flags "differing modelling assumptions"), 1.7× real-GT sample, REAL sources + REAL
   deflector light + realism ablations (they are fully parametric, no ablations), DA on real
-  GT. Direct head-to-head route: HST2EUCLID is public → Euclidise our 29 shared SLACS and
-  compare in THEIR domain.**
+  GT. Direct head-to-head route: Euclidise our benchmark and compare in THEIR domain.
+  [CORRECTED 2026-07-13: "HST2EUCLID is public" was WRONG — DECISIONS_LOG (authoritative,
+  2026-07-09 R1.2) verified NO public-code statement (Bergamini et al., arXiv:2508.20860);
+  our euclidise.py is a disclosed reimplementation. Status: already EXECUTED at
+  distribution level — eval #14 ensemble on all 62 Euclidised SLACS: bias +0.062, RMSE
+  0.208, NMAD 0.084 (beats their 0.11), R² +0.33 (behind their 0.53; gap isolated to the
+  31% catastrophic tail, confident-half fail 10–13%). The exact shared-29 table stays
+  blocked on the Busillo email: re-verified 2026-07-13 on the PUBLISHED A&A version
+  (aa54538-25, July 2026) — still no lens names, no per-subsample (SLACS-only) metrics,
+  and no data-availability release.]**
 - **Cao et al. 2025 (MNRAS 540 3121; arXiv:2503.08586)** — conventional GPU pixel modeling
   (TinyLensGPU + nautilus), 63 SLACS, ≲5% deviation, ~10% catastrophic failures, ~3 min/lens.
   **[CORRECTED 2026-07-09: only the CODE is public (github.com/caoxiaoyue/TinyLensGpu); the
