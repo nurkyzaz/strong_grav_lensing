@@ -57,11 +57,11 @@ Q1 SLDE cutouts unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs).
    axis (incl. multipoles=ON) and FAIL IMMEDIATELY otherwise — AR3 does not
    launch without it.** Generator side shipped 07-13 (g2_make_manifest.py
    prints the block + writes the sidecar).
-5. **G5 ROMAN** — full focus after 4: Roman InstrumentConfig (WFI 0.11″/px,
-   STPSF PSF models, HLWAS depths) as the third rendering of the same
-   population. No real GT exists → the claim is "cross-domain-validated,
-   Roman-ready"; cite Wedig et al. 2025 (arXiv:2506.03390) as the waiting
-   application (their sim products are public — the gap will not stay open).
+5. **G5 ROMAN** — full focus after 4; FULL PROGRAM NOW IN §2R (researched
+   2026-07-13): Wedig et al.'s 16,214 public Roman sims WITH θ_E GT become
+   our external Roman benchmark (zero-shot baseline first, then the
+   G5-trained arm); own InstrumentConfig rendering stays the training side;
+   multiband as a staged non-gating extension.
 6. **Paper §4 rewrite + release assets** (§5) — continuous, parallel.
 
 ## 2. Q program — beat LEMON on their exact lenses, both domains (C16)
@@ -150,6 +150,63 @@ admits real < sim performance.
 b_SIE / Euclidised-HST / real-Euclid-Q1) — the claim nobody else can make.
 Honesty box: their arc-radius GT 13/60; our Euclidiser = disclosed
 reimplementation; own-pipeline-GT caveats cut both ways.
+
+## 2R. G5 ROMAN program (researched 2026-07-13 from arXiv:2506.03390,
+   Wedig et al. 2025; supersedes the one-line item 5 above)
+
+**The opening:** Wedig et al. release **16,214 simulated Roman HLWAS lens
+images on Zenodo (Wedig & Daylan 2024) WITH per-lens θ_E ground truth**, in
+two versions each (synthetic + realistic WFI detector effects), 10.01″
+cutouts @ 0.11″/px, WebbPSF PSFs, HLWAS bands F106/F129/F158/F184 @ ~146 s.
+Their paper trains NO ML and explicitly offers the products "to support…
+training neural networks" — the first-ML-on-the-public-Roman-benchmark slot
+is open. Their population: θ_E mostly 0.3–1.5″, σ_v 229±51, z_l 0.57±0.27
+(skews SMALLER than SLACS; partially below our 0.45″ training floor).
+
+**Ruled strategy — do BOTH, in this order (answering "score on their images
+or another way?"): their images become our EXTERNAL Roman benchmark; our own
+G5 rendering stays the training side.** That yields the unique claim: "the
+only θ_E estimator validated on real GT in two domains AND scored on the
+independent public Roman sim benchmark — Roman-ready weights released."
+Scoring on their images alone (without G5) would test domain adaptation to
+their rendering choices (parametric Sérsic deflectors/sources — a different
+philosophy from our real-stamp population) with no Roman-matched training;
+G5 alone would leave the Roman claim sim-validated only by ourselves.
+External-benchmark caveat to disclose (cuts both ways, same as Q2): their GT
+is analytic sim truth (lenstronomy; subhalo perturbations included), not
+real-lens GT — but it is INDEPENDENT of us, which is the point.
+
+- **G5a — pull + freeze the Wedig benchmark**: Zenodo dataset (quota check
+  first; 16k cutouts, modest), format inspection (q2b pattern), extract
+  per-lens θ_E/SNR/band structure, mirror GT to tables/. Files frozen at
+  creation (C18). Population-support audit vs our [0.45, 2.3]″ (Q2d
+  pattern): report in-support subset + full, flagged.
+- **G5b — zero-shot baseline (cheap, before any training)**: existing
+  G4/g4ar models on their REALISTIC F106 and F129 images, preprocessed to
+  our grid (0.11″→0.05″ resample; C17-style flux gate vs our training arm
+  FIRST — their units/zodi background differ). ⛔ logged eval. This row
+  quantifies how far pure cross-domain transfer gets — whatever it shows,
+  it motivates G5c.
+- **G5c — G5 Roman InstrumentConfig + training arm**: WFI 0.11″/px, STPSF
+  (= WebbPSF renamed) PSF models, HLWAS 146 s depths, zodiacal+stray+thermal
+  background per their §3 recipe — the THIRD rendering of OUR self-consistent
+  population (same manifests, same physics; C15 corrections + C10 spec block
+  mandatory). Pilot → gates (incl. AR0) → 100k → train → sim-val.
+- **G5d — ⛔ Roman headline eval**: G5-trained ensemble on the frozen Wedig
+  realistic set, both bands; LEMON-convention table + bootstrap; per-θ_E
+  bins with the <0.45″ out-of-support rows flagged. Optional secondary:
+  their synthetic (noise-free) version isolates detector-effect sensitivity.
+- **G5e — multiband extension (staged, NOT gating the paper)**: HLWAS is
+  natively 4-band and their release includes all bands — a 4-channel
+  (F106/F129/F158/F184) input variant trained on the same manifests answers
+  "does color help θ_E?" on the same external benchmark. But our REAL-GT
+  domains (HST F814W, Euclid VIS) are single-band, so multiband can only be
+  sim-validated for now → frame as a Roman-readiness ablation/paper-2 arm,
+  single-band G5 first.
+
+Refs to carry: Wedig et al. 2025 (arXiv:2506.03390), SLSim (LSST-strong-
+lensing/slsim), mejiro v1.0.0 (AstroMusers/mejiro), Zenodo Wedig & Daylan
+2024 (locate DOI at G5a).
 
 ## 3. AR ladder (arc realism; full table archived in
    DATA_OVERHAUL_GEN4_PLAN §AR)
