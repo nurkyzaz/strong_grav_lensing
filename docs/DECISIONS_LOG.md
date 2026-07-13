@@ -5,6 +5,30 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-13 (PM) — LEMON HEAD-TO-HEAD PROGRAM LAUNCHED (C16; Nurkyz directive): plan doc written, branches merged to main, **Q1 GT + IMAGES VERIFIED PUBLIC and downloading** — the native-real-Euclid domain is open
+
+- `docs/LEMON_HEADTOHEAD_PLAN.md` created (stages Q0-Q3 + don't-forget checklist);
+  COMMITMENTS C16-C18 added, C8 updated (Busillo email SENT by Nurkyz).
+- Both branches merged to main (DECISIONS_LOG union) and pushed.
+- **Q2a resolved: Zenodo 15025832 (Q1 SLDE, Walmsley et al.) publishes
+  `modeling_lens_mass.csv` = 335 per-lens PyAutoLens SIE theta_E (the GT LEMON
+  scored against, mirrored to `tables/q1_slde_mass_models.csv`), the full
+  2,584-candidate catalog, AND `lens.zip` (3.0 GB) = the VIS cutouts.**
+  Download running on the login node (nohup wget -c, ~/cosmos_acs/q1_slde/);
+  quota 105/150 GB. LEMON's Fig. 12 N=354 vs 335 here -> remainder presumably
+  Rojas high-sigma_v systems; reconcile at eval.
+- SLACS-29 hypotheses tested: Bolton Table 5 parsed (Nurkyz-provided) ->
+  `tables/bolton08_table5.csv`; Ring=32, Ring+sigma_good=31; H3 (Auger
+  photometry cut) RULED OUT (VizieR: all 31 have Imag+Re(I)). Routes left:
+  email reply (definitive), Fig-9 digitization. 62-superset row meanwhile.
+- EELs-13 IDENTIFIED (Oldham 2017 Table 2, theta_E 0.31-0.86", matches their
+  Fig. 9); Faure COSMOS table pulled (VizieR, erratum theta_E); Pawase 13 =
+  next (spec-confirmed subset of their Table 3; recall 13/60 of LEMON's GT is
+  ARC RADIUS, not theta_E). Skeleton: `tables/lemon60_targets.csv`.
+- Next: unzip + inspect cutouts, GT join by id_str, preprocessing to the g4
+  Euclid-arm grid, C17 flux/ZP gate, 10-lens pilot w/ previews -> then a
+  logged eval vs LEMON's Q1 scoreboard (0.01/0.17/0.07/0.71).
+
 ## 2026-07-13 (morning) — ⛔ EVALS #20 + #21 (counts → 20, 21): the NATIVE ARM DELIVERS THE TWO-DOMAIN CLAIM (SLACS native R² +0.64/fail 15%, S4TM native r50 R² +0.90/RMSE 0.088/fail 8% — project best); g3b fixes the high-θ bias but confirms the selection trade-off; overnight-chain post-mortem: both AR pilots PASSED, abort was a marker typo; quota raised to 150 GB
 
 **EVAL #21 (NATIVE, first GEN4 native eval; primary cnv2_3):**
