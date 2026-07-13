@@ -5,6 +5,55 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-13 (afternoon) — ⛔ EVAL #22 (count → 22): g4ar (AR1 arc-Poisson + AR2 coupled shear) is a NULL on the SLACS-Euclid aggregate but a NEW S4TM-EUCLID BEST (r50_3 R² +0.86) and the first zero-confident-half-failure run; C15a/b IMPLEMENTED in the manifest generator; C15c VALIDATED (raw −8.5% → corrected +1.8%); Q2 pilot passes previews; C17 gate MEASURED: flux scale ~11× off (ZP explains only 1.9×) — rescale ruling required before Q2e
+
+**EVAL #22 (Euclidised benchmark, g4ar = g3b recipe + AR1 + AR2; frozen
+recal b=−0.0032 s=1.015 sim-val, TTA ×8; 34 prediction CSVs → results/):**
+- SLACS N=62 ens (cnv2_3): bias −0.028, RMSE 0.157, NMAD 0.061, R² +0.62,
+  fail 15%, med frac −1.1%; **conf-half fail 0% — first ever**; boot
+  P(NMAD<.11)=1.00, P(R²>.53)=0.73. **NULL vs the eval-#19 incumbent**
+  (G4 cnv2_3: 0.137/+0.71/15%), which keeps the SLACS-Euclid headline.
+- S4TM N=40: ens +0.034/0.134/0.080/+0.76/25%; **r50_3 +0.020/0.103/0.071/
+  R² +0.86/fail 22% — new S4TM-Euclid best** (prev: #18 G3 r50_3
+  0.117/+0.81/22%).
+- Bins: SLACS [0,0.9) still 62% fail/+8.7% (N=8) — unchanged target for
+  AR3 + G1b + C15. Reading: the AR pair helps the faint-arc/low-mass regime
+  and confidence gating, NOT the SLACS aggregate.
+- **RECIPE PROPOSAL (needs Nurkyz confirm): keep G4 cnv2_3 as Euclid
+  primary; g4ar r50_3 takes the S4TM-Euclid row.**
+
+**C15a/b IMPLEMENTED** in `g2_make_manifest.py` (σ_SIS = σ_fiber/0.948 +
+7% multiplicative intrinsic scatter; `.bak_c15` kept; compiles). Takes
+effect at the next manifest build; pilot-gated as required.
+
+**C15c VALIDATED (with a logged data bug):** first attempt joined against
+the Auger PHOTOMETRY table by mistake (Imag/Re/z only → N=0) — retracted,
+refetched VizieR J/ApJ/682/964/table4 (Bolton 08: Name, zFG, zBG, σ, e_σ;
+131 rows). On the benchmark (N=57; 5 systems lack SDSS σ):
+θ_SIS(raw σ_fiber) median **−8.5%** vs b_SIE; with C15a (σ/0.948)
+median **+1.8%** (NMAD scatter 15.7→17.4%, consistent with the ~14% honest
+label noise C15b encodes). Normalization is literature, never fitted here.
+Figure `paper_figures/c15c_validation.png`; per-lens table
+`tables/c15c_theta_sis_vs_bsie.csv`.
+
+**Q2 pilot (10 lenses) PASSES previews:** center-crop 64px@0.1″ → 2×
+flux-conserving upsample to 128@0.05″; three-stretch gallery clean (arcs/
+rings visible, deflectors centered) — `paper_figures/q2_pilot_preview.png`.
+Aperture-vs-catalog flux offset uniform to ±0.09 mag across lenses (the
+−2.05 constant is aperture definitions; tightness is what matters).
+
+**C17 gate MEASURED (q2_c17_gate.py, vs euclid_slacs_images_g3.h5):**
+peak/sky Q1 med 349 vs bench 480 (0.73×, distributions overlap — contrast
+compatible); **absolute skyRMS 0.09× (≈2.6 mag)** — the MAGZERO 24.6 vs
+euclidise-assumed 23.9 explains only 1.9×, the rest is a flux-unit
+convention difference; Q1 cutouts are background-subtracted (sky ≈0.3×RMS)
+vs the bench pedestal (≈2×RMS). **RULING REQUIRED before ⛔ Q2e: single
+multiplicative rescale (skyRMS-matched ×~11 vs ZP-derived) + sky-pedestal
+handling. No Q1 eval until ruled** — this is exactly what C17 existed to
+catch (LEMON needed −0.22 mag ad hoc; ours is a unit issue, measured).
+
+---
+
 ## 2026-07-13 (PM, cont.) — DOC CONSOLIDATION (Nurkyz directive: "one plan"): MASTER_PLAN.md rewritten as the SINGLE live plan; five plan docs + the superseded LensFusion instructions ARCHIVED to docs/archive/ with banners; root folder synced
 
 - New MASTER_PLAN.md = priority ladder (eval #22 → Q program → G1b → AR3 →

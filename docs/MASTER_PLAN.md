@@ -10,7 +10,7 @@ holds current numbers; PAPER_DRAFT.md is the manuscript; CLAUDE.md holds the
 operating rules. If a stage here conflicts with a newer DECISIONS_LOG entry,
 the log wins — update this file when that happens.
 
-## 0. Where we are (2026-07-13, eval count 21; details in MODELS_AND_RESULTS.md)
+## 0. Where we are (2026-07-13, eval count 22; details in MODELS_AND_RESULTS.md)
 
 GEN4 (self-consistent population: real HST galaxy = light AND mass, SDSS σ_v →
 θ_E, FJ channel) delivered the central result on the frozen benchmark:
@@ -20,18 +20,26 @@ GEN4 (self-consistent population: real HST galaxy = light AND mass, SDSS σ_v �
 | Native HST SLACS (eval #21) | +0.005″ | 0.152″ | 0.048″ | +0.64 | 15% |
 | Native HST S4TM (eval #21) | +0.013″ | 0.088″ | 0.047″ | +0.90 | 8% |
 | Euclid-domain SLACS (eval #19) | −0.010″ | 0.137″ | 0.056″ | +0.71 | 15% |
+| Euclid-domain S4TM (eval #22, g4ar r50_3) | +0.020″ | 0.103″ | 0.071″ | +0.86 | 22% |
 
 Beats/matches Cao 2025 (conventional, same lenses); beats LEMON Table 3 on every
-θ_E aggregate in their Euclidised domain. In flight on the cluster:
-run_night_resume.sh → g4ar (AR1 arc-Poisson + AR2 coupled shear) regen → grid →
-⛔ eval #22 (pre-authorized, count → 22); g1b 800-target stamp fetch; Q1 SLDE
-cutouts downloaded + unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs, 4.7 GB).
+θ_E aggregate in their Euclidised domain. **Eval #22 LANDED (2026-07-13 PM):**
+g4ar (AR1+AR2) is a NULL on the SLACS-Euclid aggregate (−0.028/0.157/+0.62/15%;
+#19 keeps that headline) but conf-half fail 0% (first ever) and a new
+S4TM-Euclid best (r50_3 above). Recipe proposal PENDING NURKYZ CONFIRM:
+G4 cnv2_3 stays Euclid primary, g4ar r50_3 takes the S4TM row. Also landed:
+C15a/b implemented in g2_make_manifest.py (pilot-gated); C15c validation
+figure done (raw −8.5% → corrected +1.8%, N=57); Q2 10-lens pilot passes
+previews; C17 flux gate measured (~11× unit offset — ruling needed, §2 Q2c).
+Still on the cluster: g1b 800-target stamp fetch (check g1b_fetch.log);
+Q1 SLDE cutouts unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs).
 
 ## 1. Priority ladder (Nurkyz-set direction + Q program; work top-down,
    parallel where independent)
 
-1. **Harvest ⛔ eval #22** (g4ar) → decide the production Euclid recipe
-   (incumbent: G4-trained cnv2_3 on the real-PSF bench, 0.137/+0.71/15%).
+1. **Harvest ⛔ eval #22** (g4ar) — DONE 2026-07-13 (logged, CSVs banked).
+   Remaining: Nurkyz confirms the recipe (proposal: G4 cnv2_3 stays Euclid
+   primary at 0.137/+0.71/15%; g4ar r50_3 takes the S4TM-Euclid row).
 2. **Q program — LEMON head-to-head on their exact lenses** (§2; C16). Q2 is
    unblocked NOW and is pure evaluation-side work (no retraining) — run it
    alongside 3–4.
@@ -98,10 +106,14 @@ admits real < sim performance.
 - **Q2b format inspection**: FITS pixel scale/size/units; info.json contents;
   mask conventions. THEN preprocessing to the 128px @ 0.05″ grid the g4
   Euclid arm expects (same 2× upsample as euclidise.py output side).
-- **Q2c gates BEFORE eval (C17)**: flux/ZP sanity (aperture mags vs catalog
-  I_E — we predict a smaller offset than their −0.22 since G3 calibrates on
-  real Q1 PSF+sky; MEASURE it); sky-RMS + peak/sky distributions vs the
-  training arm (gate_stage0-style); 10-lens pilot with three-stretch previews.
+- **Q2c gates BEFORE eval (C17): MEASURED 2026-07-13.** 10-lens pilot passes
+  three-stretch previews; aperture-vs-catalog flux uniform ±0.09 mag.
+  vs euclid_slacs_images_g3.h5: peak/sky 0.73× (compatible) but absolute
+  skyRMS 0.09× (≈2.6 mag; ZP 24.6-vs-23.9 explains only 1.9× — flux-unit
+  convention) and Q1 cutouts are background-subtracted vs the bench pedestal.
+  **NEXT: rescale ruling (skyRMS-matched ×~11 vs ZP-derived) + pedestal
+  handling, then rerun the gate to confirm distributions align. No eval
+  before that.**
 - **Q2d population-shift audit (disclose)**: Q1 deflectors not all LRGs; θ_E
   skews small; z_l higher than SLACS. Report training-support overlap; flag
   out-of-support systems in the per-lens table.
@@ -124,8 +136,8 @@ reimplementation; own-pipeline-GT caveats cut both ways.
 | item | what | status |
 |---|---|---|
 | AR0 | quantitative arc-realism gate | baseline DONE (sim/real gap SMALL); wire into every pilot chain (C14) |
-| AR1 | arc shot noise, native arm | patch applied; in g4ar → eval #22 (C13) |
-| AR2 | ΔPA↔γ_ext coupling | in g4ar → eval #22 (C1) |
+| AR1 | arc shot noise, native arm | DONE — in g4ar, evaluated #22 (C13): SLACS-aggregate null, helps faint-arc/S4TM + confidence gating |
+| AR2 | ΔPA↔γ_ext coupling | DONE — in g4ar, evaluated #22 (C1): same reading as AR1 |
 | AR3 | mass multipoles m=3,4 anchored to each stamp's MEASURED isophotes (novelty) | NEXT after G1b measurement (C5); pilot + AR0 gate |
 | AR4 | source knots / HUDF deep-morphology tier | only if arc gate still shows a gap after AR3 (C7) |
 | AR5 | companion MASS (FJ-scaled SIS) | conditional, after AR3 |

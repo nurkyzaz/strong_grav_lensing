@@ -5,21 +5,21 @@ dated). This file is the SUMMARY VIEW of where the numbers stand. Pre-GEN4
 content (m3/simct/hybrid-v1..v3/Path-B eras) lives in git history of this file
 and in DECISIONS_LOG.
 
-## The frozen benchmark (never trained on; eval count at 21)
+## The frozen benchmark (never trained on; eval count at 22)
 
 62 SLACS + 40 S4TM real HST/ACS F814W cutouts; ground truth = Bolton et al.
 2008 spectroscopic-lensing b_SIE. Euclid-domain testing = the SAME cutouts
 through the euclidise operator (real Q1 VIS PSF since G3). All model selection
 on sim-val only; recal frozen before benchmark contact; TTA ×8; bootstrap CIs.
 
-## Headline results (as of eval #21)
+## Headline results (as of eval #22)
 
 | domain | config | bias | RMSE | NMAD | R² | fail>15% |
 |---|---|---|---|---|---|---|
 | **Native HST, SLACS** | eval #21, g4n cnv2_3 | +0.005″ | 0.152″ | 0.048″ | **+0.64** | **15%** |
 | **Native HST, S4TM** | eval #21, g4n r50_3 (derived) | +0.013″ | **0.088″** | 0.047″ | **+0.90** | **8%** |
 | **Euclid (real-PSF bench), SLACS** | eval #19, G4 cnv2_3 | −0.010″ | **0.137″** | 0.056″ | **+0.71** | 15% |
-| **Euclid, S4TM** | eval #18, G3 r50_3 | +0.027″ | 0.117″ | 0.082″ | +0.81 | 22% |
+| **Euclid, S4TM** | eval #22, g4ar r50_3 (derived; row pending Nurkyz recipe confirm) | +0.020″ | **0.103″** | 0.071″ | **+0.86** | 22% |
 
 References: Cao et al. 2025 (conventional modeling, same lenses/GT): ≲5%
 median dev., ~10% fail. LEMON Q1 (CNN, synthetic training, own-model GT):
@@ -49,11 +49,14 @@ fail 55%. July-6 v2 (native): −2.6%, R² +0.27, fail 23%.
 | g4_* (17) | train_g4_100k (GEN4 Euclid, gauss-PSF era; set deleted, reproducible) | CURRENT Euclid primary ON the real-PSF bench (cnv2_3 + g4_recal.json) |
 | g3b_* (16) | train_g3b_100k (real PSF + SNR>0.8 selection) | kept; high-θ-bias-free alternative |
 | g3_* (16) | train_g3 (real PSF, old selection; set deleted, reproducible) | kept; S4TM-Euclid best (r50_3); cnv2_s3 diverged (C12) |
-| g4ar_* | train_g4ar (g3b + arc-Poisson + coupled shear) | GRID RUNNING → eval #22 |
+| g4ar_* | train_g4ar (g3b + arc-Poisson + coupled shear) | evaluated #22: NULL on the SLACS-Euclid aggregate (−0.028/0.157/+0.62/15%) but conf-half fail 0% (first ever) and **new S4TM-Euclid best (r50_3 0.103/+0.86/22%)** |
 | logpolar | — | retired after two nulls |
 
 ## Known open items
 
 σ coverage under (RAW ~50–57/70–89) — domain miscalibration, conformal-on-real
-open (C11). σ_v→θ_E normalization ~11% low at fixed light (f_SIS=0.948) +
-missing 7% intrinsic scatter — fixes queued (C15). Full ledger: COMMITMENTS.md.
+open (C11). σ_v→θ_E corrections (C15a/b) now IMPLEMENTED in g2_make_manifest
+(pilot-gated, next data build); C15c validated them on the benchmark
+(raw σ_fiber −8.5% → corrected +1.8%, N=57 — paper_figures/c15c_validation.png).
+Q2 (real Q1) C17 flux gate measured: ~11× unit-scale offset, rescale ruling
+needed before Q2e. Full ledger: COMMITMENTS.md.

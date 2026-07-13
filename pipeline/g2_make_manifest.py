@@ -28,6 +28,8 @@ ap.add_argument("--out", required=True)
 ap.add_argument("--tmin", type=float, default=0.45)
 ap.add_argument("--tmax", type=float, default=2.30)
 ap.add_argument("--nbin", type=int, default=37)
+ap.add_argument("--couple_shear", action="store_true",
+                help="AR2: gamma_ext coupled to |dPA| (C1); default OFF")
 a = ap.parse_args()
 rng = np.random.default_rng(a.seed)
 
@@ -100,6 +102,14 @@ prefac = np.degrees(4 * np.pi / C_KMS ** 2) * 3600.0
 # is what was missing.
 RHO_REQ = -0.15
 
+# C15a/b (2026-07-13): sigma_v -> theta_E mapping corrections.
+# (a) SLACS-measured normalization: sigma_fiber = 0.948 sigma_SIE (Bolton+08)
+#     -> sigma_SIS = sigma_fiber / F_SIS; theta_E rises ~11% at fixed light.
+# (b) 7% intrinsic stellar-vs-lensing dispersion scatter (beyond measurement
+#     error), applied multiplicatively -> ~14% honest theta_E label noise.
+F_SIS = 0.948
+SIG_INT = 0.07
+
 
 def sample_physical(nb):
     gi = rng.integers(0, len(gal), nb)
@@ -107,6 +117,7 @@ def sample_physical(nb):
     zdens = np.exp(-0.5 * ((zgrid[zi] - 0.65) / 0.15) ** 2)
     keepz = rng.random(nb) < zdens
     vd = vd_arr[gi] + rng.normal(0, 1, nb) * ve_arr[gi]
+    vd = (vd / F_SIS) * (1.0 + rng.normal(0, SIG_INT, nb))  # C15a + C15b
     th = prefac * vd ** 2 * ratio[gi, zi]
     ok = keepz & np.isfinite(th) & (th >= a.tmin) & (th < a.tmax) & (vd > 50)
     return gi[ok], zi[ok], vd[ok], th[ok]
@@ -152,6 +163,11 @@ while len(rows) < a.n and attempts < a.n * 2000:
         k = int(rng.integers(8))
         pa_l = dihedral_pa(g["pa"], k)
         dpa = float(np.clip(rng.normal(0, 10.0), -30, 30))
+        if a.couple_shear:
+            gam = float(min(rng.rayleigh(0.03) + 0.0012 * abs(dpa), 0.25))
+            phig = float(rng.uniform(0, np.pi))
+            g1 = round(gam * np.cos(2 * phig), 6)
+            g2 = round(gam * np.sin(2 * phig), 6)
         qm = float(np.clip(g["q"] + rng.normal(0, 0.08), 0.35, 0.95))
         em = (1 - qm) / (1 + qm)
         phi = np.radians(pa_l + dpa)
@@ -162,7 +178,9 @@ while len(rows) < a.n and attempts < a.n * 2000:
                          z_source=round(float(zgrid[zi[j]]), 5),
                          sigma_v_used=round(float(vd[j]), 2),
                          z_l=g["z_l"], stamp_mag=g["mag"], q_light=g["q"],
-                         pa_light_eff=round(pa_l, 2), dpa=round(dpa, 2)))
+                         pa_light_eff=round(pa_l, 2), dpa=round(dpa, 2),
+                         **(dict(gamma1=g1, gamma2=g2)
+                            if a.couple_shear else {})))
 
 # SHUFFLE: renders consume rows sequentially and bin-filling appends the
 # hard (high-theta) bins LAST — unshuffled, a partial consumption drops the
@@ -187,3 +205,6 @@ from scipy.stats import spearmanr
 rho, _ = spearmanr(mg, th)
 print("manifest rho(stamp mag, theta_E) = %+.2f (physical FJ channel; real ~ -0.3..-0.5)"
       % rho)
+print("PHYSICS SPEC: fj_channel=ON misalignment=ON(N10,clip30) "
+      "q_scatter=adhoc0.08(C2-open) gamma_coupling=%s multipoles=OFF(AR3) "
+      "tempered_alpha=swept" % ("ON" if a.couple_shear else "OFF(AR2)"))
