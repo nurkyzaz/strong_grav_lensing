@@ -1,0 +1,32 @@
+subsample,system,gt_theta_E_arcsec,gt_convention,gt_source,status_notes
+EEL,J0837,0.56,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J0901,0.67,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J0913,0.42,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J1125,0.86,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J1144,0.68,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J1218,0.68,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J1323,0.31,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J1347,0.43,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J1446,0.41,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J1605,0.64,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J1606,0.52,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J1619,0.5,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+EEL,J2228,0.6,power-law + external shear,Oldham et al. 2017 Table 2,CONFIRMED member (13 = full EELs sample); full coords from their Table 1 at fetch time
+COSMOS-cand,COSMOS 0012+2015,0.67,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0018+3845,1.32,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0038+4133,0.73,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0047+5023,1.41,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0049+5128,2.09,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0050+4901,1.69,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0056+1226,1.64,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0124+5121,0.86,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0211+1139,3.14,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0216+2955,1.75,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 0227+0451,2.64,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 5857+5949,2.28,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 5914+1219,1.65,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 5921+0638,0.70,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 5941+3628,1.17,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+COSMOS-cand,COSMOS 5947+4752,1.97,SIE + shear (Lenstool),Faure et al. 2008 Table 4 (erratum values via VizieR J/ApJS/176/19),TODO: keep only the 5 spectroscopically confirmed (LEMON criterion)
+ACS-todo,Pawase 2014 Table 3 spec-confirmed subset (13),,ARC RADIUS ONLY - no theta_E exists,Pawase et al. 2014 (MNRAS 439 3392) Table 3,TODO: extract Table 3 + spec-confirmation flags (not on VizieR); dual-report or exclude in eval
+SLACS-note,"29 of Bolton 63 grade-A, identity UNRESOLVED",,b_SIE (Bolton Table 5),tables/bolton08_table5.csv,"H1 Ring=32, H2 Ring+sigma=31, H3 (Auger phot) RULED OUT (all 31 have I-band); routes: email reply / Fig9 digitization; meanwhile use 62-superset"
