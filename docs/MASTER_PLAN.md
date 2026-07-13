@@ -37,9 +37,11 @@ Q1 SLDE cutouts unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs).
 ## 1. Priority ladder (Nurkyz-set direction + Q program; work top-down,
    parallel where independent)
 
-1. **Harvest ⛔ eval #22** (g4ar) — DONE 2026-07-13 (logged, CSVs banked).
-   Remaining: Nurkyz confirms the recipe (proposal: G4 cnv2_3 stays Euclid
-   primary at 0.137/+0.71/15%; g4ar r50_3 takes the S4TM-Euclid row).
+1. **Harvest ⛔ eval #22** (g4ar) — DONE 2026-07-13; ⛔ eval #23 (derived
+   two-model ensemble) DONE same day. **Nurkyz RULED: no headline freeze —
+   multi-domain reporting; provisional recipe = G4 cnv2_3 (SLACS-Euclid),
+   g4ar r50_3 (S4TM-Euclid), #23 ens2 as the combined row; headline chosen
+   at final paper drafting.**
 2. **Q program — LEMON head-to-head on their exact lenses** (§2; C16). Q2 is
    unblocked NOW and is pure evaluation-side work (no retraining) — run it
    alongside 3–4.

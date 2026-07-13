@@ -5,6 +5,42 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-13 (evening) — ⛔ EVAL #23 (count → 23, DERIVED — no new benchmark passes): two-model ensemble mean(G4 cnv2_3, g4ar r50_3) per Nurkyz ruling — a COMPROMISE row, not a new best; NURKYZ RULINGS: no headline freeze (multi-domain reporting), Q2 = Option A with a normalization-SWEEP stage before the single official eval, C10 now BLOCKS AR3
+
+**EVAL #23 (derived from banked CSVs `results/preds_l19_g4_cnv2_s*` +
+`preds_l22_g4ar_r50_s*`; each side under its own frozen sim-val recal;
+equal weight per MODEL; script `analysis/l23_tables.py`; reproduction
+check: both side rows match the published #19/#22 rows to the digit):**
+- SLACS N=62: **−0.032 / 0.156 / 0.077 / R² +0.62 / fail 16%** — does NOT
+  beat the #19 incumbent (0.137/+0.71/15%), which keeps the SLACS-Euclid row.
+- S4TM N=40: **+0.041 / 0.136 / 0.093 / R² +0.75 / fail 22%** — WORSE than
+  g4ar r50_3 alone (+0.86), dragged by the G4 side (S4TM +0.51).
+- Honest reading: as a SINGLE cross-domain config, ens2 (+0.62/+0.75) is a
+  tie with the all-g4ar cnv2_3 ensemble from #22 (+0.62/+0.76) — the
+  two-model mix adds nothing over per-domain picks. It stands in the tables
+  as the combined row; per-domain picks dominate it in each domain.
+- CSVs: `results/preds_l23_ens2_euclid_{slacs,s4tm}_images_g3.csv`.
+
+**NURKYZ RULINGS (2026-07-13, supersede the #22 pending-confirm items):**
+1. **No "main benchmark" freeze.** The model is multi-domain by design;
+   paper tables report ALL domains; headline chosen at final drafting.
+   Provisional recipe stands: G4 cnv2_3 (SLACS-Euclid), g4ar r50_3
+   (S4TM-Euclid), eval-#23 ens2 as the combined cross-domain row.
+2. **Q2 = Option A** (rescale Q1 cutouts to the training domain; do NOT
+   retrain). But the measured ~11× factor is NOT applied blindly: a
+   **normalization-sweep stage** (MASTER_PLAN §2 Q2c2) tunes factor ×
+   pedestal (≥12 combos) on a held-out tuning subset against PyAutoLens GT,
+   freezes the winner, re-runs the C17 gate, and only then submits the
+   official ⛔ Q2e (eval #24) EXACTLY ONCE on the full set. Tuning-subset
+   contact is disclosed (report with/without those lenses).
+3. **C10 physics spec block now BLOCKS the AR3 pilot** — implement in the
+   generator before any AR3 training set; AR3 pilot script must fail hard
+   if the manifest header lacks the spec block.
+4. G5 Roman scoped as a researched write-up (Wedig et al. 2025 §3 route
+   vs own rendering vs multiband) — see MASTER_PLAN §G5.
+
+---
+
 ## 2026-07-13 (afternoon) — ⛔ EVAL #22 (count → 22): g4ar (AR1 arc-Poisson + AR2 coupled shear) is a NULL on the SLACS-Euclid aggregate but a NEW S4TM-EUCLID BEST (r50_3 R² +0.86) and the first zero-confident-half-failure run; C15a/b IMPLEMENTED in the manifest generator; C15c VALIDATED (raw −8.5% → corrected +1.8%); Q2 pilot passes previews; C17 gate MEASURED: flux scale ~11× off (ZP explains only 1.9×) — rescale ruling required before Q2e
 
 **EVAL #22 (Euclidised benchmark, g4ar = g3b recipe + AR1 + AR2; frozen

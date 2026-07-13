@@ -5,21 +5,33 @@ dated). This file is the SUMMARY VIEW of where the numbers stand. Pre-GEN4
 content (m3/simct/hybrid-v1..v3/Path-B eras) lives in git history of this file
 and in DECISIONS_LOG.
 
-## The frozen benchmark (never trained on; eval count at 22)
+## The frozen benchmark (never trained on; eval count at 23)
 
 62 SLACS + 40 S4TM real HST/ACS F814W cutouts; ground truth = Bolton et al.
 2008 spectroscopic-lensing b_SIE. Euclid-domain testing = the SAME cutouts
 through the euclidise operator (real Q1 VIS PSF since G3). All model selection
 on sim-val only; recal frozen before benchmark contact; TTA ×8; bootstrap CIs.
 
-## Headline results (as of eval #22)
+## Headline results (as of eval #23)
+
+Nurkyz ruling 2026-07-13: NO single "main benchmark" frozen — the model is
+multi-domain by design; paper tables report all domains and the headline is
+chosen at final drafting. Provisional recipe: per-domain picks below + the
+eval-#23 two-model ensemble as the combined cross-domain row.
 
 | domain | config | bias | RMSE | NMAD | R² | fail>15% |
 |---|---|---|---|---|---|---|
 | **Native HST, SLACS** | eval #21, g4n cnv2_3 | +0.005″ | 0.152″ | 0.048″ | **+0.64** | **15%** |
 | **Native HST, S4TM** | eval #21, g4n r50_3 (derived) | +0.013″ | **0.088″** | 0.047″ | **+0.90** | **8%** |
 | **Euclid (real-PSF bench), SLACS** | eval #19, G4 cnv2_3 | −0.010″ | **0.137″** | 0.056″ | **+0.71** | 15% |
-| **Euclid, S4TM** | eval #22, g4ar r50_3 (derived; row pending Nurkyz recipe confirm) | +0.020″ | **0.103″** | 0.071″ | **+0.86** | 22% |
+| **Euclid, S4TM** | eval #22, g4ar r50_3 (derived) | +0.020″ | **0.103″** | 0.071″ | **+0.86** | 22% |
+| Euclid, SLACS — combined ens2 | eval #23 (derived): mean(G4 cnv2_3, g4ar r50_3) | −0.032″ | 0.156″ | 0.077″ | +0.62 | 16% |
+| Euclid, S4TM — combined ens2 | eval #23 (derived), same config | +0.041″ | 0.136″ | 0.093″ | +0.75 | 22% |
+
+Eval-#23 honest reading: the two-model ensemble is a COMPROMISE row — it does
+not beat #19 on SLACS nor r50_3 on S4TM, and as a single cross-domain config
+it ties the all-g4ar cnv2_3 ensemble (#22: +0.62/+0.76). Per-domain picks
+dominate; ens2 exists for single-config cross-domain reporting.
 
 References: Cao et al. 2025 (conventional modeling, same lenses/GT): ≲5%
 median dev., ~10% fail. LEMON Q1 (CNN, synthetic training, own-model GT):
