@@ -5,6 +5,23 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-13 (night) — NURKYZ RULING: Q2 normalization FROZEN at ×11.4, no pedestal (gate-aligned option (a)); Q2d audit + ⛔ Q2e (eval #24) authorized to run disconnected (single cluster-resident sbatch chain)
+
+- Frozen: rescale ×11.4 (skyRMS-matched, C17-gate-passing), no pedestal
+  (measured zero effect). Written into q2e_eval.py as a constant.
+- Q2e composition (one logged eval, pre-registered rows): primary G4
+  cnv2_3 ens; derived same-passes rows g4ar r50_3 (the faint-arc pick —
+  Q1 skews small-θ_E) and #23-style ens2. Rows reported: full sample,
+  excluding the 9 burned tuning lenses, in-support (θ_E_GT ∈ [0.45,2.3]),
+  and in-support-excl-tuning. Bar: LEMON Fig 12a (0.01/0.17/0.07/+0.71).
+- Q2d audit (analysis-only, same chain, before predictions): GT-support
+  flags, distribution summary, C17 stats on the full set, three-stretch
+  previews of ALL out-of-support systems + a 20-lens in-support sample
+  (banked for inspection; standing preview rule).
+- Eval file frozen at creation per C18: q1_slde_eval_f11p4.h5.
+
+---
+
 ## 2026-07-13 (late evening) — Q2c2 NORMALIZATION SWEEP EXECUTED (Nurkyz go-ahead): factor response nearly FLAT — normalization is NOT the binding constraint; C17 gate PASSES at the physically-anchored ×11.4; nominal lowest-RMSE winner f14 is edge-of-grid noise; RECOMMEND FREEZE f11.4 × no-pedestal (ruling pending); benchmark eval count UNCHANGED at 23
 
 - Job 47907 (first submit 47902 crashed on empty-GT rows in
