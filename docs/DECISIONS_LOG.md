@@ -5,6 +5,41 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-13 (morning) — ⛔ EVALS #20 + #21 (counts → 20, 21): the NATIVE ARM DELIVERS THE TWO-DOMAIN CLAIM (SLACS native R² +0.64/fail 15%, S4TM native r50 R² +0.90/RMSE 0.088/fail 8% — project best); g3b fixes the high-θ bias but confirms the selection trade-off; overnight-chain post-mortem: both AR pilots PASSED, abort was a marker typo; quota raised to 150 GB
+
+**EVAL #21 (NATIVE, first GEN4 native eval; primary cnv2_3):**
+- SLACS N=62: bias +0.005, RMSE 0.152, NMAD 0.048, R² +0.64, fail 15%, med
+  frac −0.3%; bins: <0.9″ 38%/+2.2%; 0.9–1.2 17%; 1.2–1.5 9%; **1.5–3.0 0%**.
+  vs the m3 native baseline (R² −1.02, fail 55%) and the July-6 v2 report
+  (−2.6%, R² +0.27, fail 23%): the GEN4 program more than doubled native R²
+  and halved the failure rate on the SAME benchmark.
+- S4TM N=40: cnv2_3 0.119/+0.81/15%; **r50_3 RMSE 0.088, R² +0.90, fail 8% —
+  the best single result of the entire project.** NMAD 0.042–0.047 native.
+- THE PAPER CLAIM IS NOW MEASURED: one physical population, real-GT-validated
+  in BOTH domains (native R² +0.64 / Euclid R² +0.67–0.71), ready for Roman.
+**EVAL #20 (g3b, real-op Euclid bench; primary cnv2_3):**
+- SLACS: 0.188/+0.45/16%, high-θ bin FIXED (22%/−0.1% vs #18's 44%/−10.7%) —
+  the selection re-tune did exactly what it targeted; but overall still behind
+  the G4-trained cell (#19: 0.137/+0.71/15%). S4TM: 0.155/+0.68/28% — WORSE
+  than G3's 0.117: the marginal faint arcs g3b excludes are exactly what
+  taught the S4TM regime. **Selection strictness is a real dial trading
+  SLACS-tail bias against faint-arc performance — an ablation-grade finding;
+  one training set cannot sit at both ends of this dial (motivates AR4 source
+  knots or a mixed-selection curriculum as the unifying move).**
+- Euclid-domain headline remains eval #19's G4-train/real-bench 0.137/+0.71/15%.
+**Overnight post-mortem (honest):** (1) both AR pilots PASSED ALL gates (AR1:
+stage0 ×4 + FJ −0.08 + AR0 ×4; AR2: stage0 ×4 + **FJ −0.26, strongest yet** +
+AR0 ×4; 600-render pilots complete in ~31 s on these nodes — not an anomaly,
+g3_pilot took 64 s); the NIGHT_ABORT was a sed no-op typo (ar2 script printed
+AR1_PILOT_DONE) — the driver's safety check worked as designed, stopped
+before any regen, nothing lost. (2) G1b fetch crashed at t=0: lrgdefl2b_labels
+was built on the Mac and never copied to the cluster — shipped, precheck run
+(1,441 ACS-only of 1,982), fetch relaunched (800 phase-1, chunks of 20).
+(3) Cleanup executed (~25 GB freed); QUOTA RAISED to 150/160 GB (Nurkyz).
+RESUMED (run_night_resume.sh): g4ar regen → merge+gates → grid → ⛔ EVAL #22.
+
+---
+
 ## 2026-07-12 (late night) — OVERNIGHT AUTONOMOUS PROGRAM LAUNCHED (Nurkyz ruling: cleanup approved; AR1/AR2 + G1b fetch start automatically after the AB chain; "when next time I check, it should be done"; she is offline ~12 h)
 
 Everything cluster-resident (Mac offline kills session monitors — by design
