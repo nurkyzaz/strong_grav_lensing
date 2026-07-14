@@ -25,13 +25,17 @@ from scipy.ndimage import zoom
 BASE = os.path.expanduser("~/cosmos_acs/roman_dc")
 EC = os.path.expanduser("~/einstein_cnn")
 BANDS = ["F106", "F129", "F158"]
-VAL_N = 1000
-SEED = 20260714
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--labeled", action="store_true")
 ap.add_argument("--unlabeled", action="store_true")
+ap.add_argument("--val_n", type=int, default=1000)
+ap.add_argument("--split_seed", type=int, default=20260714)
+ap.add_argument("--prefix", default="rung0",
+                help="output name prefix (v2 round: rung0v2, val_n 500, fresh seed)")
 a = ap.parse_args()
+VAL_N = a.val_n
+SEED = a.split_seed
 
 
 def load_groups(fn, with_theta):
@@ -76,8 +80,8 @@ if a.labeled:
     vi, ti = order[:VAL_N], order[VAL_N:]
     for tag, idx in (("train", ti), ("val", vi)):
         sel_u = [uids[j] for j in idx]
-        write(os.path.join(EC, "%s_rung0_3band.h5" % tag), ims[idx], th[idx], sel_u)
-        write(os.path.join(EC, "%s_rung0_f106.h5" % tag), ims[idx][:, 0], th[idx], sel_u)
+        write(os.path.join(EC, "%s_%s_3band.h5" % (tag, a.prefix)), ims[idx], th[idx], sel_u)
+        write(os.path.join(EC, "%s_%s_f106.h5" % (tag, a.prefix)), ims[idx][:, 0], th[idx], sel_u)
     # quick gate stats on F106
     x = ims[ti[:500], 0]
     sky = np.median(x[:, :12, :12], axis=(1, 2))

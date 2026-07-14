@@ -5,6 +5,27 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (evening, cont.) — Nurkyz submission-prep round: exact TDLMC numbers computed for the email; G5a v2 retrain chain LAUNCHED (10,660 train / fresh 500 calib holdout + MIXED-12 ensemble); G1B FETCH DONE (779 stamps) and the prune package is on the Mac
+
+- **Email numbers (challenge-val 1000, submission σ config):** 3band all6
+  Goodness χ² = 1.000 / Precision P = 0.0963 / Accuracy A = +0.0037;
+  f106 all6 1.000 / 0.1147 / +0.0113.
+- **v2 retrain (Nurkyz: use the held-out 1000 for training too).** Design
+  note logged: a ZERO-holdout run cannot calibrate σ, and TDLMC Goodness
+  punishes miscalibration quadratically — so v2 trains on 10,660 (fresh
+  500-lens calib holdout, split_seed 20260716) = +500 lenses vs v1, and
+  adds the certainty lever: a MIXED-12 ensemble (all members across both
+  variants; decorrelation shrinks honest σ → better P at χ²=1). Chain
+  (run_g5a2_chain.sh, nohup): convert v2 → 6 f106 → 6 3band → harvest on
+  the 500 → submission2 CSVs (3band_all6_v2 + mixed12_v2).
+- **G1b phase-1 fetch COMPLETE** (06:25 HKT): 779 cutouts in
+  real_lrgdefl2b_images_256.h5. Prune package delivered to the Mac
+  (g1b_prune/): 13 asinh pages + g1b_prune_template.csv (all keep=1;
+  Nurkyz sets keep=0 for rejects) → unlocks C5 (measurement pass incl.
+  a3/a4) → AR3/z-migration library.
+
+---
+
 ## 2026-07-14 (evening) — ⛔ EVAL #25 (count → 25): the texture bug WAS the dominant cause — **#24's negative headline is RETRACTED per the pre-registered rule; #25 is the official Q2e number**: R² 0.00 → +0.57, fail 64% → 29%. Path A submission CSVs DELIVERED (exactly-once run done); LEMON bar still not met — the honest residual is a real but modest population effect
 
 **⛔ #25 (N=322, zoom convention, calibration-identical ×2.85; job 48007):**
