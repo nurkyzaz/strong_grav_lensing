@@ -5,7 +5,7 @@ dated). This file is the SUMMARY VIEW of where the numbers stand. Pre-GEN4
 content (m3/simct/hybrid-v1..v3/Path-B eras) lives in git history of this file
 and in DECISIONS_LOG.
 
-## The frozen benchmark (never trained on; eval count at 24)
+## The frozen benchmark (never trained on; eval count at 25)
 
 62 SLACS + 40 S4TM real HST/ACS F814W cutouts; ground truth = Bolton et al.
 2008 spectroscopic-lensing b_SIE. Euclid-domain testing = the SAME cutouts
@@ -33,16 +33,16 @@ not beat #19 on SLACS nor r50_3 on S4TM, and as a single cross-domain config
 it ties the all-g4ar cnv2_3 ensemble (#22: +0.62/+0.76). Per-domain picks
 dominate; ens2 exists for single-config cross-domain reporting.
 
-**Native real Q1 (⛔ eval #24, N=322, frozen ×11.4 normalization) — MISS,
-and the paper's headline negative finding:** primary cnv2_3
-−0.244/0.428/0.166/R² +0.00/fail 64%; best row r50_3 −0.207/0.371/+0.25/56%;
-LEMON bar (0.01/0.17/0.07/+0.71) not approached, P(beat)=0.00 all metrics.
-Failure is a θ_E-dependent compression (−15% → −34% with growing θ_E),
-population-driven (Q1 deflectors at half the benchmark contrast; FJ channel
-suspect), NOT preprocessing (previews clean, C17 skyRMS matched, support 97%,
-tuning exclusion null). "Euclidising the benchmark ≠ Euclid-ready — the
-instrument operator transfers, the population prior does not." Fires I9 (DA)
-and motivates G1b mixed-population training.
+**Native real Q1 (⛔ eval #25, N=322, zoom convention — the OFFICIAL Q2e
+number; #24's "decisive miss" headline RETRACTED as a preprocessing
+artifact per the pre-registered rule):** primary cnv2_3 −0.075/0.282/
+0.088/R² +0.57/fail 29% (in-support +0.61). LEMON Fig 12a bar
+(0.01/0.17/0.07/+0.71) still unmet — honest frame: ZERO-SHOT
+cross-population transfer at R² +0.57 vs their in-domain-trained 0.71 on
+their-referee, success-filtered board. Residual population effect real but
+modest (slope −5%→−11% with θ_E; deflector-contrast gap). DA (C22) and
+z-migration (C21) target exactly this residual. σ overconfident on real
+Q1 (cov 32/56) — C11/C23.
 
 References: Cao et al. 2025 (conventional modeling, same lenses/GT): ≲5%
 median dev., ~10% fail. LEMON Q1 (CNN, synthetic training, own-model GT):
@@ -81,5 +81,6 @@ fail 55%. July-6 v2 (native): −2.6%, R² +0.27, fail 23%.
 open (C11). σ_v→θ_E corrections (C15a/b) now IMPLEMENTED in g2_make_manifest
 (pilot-gated, next data build); C15c validated them on the benchmark
 (raw σ_fiber −8.5% → corrected +1.8%, N=57 — paper_figures/c15c_validation.png).
-Q2 (real Q1) C17 flux gate measured: ~11× unit-scale offset, rescale ruling
-needed before Q2e. Full ledger: COMMITMENTS.md.
+Q2/Q2e complete: normalization frozen ×11.4, texture convention fixed at
+⛔ #25 (the official Q1 number above; #24 headline retracted). Remaining
+levers on real Q1: DA (C22) and z-migration (C21). Full ledger: COMMITMENTS.md.

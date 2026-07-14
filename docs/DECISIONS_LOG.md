@@ -5,6 +5,34 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (evening) — ⛔ EVAL #25 (count → 25): the texture bug WAS the dominant cause — **#24's negative headline is RETRACTED per the pre-registered rule; #25 is the official Q2e number**: R² 0.00 → +0.57, fail 64% → 29%. Path A submission CSVs DELIVERED (exactly-once run done); LEMON bar still not met — the honest residual is a real but modest population effect
+
+**⛔ #25 (N=322, zoom convention, calibration-identical ×2.85; job 48007):**
+- **Primary cnv2_3: bias −0.075 / RMSE 0.282 / NMAD 0.088 / R² +0.57 /
+  fail 29%** (vs #24: −0.244/0.428/0.166/0.00/64%); med frac −6.3%;
+  in-support R² +0.61. ens2 +0.57; r50_3 +0.49 (the r50 faint-arc edge
+  seen on Euclidised S4TM does NOT carry to native Q1).
+- **RETRACTION (formal, rule pre-registered at the #24 forensics):
+  eval #24's "decisive miss" headline is retracted as a preprocessing
+  artifact** (repeat/4 texture vs the zoom training convention). The
+  population finding SURVIVES at reduced amplitude: residual slope
+  −5% → −11% (θ 0.45→3.0) + small-θ +21% (N=8) + deflector-contrast gap —
+  real, but no longer the story #24 told. Both evals stay logged.
+- vs LEMON Fig 12a (0.01/0.17/0.07/+0.71): still not met — P(beat)=0.00–
+  0.01 everywhere. Honest frame: zero-shot cross-population transfer at
+  R² +0.57 vs their in-domain-trained 0.71 on their-referee GT and their
+  success-filtered sample. **C22 DA baseline = THIS number.**
+- σ still overconfident on real Q1 (cov 32/56 RECAL) — C11/C23 unchanged.
+- Files: results/preds_l25_*.csv (7); frozen zoom h5 evaluated once (C18).
+
+**Path A submission (job 48008, exactly-once):** both CSVs delivered to
+the Mac (roman_dc/): 3band all6 (θ med 0.632, σ med 0.051, frozen ×0.98)
+PRIMARY; f106 all6 (×1.11) secondary. N=11,067. **Nurkyz sends the email**
+(roman_data_challenge_submissions@stonybrook.edu; grader strips the
+strong_lens_ prefix — bare uids used). C20 → delivery done.
+
+---
+
 ## 2026-07-14 (strategy session, cont.) — ⛔ #25 + Path A submission run LAUNCHED (jobs 48007/48008); COMMITMENTS.md fully REWRITTEN (all streams swept, C19–C27 added); PROFESSOR COMMENTS EVALUATED (act on all four, but three are analysis-only)
 
 - **P1 (arch-insensitivity on real data)**: evaluated as a FINDING, not a

@@ -6,46 +6,34 @@ It is project memory. **`DECISIONS_LOG.md` in this folder is the single most
 authoritative file — if anything here conflicts with it, DECISIONS_LOG.md wins,
 and say so out loud rather than silently picking one.**
 
-## CONTINUATION PROMPT (state as of 2026-07-13; delete this block when superseded)
+## CONTINUATION PROMPT (state as of 2026-07-14 EOD; delete this block when superseded)
 
-You are mid-campaign. Read the top ~8 entries of DECISIONS_LOG.md, then
-COMMITMENTS.md (reconcile every OPEN row at every ⛔ and before any full
-generation — that rule caught two silently-dropped physics items already),
-then MODELS_AND_RESULTS.md for the current numbers.
+You are in the ENDGAME (MASTER_PLAN §1R). Read the top ~10 entries of
+DECISIONS_LOG.md, then COMMITMENTS.md (REWRITTEN 2026-07-14 as the single
+execution ledger — live rows C2–C27 each carry a next action; reconcile at
+every ⛔), then MODELS_AND_RESULTS.md for current numbers (eval count 25).
 
-WHERE WE ARE: the GEN4 self-consistent population (real HST galaxies as
-deflectors, measured SDSS σ_v → θ_E, FJ channel in training) delivered the
-paper's central result on the frozen benchmark (62 SLACS + 40 S4TM, Bolton
-b_SIE, eval count 21): native SLACS R² +0.64 / fail 15% (S4TM r50 R² +0.90 /
-8%), Euclid-domain (real-Q1-PSF operator) R² +0.71 / RMSE 0.137″. Both
-match/beat Cao 2025's conventional pipeline and lead LEMON on NMAD/R²/bias.
+WHERE WE ARE: two-domain real-GT result stands (native SLACS R² +0.64,
+S4TM r50 +0.90; Euclidised SLACS 0.137″/+0.71 = beats LEMON Table 3 on
+every aggregate). Native real Q1: ⛔ #25 (texture-FIXED) = official number,
+R² +0.57/fail 29% (#24's "decisive miss" RETRACTED as a preprocessing
+artifact; residual population effect modest). ROMAN: Path A trained on
+Rung 0 (3band all6: R² +0.94, χ² 0.96 on their TDLMC grading, challenge-val);
+submission CSVs DELIVERED to the Mac (roman_dc/) — the exactly-once
+unlabeled run is done. Path B v1 cancelled; v2 = z-migration (C21).
 
-LIKELY IN FLIGHT OR JUST LANDED (check first):
-- run_night_resume.sh on the cluster: g4ar (AR1 arc-Poisson + AR2 coupled
-  shear) regen → grid → ⛔ EVAL #22 (authorized; count → 22; report
-  immediately; log + push CSVs to results/).
-- g1b_fetch.log: 800-target phase-1 stamp fetch (of a 1,982-candidate
-  footprint-crossmatch list; 526 at σ_v≥250).
+WAITING ON EXTERNALS (check first):
+- LEMON/Busillo email with their lens lists (fires workstream 1: exact-29
+  row-filter, 31-lens MAST fetch → euclidise → single ⛔ eval, table).
+- Nurkyz sending the Rung 0 submission email (C20); their grade thereafter.
+- g1b fetch (~/einstein_cnn/g1b_fetch.log) → Nurkyz visual prune → C5.
 
-THE SET DIRECTION (Nurkyz-ruled, in order):
-1. Harvest/report eval #22; decide the production Euclid recipe (current
-   holder: G4-trained cnv2_3 on the real-PSF bench, 0.137/+0.71/15%).
-2. G1b library build: Nurkyz's visual prune (preview pages), measurement pass
-   INCLUDING isophote a3/a4 (C5, feeds AR3) and the C15a/b σ_v corrections
-   (f_SIS = σ_fiber/0.948; +7% intrinsic scatter) baked into the next
-   manifests; C15c validation figure (θ_SIS(σ_fiber) vs b_SIE, analysis-only)
-   can be made immediately.
-3. AR3 isophote-anchored multipoles (one pilot, gates incl. AR0 arc gate) →
-   regen with the BIG G1b library + C15 corrections → the next eval pair
-   (native + Euclid) — expect less tempering (stronger training FJ ρ).
-4. THEN G5 ROMAN, full focus: Roman InstrumentConfig (WFI 0.11″/px, STPSF
-   PSF models, survey depths) as the third rendering of the same population
-   — no real GT exists, so the claim is "cross-domain-validated, Roman-ready".
-5. Q program (MASTER_PLAN §2): LEMON head-to-head on their exact lenses —
-   Q1 SLDE cutouts + PyAutoLens GT are downloaded (~/cosmos_acs/q1_slde/);
-   Busillo email SENT by Nurkyz 2026-07-12/13 (nudge ~07-20 if silent).
-6. Paper §4 rewrite in parallel (skeleton + tables already in PAPER_DRAFT.md
-   §4.0).
+THE FOUR WORKSTREAMS (§1R): 1) LEMON finale (email-gated). 2) Roman: Path B
+v2 z-migration build — ONE regen carries AR3+C2+C15-verify+C10-check+C14
+(pilot-gated; >1k needs Nurkyz). 3) DA on real Q1 (C22; baseline = #25;
+--da_pool exists in the trainer). 4) Consolidation: UQ paper section (C23),
+arch-insensitivity finding (C25), original-LEMON-2023 comparison (C24),
+paper §4/Q3, I-item sweep in COMMITMENTS.
 
 STANDING OPERATIONAL PATTERN: chain stages with explicit nohup driver scripts
 on the CLUSTER (sbatch --wait waves, ≤8 jobs, gate-check between hops, abort
