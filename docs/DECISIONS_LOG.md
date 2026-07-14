@@ -43,6 +43,47 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (late night) — LEMON REPLIED WITH DATA (Busillo, V.B.): 4 CSVs, 59 lenses total (29 SLACS + 12 EELs + 5 COSMOS + 13 ACS/Pawase — their own predictions + sigma, no aggregate metrics). SLACS-29 EXACT LIST RESOLVES C16/Q1a — zero-cost head-to-head computed from ALREADY-BANKED CSVs: we win decisively in BOTH domains; a striking (hedged) finding on LEMON's own SLACS numbers
+
+- **Q1a (SLACS-29) DONE — resolves the long-open exact-29 ambiguity.**
+  All 29 J-names matched Bolton 2008 Table 5 (0 misses) and are a subset
+  of our frozen 62-lens benchmark (0 misses) — pure row-filter on eval
+  #19 (Euclid) and #21 (native) predictions, NO new model passes.
+  | config | N | bias | RMSE | NMAD | R² | fail>15% |
+  |---|---|---|---|---|---|---|
+  | LEMON (their Euclid-domain preds) | 29 | +0.288 | 0.473 | 0.307 | **−4.26** | 55% |
+  | OURS native HST | 29 | −0.017 | **0.174** | 0.038 | **+0.29** | 10% |
+  | OURS Euclid-domain | 29 | −0.044 | **0.136** | 0.045 | **+0.57** | 7% |
+  We beat LEMON on their own exact 29 lenses in BOTH domains, native most
+  dramatically. Files: lemon_headtohead/slacs29_head_to_head.csv +
+  slacs29_summary.md (Mac).
+- **Flag (hedged, not yet explained): LEMON's own SLACS-29 predictions are
+  far worse than their published 60-lens aggregate (R² 0.53) — R² −4.26,
+  systematic OVER-prediction (mean +0.29″), several severe outliers
+  (up to +0.95″).** Diagnosed what we could without their pipeline: (a)
+  ruled out a parsing/matching bug (per-lens residuals are physically
+  smooth, sign-consistent, not scrambled); (b) ruled out the SIE-vs-shear
+  mass-model convention (Bolton's b_LTM ≈ b_SIE for these lenses, mean
+  diff −0.013″, shear tiny). Root cause UNKNOWN — could be a genuine
+  SLACS-domain weak point for their pipeline (their own Sect. 7 admits
+  real < sim), a units/definition mismatch we can't see without their
+  code, or something else. NOT claiming causation; report the number,
+  flag the puzzle, do not send it to Busillo without Nurkyz's sign-off.
+- **Q1b (30 non-SLACS) scoped, not yet fetched.** EELs: LEMON used 12 of
+  our original 13 (dropped J0913) — confirmed via Oldham et al. 2017
+  (MNRAS 470, 3497) Table 1, full J-names identified but only
+  ARCMIN-precision coords (4-digit truncation) — needs full-precision
+  resolve. COSMOS (5: 0012+2015/0038+4133/0047+5023/0211+1139/5921+0638):
+  no local tiles cached (checked), coords not yet resolved. ACS/Pawase
+  (13): **coordinates FULLY EXTRACTED already** — their filenames encode
+  exact sexagesimal RA/Dec directly (acs_coords.csv, Mac); still need
+  Pawase Table 3 for the (no-θ_E, arc-radius) GT and cross-ID.
+  Delegated the EEL/COSMOS coordinate finish + Pawase Table 3 extraction
+  to a research agent (background); MAST fetch (g1b driver pattern,
+  pilot-3-first per the standing plan) follows once coords land.
+
+---
+
 ## 2026-07-14 (evening) — ⛔ EVAL #25 (count → 25): the texture bug WAS the dominant cause — **#24's negative headline is RETRACTED per the pre-registered rule; #25 is the official Q2e number**: R² 0.00 → +0.57, fail 64% → 29%. Path A submission CSVs DELIVERED (exactly-once run done); LEMON bar still not met — the honest residual is a real but modest population effect
 
 **⛔ #25 (N=322, zoom convention, calibration-identical ×2.85; job 48007):**
