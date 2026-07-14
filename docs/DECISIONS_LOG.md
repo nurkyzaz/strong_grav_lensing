@@ -5,6 +5,23 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (late) — G5a v2 CHAIN COMPLETE: v2 improves every scored metric (P 0.0963 → 0.0814, A → +0.0009, R² +0.97, χ² 1.000); WINNER = 3band_all6_v2, delivered as CUHK_rung0_submission1.csv; email draft rewritten in their grading language
+
+- v2 harvest (fresh calib-500; selection touched it — hidden test is the
+  clean readout): **3band_all6_v2 RMSE 0.083 / NMAD 0.040 / R² +0.97 /
+  χ² 1.000 / P 0.0814 / A +0.0009** (mixed12: RMSE 0.081 but P 0.0824 —
+  the f106 members' wider σ costs Precision; 3band wins the scored
+  metric). +500 training lenses + recalibration did the work.
+- Delivered to Mac roman_dc/: **CUHK_rung0_submission1.csv** (grader
+  naming; N=11,067, no NaNs, θ med 0.632, σ med 0.043) +
+  ALTERNATE_mixed12_v2.csv + EMAIL_DRAFT_rung0_submission.md (draft
+  corrections: held-out framing, their three Ding+21 metrics, filename
+  convention, method + σ-calibration statements, 2-submission ask citing
+  their own numbering, Rung 1 timeline question). v1 CSVs superseded.
+- Banked: results/g5a2/ (2 CSVs). C20 updated: v2 file is THE submission.
+
+---
+
 ## 2026-07-14 (evening, cont.) — Nurkyz submission-prep round: exact TDLMC numbers computed for the email; G5a v2 retrain chain LAUNCHED (10,660 train / fresh 500 calib holdout + MIXED-12 ensemble); G1B FETCH DONE (779 stamps) and the prune package is on the Mac
 
 - **Email numbers (challenge-val 1000, submission σ config):** 3band all6
