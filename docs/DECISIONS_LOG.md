@@ -72,10 +72,18 @@ Corrections/retractions are logged explicitly rather than silently edited.
   pawase_arc_radius.csv; pipeline/build_lemon30_labels.py builds the
   fetch-ready 30-row label CSV (name/ra/dec/theta_E_pub or arc-radius
   tag/survey) in fetch_real_lens_images.py's exact input format.
-- **MAST pilot fetch LAUNCHED** (1 lens/subsample: EEL_J0837,
-  COSMOS_0012+2015, ACS_001423p02M302109p8) — standing gate before the
-  full 30-lens fetch. Same tool/convention as the SLACS benchmark
-  (6.4″ box, 128px, 0.05″/px) — zero downstream format conversion needed.
+- **MAST pilot fetch RAN AND PASSED** (1 lens/subsample: EEL_J0837,
+  COSMOS_0012+2015, ACS_001423p02M302109p8) — reused fetch_real_lens_images.py
+  unmodified (same 6.4″/128px/0.05″-px convention as the SLACS benchmark,
+  zero downstream format conversion). All 3 previews show real galaxies at
+  the resolved coordinates, correctly centered/near-centered, not blank
+  sky (previews banked, Mac: lemon_headtohead/pilot_previews/). Pilot
+  passed → **FULL 30-lens fetch LAUNCHED disconnected-safe**
+  (lemon30_fetch_driver.sh, nohup, login node) — EEL(12) → COSMOS(5) →
+  ACS(13) sequentially, writing real_LEMONEEL/COSMOS/ACS_images.h5.
+  Next on completion: previews on all 30 (standing rule), euclidise,
+  native + Euclid predictions, freeze files (C18), combined table with
+  the SLACS-29 result already in hand.
 
 ---
 
