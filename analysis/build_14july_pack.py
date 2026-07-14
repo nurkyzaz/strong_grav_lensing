@@ -62,7 +62,7 @@ def scatter(fn, name, p, t, m, color="#1f77b4"):
 rows = []
 
 
-def bank(folder, label, names, p, t, published, color, excl=True):
+def bank(folder, label, names, p, t, published, color, excl=True, suffix=""):
     d = os.path.join(PACK, folder)
     os.makedirs(d, exist_ok=True)
     if excl:
@@ -71,8 +71,8 @@ def bank(folder, label, names, p, t, published, color, excl=True):
     m = met(p, t)
     pd.DataFrame(dict(name=names, theta_E_true=t, theta_E_pred=np.round(p, 4),
                       frac_err=np.round(p / t - 1, 4))).to_csv(
-        os.path.join(d, "per_lens.csv"), index=False)
-    scatter(os.path.join(d, "scatter.png"), label, p, t, m, color)
+        os.path.join(d, "per_lens%s.csv" % suffix), index=False)
+    scatter(os.path.join(d, "scatter%s.png" % suffix), label, p, t, m, color)
     ok = ""
     if published:
         ok = "REPRO-OK" if all(abs(m[k] - v) < tol for k, (v, tol) in published.items()) \
@@ -86,36 +86,24 @@ def bank(folder, label, names, p, t, published, color, excl=True):
 # --- eval 19: THE beat-LEMON board (Euclidised SLACS) ---
 n, p, t = ens_from(["preds_l19_g4_cnv2_s%d_euclid_slacs_images_g3.csv" % s for s in (1, 2, 3)], B_G4)
 bank("eval19_beat_lemon_euclid", "EVAL 19 Euclidised SLACS (G4 cnv2_3) — the beat-LEMON row",
-     n, p, t, dict(rmse=(0.137, 0.003), r2=(0.71, 0.02)), "#1f77b4")
+     n, p, t, dict(rmse=(0.137, 0.003), r2=(0.71, 0.02)), "#1f77b4", suffix="_slacs")
 n, p, t = ens_from(["preds_l19_g4_cnv2_s%d_euclid_s4tm_images_g3.csv" % s for s in (1, 2, 3)], B_G4)
-bank("eval19_beat_lemon_euclid", "EVAL 19 Euclidised S4TM (G4 cnv2_3)", n, p, t, None, "#4c9be8", excl=False)
-os.rename(os.path.join(PACK, "eval19_beat_lemon_euclid", "per_lens.csv"),
-          os.path.join(PACK, "eval19_beat_lemon_euclid", "per_lens_s4tm.csv"))
-os.rename(os.path.join(PACK, "eval19_beat_lemon_euclid", "scatter.png"),
-          os.path.join(PACK, "eval19_beat_lemon_euclid", "scatter_s4tm.png"))
+bank("eval19_beat_lemon_euclid", "EVAL 19 Euclidised S4TM (G4 cnv2_3)", n, p, t, None, "#4c9be8", excl=False, suffix="_s4tm")
 
 # --- eval 21: native best ---
 n, p, t = ens_from(["preds_l21_g4n_cnv2_s%d_real_slacs_images.csv" % s for s in (1, 2, 3)], B_G4N)
 bank("eval21_native_best", "EVAL 21 Native HST SLACS (g4n cnv2_3)",
-     n, p, t, dict(rmse=(0.152, 0.003), r2=(0.64, 0.02)), "#2ca02c")
+     n, p, t, dict(rmse=(0.152, 0.003), r2=(0.64, 0.02)), "#2ca02c", suffix="_slacs")
 n, p, t = ens_from(["preds_l21_g4n_r50_s%d_real_s4tm_images.csv" % s for s in (1, 2, 3)], B_G4N)
 m = bank("eval21_native_best", "EVAL 21 Native HST S4TM (g4n r50_3, derived) — PROJECT BEST",
-         n, p, t, dict(rmse=(0.088, 0.004), r2=(0.90, 0.02)), "#0e6e0e", excl=False)
-os.rename(os.path.join(PACK, "eval21_native_best", "per_lens.csv"),
-          os.path.join(PACK, "eval21_native_best", "per_lens_s4tm_r50.csv"))
-os.rename(os.path.join(PACK, "eval21_native_best", "scatter.png"),
-          os.path.join(PACK, "eval21_native_best", "scatter_s4tm_r50.png"))
+         n, p, t, dict(rmse=(0.088, 0.004), r2=(0.90, 0.02)), "#0e6e0e", excl=False, suffix="_s4tm_r50")
 
 # --- eval 22: S4TM-Euclid best ---
 n, p, t = ens_from(["preds_l22_g4ar_r50_s%d_euclid_s4tm_images_g3.csv" % s for s in (1, 2, 3)], B_G4AR)
 bank("eval22_g4ar", "EVAL 22 Euclidised S4TM (g4ar r50_3) — S4TM-Euclid best",
-     n, p, t, dict(rmse=(0.103, 0.003), r2=(0.86, 0.02)), "#9467bd", excl=False)
+     n, p, t, dict(rmse=(0.103, 0.003), r2=(0.86, 0.02)), "#9467bd", excl=False, suffix="_s4tm_r50")
 n, p, t = ens_from(["preds_l22_g4ar_cnv2_s%d_euclid_slacs_images_g3.csv" % s for s in (1, 2, 3)], B_G4AR)
-bank("eval22_g4ar", "EVAL 22 Euclidised SLACS (g4ar cnv2_3, null vs #19)", n, p, t, None, "#b493d3")
-os.rename(os.path.join(PACK, "eval22_g4ar", "per_lens.csv"),
-          os.path.join(PACK, "eval22_g4ar", "per_lens_slacs.csv"))
-os.rename(os.path.join(PACK, "eval22_g4ar", "scatter.png"),
-          os.path.join(PACK, "eval22_g4ar", "scatter_slacs.png"))
+bank("eval22_g4ar", "EVAL 22 Euclidised SLACS (g4ar cnv2_3, null vs #19)", n, p, t, None, "#b493d3", suffix="_slacs")
 
 # --- eval 23 + 24 + g5b: direct from ens CSVs ---
 for folder, label, fn, col, excl in (
@@ -125,12 +113,7 @@ for folder, label, fn, col, excl in (
          "preds_l23_ens2_euclid_s4tm_images_g3.csv", "#b0857b", False)):
     d = pd.read_csv(os.path.join(RES, fn))
     bank(folder, label, d["name"].values, d["theta_E_pred_arcsec"].values,
-         d["theta_E_pub_arcsec"].values, None, col, excl=excl)
-    if "s4tm" in fn:
-        os.rename(os.path.join(PACK, folder, "per_lens.csv"),
-                  os.path.join(PACK, folder, "per_lens_s4tm.csv"))
-        os.rename(os.path.join(PACK, folder, "scatter.png"),
-                  os.path.join(PACK, folder, "scatter_s4tm.png"))
+         d["theta_E_pub_arcsec"].values, None, col, excl=excl, suffix="_s4tm" if "s4tm" in fn else "_slacs")
 
 d = pd.read_csv(os.path.join(RES, "preds_l24_ens_q1_slde_f11p4.csv"))
 bank("eval24_realQ1_negative_finding", "EVAL 24 REAL Euclid Q1 N=322 (cnv2_3) — the negative finding",
