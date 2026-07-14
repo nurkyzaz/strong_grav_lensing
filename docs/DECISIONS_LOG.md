@@ -43,6 +43,42 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (near midnight) — Q1b COORDINATES FULLY RESOLVED for all 30 non-SLACS lenses (12 EEL + 5 COSMOS + 13 ACS/Pawase); ONE VERIFIED CORRECTION caught mid-flight (a WebFetch table-extraction error on J2228, self-corrected via SIMBAD before use); MAST pilot-3 fetch launched (1/subsample, standing gate)
+
+- **Delegation failure, noted for future reference**: the background
+  Explore agent (research task) could not complete — its tools lacked
+  working web access and it returned only "cannot resolve without
+  external access," recommending exactly the work it was asked to do.
+  Redone directly in-thread with WebSearch/WebFetch, which worked.
+- **EELs (12): SIMBAD's own `[OAF2017] EEL Jxxxx system` catalog entries**
+  (Oldham/Auger/Fassnacht 2017, our exact source) gave authoritative
+  RA/Dec for all 12 in one query. **Caught and corrected an error along
+  the way**: an early WebFetch of a DIFFERENT Oldham paper's table
+  reported J2228 at dec +20°24′ (matching a plausible SDSS-name-truncation
+  read); a second WebFetch of the actual companion paper (MNRAS 465 3185)
+  said dec −00°18′ instead — a stark conflict. Resolved via a SIMBAD cone
+  search at both candidates: only the second position has a cataloged
+  `[OAF2017] EEL J2228 system` (type gLS). The first extraction was
+  WRONG; using it uncorrected would have pointed the fetch at empty sky.
+  Lesson: WebFetch table extraction from paywalled HTML is not reliable
+  enough to act on without a cross-check when precision matters.
+- **COSMOS (5): VizieR J/ApJS/176/19/lens (Faure+2008) table**, direct
+  RA/Dec, all 5 matched by name exactly.
+- **ACS/Pawase (13): all 13 matched EXACTLY** (down to the coordinate
+  string) against Pawase et al. 2014 (MNRAS 439 3392) Table 3 — full
+  arc-radius GT recovered for every one (their substitute for θ_E,
+  no mass model fit; disclosed per LEMON's own caveat).
+- Files banked: tables/lemon_headtohead/{eel,cosmos,acs}_coords.csv,
+  pawase_arc_radius.csv; pipeline/build_lemon30_labels.py builds the
+  fetch-ready 30-row label CSV (name/ra/dec/theta_E_pub or arc-radius
+  tag/survey) in fetch_real_lens_images.py's exact input format.
+- **MAST pilot fetch LAUNCHED** (1 lens/subsample: EEL_J0837,
+  COSMOS_0012+2015, ACS_001423p02M302109p8) — standing gate before the
+  full 30-lens fetch. Same tool/convention as the SLACS benchmark
+  (6.4″ box, 128px, 0.05″/px) — zero downstream format conversion needed.
+
+---
+
 ## 2026-07-14 (late night) — LEMON REPLIED WITH DATA (Busillo, V.B.): 4 CSVs, 59 lenses total (29 SLACS + 12 EELs + 5 COSMOS + 13 ACS/Pawase — their own predictions + sigma, no aggregate metrics). SLACS-29 EXACT LIST RESOLVES C16/Q1a — zero-cost head-to-head computed from ALREADY-BANKED CSVs: we win decisively in BOTH domains; a striking (hedged) finding on LEMON's own SLACS numbers
 
 - **Q1a (SLACS-29) DONE — resolves the long-open exact-29 ambiguity.**
