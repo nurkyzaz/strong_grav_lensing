@@ -5,6 +5,37 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (evening) — G5a DONE: Roman Data Challenge Rung 0 format + rules decoded; BOTH datasets on the cluster; the submission mechanics are exactly as Nurkyz read them
+
+- **Mechanics confirmed:** labeled set = training (theta_e + rich truth in
+  per-lens attrs); unlabeled set = the SCORED test set ("Rung 0 submissions
+  will be scored for this dataset"); submit CSV with header ID, theta_E,
+  theta_E_sigma to roman_data_challenge_submissions@stonybrook.edu;
+  organizers hold the hidden labels. Timeline: Rung 0 = Oct 2025 (tutorial
+  rung, θ_E regression); Rung 1 = May 2026 (LIVE — substructure era
+  begins); Rung 2 = Summer 2026.
+- **Labeled set (Zenodo 21200584 v2.1, 1.22 GB, banked
+  ~/cosmos_acs/roman_dc/): 11,160 lenses × 3 bands (F106/F129/F158) =
+  33,480 images, 91×91 px @ 0.11″ (10.01″), units DN/s (romanisim L2),
+  610 s.** Per-lens attrs: theta_e, sigma_v, z_lens, z_source,
+  main_halo_mass, mu, substructure flag, detector position, pyHalo params.
+  Unlabeled set (21200550) downloaded alongside + both viewer notebooks.
+- **Population (G5-relevant, echoes the #24 lesson):** θ_E q10/50/90 =
+  0.32/0.65/1.50″ (min 0.16, max 3.59) — **24% below our 0.45″ training
+  floor**; σ_v 137/196/272; z_l 0.39/0.79/1.38. Any G5 training arm must
+  extend support down to ~0.15″ and to lower σ_v / higher z_l than the
+  SLACS-anchored manifests — the population prior is the known failure
+  mode now.
+- **Their ask includes θ_E_sigma → our calibration story (ensemble + TTA +
+  conformal, C11) is a first-class differentiator here, not an accessory.**
+- Submission-path options staged for Nurkyz: (a) fast — train members on
+  their 11,160 labeled multiband set (F106-only first, 3-channel second);
+  (b) pure-us — G5c our-population Roman render, eval on their test set;
+  (c) BOTH as the paper's two-row story (their-train vs our-population
+  transfer). No training launched yet.
+
+---
+
 ## 2026-07-14 (late afternoon) — NURKYZ REORIENTATION RULING: Q program PARKED (LEMON replied — will provide their lists/numbers); two-scoreboard confusion resolved (Sect 2.2 60-lens vs Sect 6.3/Fig 12 Q1-354, both real); SLACS inspection pack + LEMON-60 status delivered; NEXT PHASE = G5 ROMAN (Rung 0 Data Challenge set downloading)
 
 - **Where "354" came from (Nurkyz challenge, re-verified in the paper
