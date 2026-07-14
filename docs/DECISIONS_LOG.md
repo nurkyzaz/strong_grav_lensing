@@ -5,6 +5,31 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (strategy session) — NURKYZ RULINGS after reviewing the Roman/Q1 imagery: Path B v1 CANCELLED (big low-z deflectors cannot mimic the compact high-z population by flux scaling); ENDGAME LADDER written (MASTER_PLAN §1R); Path B v2 = REDSHIFT MIGRATION of the real-stamp library
+
+- **Her observation, confirmed by the pilot numbers**: Roman/Q1 deflectors
+  are compact and faint (z_l ≈ 0.8) vs our big bright z ≈ 0.14 SDSS
+  stamps — the GEN4 renders cannot look like the target domains at any
+  global flux factor (peak/sky 4.75× at the sky-matched FLUX 0.09).
+- **The remedy adopted: z-migration** — shrink each stamp by the D_A
+  ratio, dim by the D_L ratio, render at target z. σ_v is intrinsic →
+  FJ/self-consistency intact; rest-frame band proxy improves. ONE module
+  fixes BOTH Roman Path B and the Euclid-Q1 population gap (#24 remedy).
+  Pilot-gated build; C2 + C15 verification ride the same regen.
+- Roman decoupled: Path A submission proceeds (their-train result stands
+  on its own for the challenge); 8-band ruled OUT for Rung 0 (only 3
+  image bands shipped — our 3-band arm is the rung maximum).
+- DA (I9) target fixed: native real Q1 (only domain with gap + real
+  unlabeled pool); after ⛔ #25 (texture-fixed baseline).
+- Four-workstream endgame: LEMON finale (email-gated) / Roman (submit A,
+  build B-v2) / DA on Q1 / consolidation (AR3, C2, C15, professor
+  comments — list requested from Nurkyz).
+- Housekeeping: the Rung 0 labeled h5 copy on the Mac is TRUNCATED
+  (775 MB of 1225 MB, interrupted transfer — unusable; resume or delete;
+  gallery + val h5 + notebook on the Mac are complete and fine).
+
+---
+
 ## 2026-07-14 (night, final) — G5c PILOT LANDED: chain mechanically CLEAN (200 renders, 93.5% acceptance, previews credible); sky gates PASS at FLUX 0.09; the remaining peak/sky FAIL is PHYSICS (z-shift brightness), not units — FLUX RULING PENDING before the full generation
 
 - Pilot job 48002 end-to-end: extended manifest (θ med 1.66 — note the

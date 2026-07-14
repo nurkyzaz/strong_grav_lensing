@@ -34,6 +34,39 @@ previews; C17 flux gate measured (~11× unit offset — ruling needed, §2 Q2c).
 Still on the cluster: g1b 800-target stamp fetch (check g1b_fetch.log);
 Q1 SLDE cutouts unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs).
 
+## 1R. ENDGAME LADDER (Nurkyz strategy session 2026-07-14 — supersedes the
+   ladder below where they conflict; the four remaining workstreams)
+
+1. **LEMON head-to-head (waiting on their email).** On arrival: exact-29
+   SLACS row = row-filter on saved CSVs (no run); 31 non-SLACS fetch →
+   euclidise → single ⛔ eval; head-to-head table into the paper.
+   MEANWHILE (not blocked): ⛔ eval #25 = texture-FIXED re-run of the Q1
+   board (staged, --conv zoom) so the comparison against their Fig 12a
+   uses the corrected preprocessing, not the #24 bug.
+2. **ROMAN.** (a) Path A SUBMISSION: one run on the unlabeled set →
+   CSV (3band all6 primary; f106 all6 secondary) → Nurkyz emails Stony
+   Brook. (b) **Path B v1 (FLUX-tuned 100k) CANCELLED by ruling** — the
+   pilot proved the chain but exposed that z≈0.14 deflectors cannot mimic
+   the z≈0.8 population by flux scaling alone. **Path B v2 = REDSHIFT
+   MIGRATION**: render each real stamp as it would appear at the target
+   z (shrink by D_A ratio, dim by D_L ratio; σ_v is intrinsic → the
+   FJ/GEN4 self-consistency claim survives; the F814W→F106 rest-frame
+   proxy IMPROVES at z~0.8). Same build serves the Euclid-Q1 population
+   gap (the #24 remedy) — one migration module, two domains. Pilot-gated
+   as always. (c) 8-band: IMPOSSIBLE on Rung 0 (only 3 image bands
+   shipped); our 3-band arm is already the rung maximum; revisit at
+   Rung 1/2.
+3. **DOMAIN ADAPTATION (I9): target = native real Euclid Q1** — the only
+   domain with BOTH a measured gap (#24) and real images for the
+   unlabeled pool (322 cutouts). Machinery exists (train_cnn_paltas
+   --da_pool). Run AFTER eval #25 sets the corrected baseline. Sim-to-real
+   DA scored on real GT remains unclaimed in the literature.
+4. **CONSOLIDATION**: AR3 (gated on G1b prune+measure — fetch running —
+   and the C10 pilot check); C2 q_mass–q_light fit + C15 pilot
+   verification fold into the z-migration regen; I6 GT-ceiling + I7
+   inference-cost (cheap, paper-time); professor comments — NURKYZ TO
+   PROVIDE THE LIST; paper §4 + Q3 sections continuous.
+
 ## 1. Priority ladder (Nurkyz-set direction + Q program; work top-down,
    parallel where independent)
 
