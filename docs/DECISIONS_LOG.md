@@ -5,6 +5,25 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (night, cont.) — G5b ZERO-SHOT BASELINE LANDED (challenge-val 1000, logged): cross-instrument transfer fails as expected — and the TRAINING-SUPPORT WALL is visible in the raw predictions (pred min pinned at 0.43–0.44″ = the old floor); their-grading numbers quantify how lethal overconfident σ is under TDLMC scoring
+
+- Numbers (ours | theirs=Ding+21): g4_cnv2_3 −0.156/0.489/0.202/R² +0.11/
+  fail 59% | χ² RAW 60.2 → conf-scaled (×3.14) 6.11, P 0.14→0.45, A +0.045.
+  g4ar_r50_3 0.518/R² 0.00 | χ² raw 261(!). ens2 0.500/+0.07 | χ² 63.9→6.45.
+- **Two structural findings:** (1) predictions are FLOOR-PINNED at
+  0.43–0.44″ — the models cannot answer below their 0.45″ training
+  support, and 24% of Rung 0 lives there (same wall as #24, now seen in a
+  fully-controlled sim domain); (2) raw σ is catastrophically overconfident
+  out-of-domain (χ² 60–261 vs ideal 1) — quantile-conformal (×3–5) pulls
+  it to ~6, still far from 1 because the residual tails are heavy. Under
+  TDLMC grading, σ honesty is worth more than θ_E sharpness — a
+  submission-side σ inflation to mean-z²=1 is mandatory for any row.
+- Preprocessing factor measured + logged in slurm_g5b_zeroshot_47974.out;
+  preds banked results/g5b/ (6 CSVs). This row completes the three-way
+  table's first column; Path-A trained columns land with the chain.
+
+---
+
 ## 2026-07-14 (night) — NURKYZ RULING: OPTION C (both paths, 3-band in scope); PATH A LAUNCHED disconnected-safe (12 members, 2 waves); trainer gains --in_chans (3-band); Path B staged with challenge-matched conventions
 
 - **Path A chain LIVE** (`run_g5a_chain.sh`, nohup login node; converter
