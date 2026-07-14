@@ -5,6 +5,36 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (afternoon) — BENCHMARK AUDIT (Nurkyz challenge: "are the bench images fetched right + GT working right?"): VERIFIED CLEAN — GT 63/63 exact vs Bolton, natives healthy and centered, euclidised faithful; J1403+0006 mystery = bright COMPANION dominating the light centroid (lens IS centered); bench arcs faint-under-halo is REAL SLACS physics, not a bug; my azimuthal-median "arc reveal" panel RETRACTED (quadrupole butterfly = ellipticity residual, not arcs)
+
+- **GT join: 63/63 h5 theta_E_pub == Bolton b_SIE (0 mismatches); native
+  and euclidised name orders identical.** Ground truth is working right.
+- **Triptych native | euclidised | subtracted (bench_audit_triptych.png):**
+  all 8 audited natives are healthy centered SLACS cutouts; euclidised
+  versions are faithful degraded renders. **J1403+0006 "looks off" solved:
+  a bright elongated companion galaxy lower-right dominates the LIGHT
+  centroid (−15.5,+18.9 px) and the display normalization — the deflector
+  itself is at center (native panel proves it).** Companions are real and
+  kept (benchmark realism).
+- **"Most bench have no visible arcs" (Nurkyz) — TRUE and EXPECTED:**
+  SLACS I-band arcs sit faint under the LRG halo (discovery papers needed
+  B-spline deflector subtraction). J1627−0053 and J1630+4520 show
+  rings/arcs directly; others need subtraction. Corollary honestly noted:
+  part of the bench R² likely rides on the light–mass correlation (the FJ
+  channel by design) — consistent with the Q1 failure mode where that
+  correlation breaks.
+- **RETRACTION: the "eucl − azimuthal med (arc reveal)" panel is junk** —
+  subtracting an azimuthal median from an elliptical galaxy leaves a
+  quadrupole butterfly that swamps arcs. Proper isophote (B-spline) fit
+  needed for a real arc-reveal figure; do NOT cite that row.
+- **STATUS: all three image sets now independently verified** (Q1 cutouts:
+  WCS/centering, round 3; native SLACS: this audit; euclidised bench: this
+  audit + GT join). Remaining live explanations for the #24 miss are
+  unchanged: texture bug (⛔ #25 staged, awaiting go) + population prior +
+  minor grade/GT-collapse contamination.
+
+---
+
 ## 2026-07-14 (midday) — FORENSICS ROUND 2+3 (Nurkyz image review; no model passes): cutouts VERIFIED correct (WCS 0.1000″/px, centered); 2 GT-COLLAPSED systems found (θ_E 0.004″/0.011″); eval set is 185 A + 129 B + 8 C — grade-A-only re-slice improves but the miss STANDS; LEMON's own 0.71 on this GT proves the gap is OURS (domain), not the referee's
 
 - **Cutout integrity (Nurkyz "cutout is wrong?"): VERIFIED FINE** — WCS
