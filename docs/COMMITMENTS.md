@@ -28,7 +28,7 @@ Status: OPEN / IN-PROGRESS / DONE / RETIRED (reason).
 | C14 | AR0 arc-realism gate: BASELINE RECORDED 2026-07-12 — all 4 metrics PASS in BOTH domains (sim inside real 16–84% throughout; sim contrast trends high ~7.8–9.1 vs real ~6, consistent with visibility selection) → the first-order arc-morphology gap is SMALL; wire ar0_arc_gate.py into every pilot chain alongside gate_stage0 | AR plan | baseline DONE; pilot-wiring OPEN | ar0_arc_gate.py in pilot sbatches |
 | C15 | σ_v→θ_E mapping corrections: (a) f_SIS normalization σ_SIS = σ_fiber/0.948 (SLACS-measured; our θ_E ~11% low at fixed light); (b) +7% intrinsic stellar-vs-lensing dispersion scatter in quadrature; (c) validation figure θ_SIS(σ_fiber) vs b_SIE on the benchmark (literature-normalized, never fitted on test data) | P1-AUDIT 2026-07-13 | (a)+(b) IMPLEMENTED 2026-07-13 in g2_make_manifest.py (.bak_c15; takes effect next manifest build, pilot-gated); (c) DONE (raw −8.5% → corrected +1.8%, N=57; paper_figures/c15c_validation.png + tables/c15c_theta_sis_vs_bsie.csv; first attempt used the photometry table by mistake — retracted and refetched Bolton08 table4 kinematics) | g2_make_manifest + paper fig |
 | C16 | LEMON head-to-head program (Q1a–Q3): reconstruct their exact 60-lens Euclidised sample (31 non-SLACS from cited tables; 29 SLACS via email/H-flags/H-fig9) + native Q1-354 eval vs PyAutoLens GT — full staging in MASTER_PLAN.md §2 (LEMON plan archived) | Nurkyz directive 2026-07-13 | IN-PROGRESS (Q0 done; Q1a/Q2a started) | MASTER_PLAN.md §2 + §6 checklist, reconciled at every ⛔ |
-| C17 | Q2c flux/ZP gate on real VIS cutouts BEFORE any Q1 eval (LEMON needed −0.22 mag; measure ours, don't assume) | Q program 2026-07-13 | IN-PROGRESS (MEASURED 07-13, q2_c17_gate.py: contrast 0.73× compatible; absolute flux 0.09× = unit convention, ZP explains only 1.9×; Q1 background-subtracted. Rescale + pedestal RULING then gate rerun before ⛔ Q2e) | Q2c gate script + DECISIONS_LOG |
+| C17 | Q2c flux/ZP gate on real VIS cutouts BEFORE any Q1 eval (LEMON needed −0.22 mag; measure ours, don't assume) | Q program 2026-07-13 | DONE (measured, swept Q2c2, FROZEN ×11.4 no-pedestal by ruling, gate re-verified on the full frozen set — skyRMS matched; ⛔ #24 ran on it. Residual note: full-set peak/sky 218 vs bench 480 = population contrast gap, logged as the #24 finding, not a normalization issue) | q2_c17_gate.py + DECISIONS_LOG #24 |
 | C18 | New real-lens files (real_lemon31, Q1 cutouts) frozen at creation; every eval on them logged with the running count | Q program 2026-07-13 | OPEN (standing rule extension) | DECISIONS_LOG eval entries |
 
 ⛔ #22 reconcile (2026-07-13): C1, C13 → DONE (evaluated #22). C15 → a/b
@@ -38,3 +38,11 @@ builder, UVIS targets); C6 (needs ruling); C7 (AR4 tier); C10 (NOT in the
 g4ar chain — verify, else implement at the AR3 pilot); C11 (pool design);
 C12 (moot if the #22 recipe proposal is confirmed); C14 (wire ar0_arc_gate
 into the AR3 pilot chain); C16, C18 active.
+
+⛔ #24 reconcile (2026-07-13 night): C17 → DONE (frozen ×11.4, evaluated).
+C16 → Q2 arm COMPLETE (native-Q1 miss logged as the headline negative
+finding); Q1 60-lens Euclidised arm still open (Q1a/Q1b). C18 → honored
+(frozen file, single logged eval). C11 → URGENCY RAISED: coverage 20/43%
+out-of-domain at #24 — conformal-on-real pool design should precede any
+real-survey deployment claim. C10 → generator half done, AR3-pilot check
+still the blocker. Others: unchanged from the #22 reconcile.

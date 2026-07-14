@@ -5,7 +5,7 @@ dated). This file is the SUMMARY VIEW of where the numbers stand. Pre-GEN4
 content (m3/simct/hybrid-v1..v3/Path-B eras) lives in git history of this file
 and in DECISIONS_LOG.
 
-## The frozen benchmark (never trained on; eval count at 23)
+## The frozen benchmark (never trained on; eval count at 24)
 
 62 SLACS + 40 S4TM real HST/ACS F814W cutouts; ground truth = Bolton et al.
 2008 spectroscopic-lensing b_SIE. Euclid-domain testing = the SAME cutouts
@@ -32,6 +32,17 @@ Eval-#23 honest reading: the two-model ensemble is a COMPROMISE row — it does
 not beat #19 on SLACS nor r50_3 on S4TM, and as a single cross-domain config
 it ties the all-g4ar cnv2_3 ensemble (#22: +0.62/+0.76). Per-domain picks
 dominate; ens2 exists for single-config cross-domain reporting.
+
+**Native real Q1 (⛔ eval #24, N=322, frozen ×11.4 normalization) — MISS,
+and the paper's headline negative finding:** primary cnv2_3
+−0.244/0.428/0.166/R² +0.00/fail 64%; best row r50_3 −0.207/0.371/+0.25/56%;
+LEMON bar (0.01/0.17/0.07/+0.71) not approached, P(beat)=0.00 all metrics.
+Failure is a θ_E-dependent compression (−15% → −34% with growing θ_E),
+population-driven (Q1 deflectors at half the benchmark contrast; FJ channel
+suspect), NOT preprocessing (previews clean, C17 skyRMS matched, support 97%,
+tuning exclusion null). "Euclidising the benchmark ≠ Euclid-ready — the
+instrument operator transfers, the population prior does not." Fires I9 (DA)
+and motivates G1b mixed-population training.
 
 References: Cao et al. 2025 (conventional modeling, same lenses/GT): ≲5%
 median dev., ~10% fail. LEMON Q1 (CNN, synthetic training, own-model GT):

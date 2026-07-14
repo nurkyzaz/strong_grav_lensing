@@ -5,6 +5,50 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-13 (night, cont.) — ⛔ EVAL #24 (count → 24): Q2e OFFICIAL on native real Q1 (N=322, frozen ×11.4) — a DECISIVE MISS of the LEMON bar and the project's most important NEGATIVE FINDING: zero-shot transfer to the real-Q1 deflector population fails in a way the Euclidised benchmark did not predict
+
+**Numbers (LEMON Fig 12a bar: +0.01 / 0.17 / 0.07 / R² +0.71):**
+- **Primary G4 cnv2_3: bias −0.244 / RMSE 0.428 / NMAD 0.166 / R² +0.00 /
+  fail 64%** (in-support N=311: −0.249/0.385/−0.04/64%).
+- r50_3 (derived): −0.207/0.371/0.158/**+0.25**/56% — the faint-arc pick
+  transfers best, but still nowhere near the bar.
+- ens2 (derived): −0.225/0.392/0.148/+0.16/60%.
+- Bootstrap P(beat LEMON) = 0.00 on every metric, every row. Tuning-subset
+  exclusion changes nothing (rows identical to 0.001) — the sweep did not
+  contaminate. σ badly overconfident out-of-domain: cov RECAL 20–23/43–50
+  (C11 made worse); conf-half fail 33–47%.
+- **The failure is a SLOPE, not an offset:** median frac −15% at
+  θ_E<0.9″ worsening monotonically to −34% at >1.5″ — predictions
+  compress toward small θ_E.
+
+**Q2d audit (same chain):** N=322 of LEMON's 354 (13 GT rows empty, 14
+dirs lack GT — disclosed); GT q10/50/90 = 0.53/0.88/1.47″; 97%
+in-support (support is NOT the story: in-support rows are no better).
+**C17 on the full set: skyRMS 0.0074 ≈ bench 0.008 ✓ but peak/sky 218 vs
+bench 480** — the broad Q1 population is HALF the contrast of our
+SLACS-derived benchmark (the 10-lens pilot, at 349, was unrepresentative).
+Previews (banked, inspected): preprocessing clean, lenses centered, arcs
+visible — NOT a pipeline bug.
+
+**Reading (hypotheses, ranked; none yet proven):** the euclidise benchmark
+shares PSF+noise op with this eval, so what changed is the DEFLECTOR
+POPULATION: real Q1 deflectors are fainter (peak/sky ½), not all LRGs,
+higher z_l — and our model's core feature, the FJ deflector-light channel,
+maps faint deflector → small σ_v → small θ_E, exactly the compression
+observed (worst on big lenses, where Q1 deflectors are dimmest relative to
+training). H2: their PyAutoLens GT on ~146 s VIS data (own Sect. 7 admits
+real<sim; their mass-ϵ R²<0) inflates scatter and could carry its own
+slope — cuts both ways, disclosed, not claimable without evidence. THE
+FINDING FOR THE PAPER: "Euclidising the benchmark ≠ Euclid-ready — the
+instrument operator transfers, the population prior does not." This FIRES
+the I9 trigger ("DA retry only if a real gap remains" — it remains) and
+motivates mixed-population training (G1b breadth) as the physical fix.
+- Files: results/preds_l24_*.csv (7), tables/q2d_audit.csv,
+  paper_figures/q2e_preview_{insample,outsupport}.png; frozen eval file
+  q1_slde_eval_f11p4.h5 (C18; evaluated ONCE).
+
+---
+
 ## 2026-07-13 (night) — NURKYZ RULING: Q2 normalization FROZEN at ×11.4, no pedestal (gate-aligned option (a)); Q2d audit + ⛔ Q2e (eval #24) authorized to run disconnected (single cluster-resident sbatch chain)
 
 - Frozen: rescale ×11.4 (skyRMS-matched, C17-gate-passing), no pedestal

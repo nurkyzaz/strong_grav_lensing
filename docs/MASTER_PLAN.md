@@ -140,11 +140,17 @@ admits real < sim performance.
 - **Q2d population-shift audit (disclose)**: Q1 deflectors not all LRGs; θ_E
   skews small; z_l higher than SLACS. Report training-support overlap; flag
   out-of-support systems in the per-lens table.
-- **Q2e ⛔ eval (logged)**: our θ_E vs PyAutoLens θ_E on their sample, LEMON
-  conventions + bootstrap CIs. Bar: R² > 0.71, NMAD < 0.07″. Secondary: σ
-  coverage on real Euclid (ours conformal C11 vs their sim-Platt). Caveat to
-  carry: PyAutoLens = own-pipeline GT (same critique we make of Gawade) —
-  "their game, their referee, their field".
+- **Q2e ⛔ eval #24 — DONE 2026-07-13, MISS (the headline negative
+  finding):** primary −0.244/0.428/R² 0.00/fail 64%; best row r50_3 +0.25;
+  bar not approached (P=0.00). θ_E-dependent compression −15%→−34%,
+  population-driven (Q1 deflectors half the benchmark contrast; FJ channel
+  suspect); preprocessing exonerated (previews clean, C17 matched, support
+  97%, tuning-exclusion null). Frozen file evaluated ONCE (C18). NEXT
+  DECISIONS (Nurkyz): (a) paper framing "operator transfers, population
+  prior does not" (Q3 honesty box has real content now); (b) I9 DA retry
+  trigger FIRED; (c) G1b mixed-population training as the physical fix —
+  both feed the AR3/G1b regen already planned. Their-GT caveat stands
+  (their mass-ϵ R²<0 on Q1; Sect. 7 real<sim admission).
 - Optional bonus: 5 Perseus ERO lenses (Acevedo Barroso classical models).
 
 ### Q3 — paper integration
