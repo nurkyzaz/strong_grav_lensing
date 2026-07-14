@@ -47,7 +47,17 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--build", action="store_true")
 ap.add_argument("--predict", action="store_true")
 ap.add_argument("--report", action="store_true")
+ap.add_argument("--conv", choices=["repeat", "zoom"], default="repeat",
+                help="upsample convention: 'repeat' = eval #24 as run; "
+                     "'zoom' = euclidise.py output convention (bilinear, "
+                     "per-0.1px values) — the post-#24 forensics found "
+                     "#24's repeat/4 texture does NOT match training. "
+                     "Factor is translated x11.4/4=2.85 so the absolute "
+                     "calibration is IDENTICAL to the frozen ruling.")
 a = ap.parse_args()
+if a.conv == "zoom":
+    H5 = os.path.join(BASE, "q1_slde_eval_f2p85_zoom.h5")
+EVAL_TAG = "l24" if a.conv == "repeat" else "l25"
 
 
 def gt_table():
@@ -67,6 +77,9 @@ def preprocess(d):
     vis = fits.open(os.path.join(d, name + ".fits"))["VIS_FLUX"].data.astype(float)
     c = vis.shape[0] // 2
     crop = vis[c - 32:c + 32, c - 32:c + 32]
+    if a.conv == "zoom":  # euclidise.py output convention (bilinear, no /4)
+        from scipy.ndimage import zoom as _zoom
+        return _zoom(crop, 2.0, order=1) * (FACTOR / 4.0)
     return np.repeat(np.repeat(crop, 2, 0), 2, 1) / 4.0 * FACTOR
 
 
@@ -151,13 +164,15 @@ if a.build:
         plt.close()
         print("preview written: %s (%d systems)" % (fn, len(sel)))
 
+SUFF = "q1_slde_f11p4" if a.conv == "repeat" else "q1_slde_f2p85_zoom"
+
 if a.predict:
     for m in MEMBERS_A + MEMBERS_B:
         subprocess.check_call(
             [PY, os.path.join(EC, "predict_real_lenses_paltas.py"),
              "--ckpt", os.path.join(EC, m + ".pt"), "--real", H5,
              "--tta", "--outdir", os.path.join(EC, "brian_run"),
-             "--out", "preds_l24_%s_q1_slde_f11p4.csv" % m], cwd=EC)
+             "--out", "preds_%s_%s_%s.csv" % (EVAL_TAG, m, SUFF)], cwd=EC)
 
 if a.report:
     aud = {r["name"]: r for r in csv.DictReader(open(os.path.join(BASE, "q2d_audit.csv")))}
@@ -165,7 +180,7 @@ if a.report:
     def load(members, B, S):
         mus, sigs, names, gt_v = [], [], None, None
         for m in members:
-            fn = os.path.join(EC, "brian_run", "preds_l24_%s_q1_slde_f11p4.csv" % m)
+            fn = os.path.join(EC, "brian_run", "preds_%s_%s_%s.csv" % (EVAL_TAG, m, SUFF))
             rows = list(csv.DictReader(open(fn)))
             if names is None:
                 names = [r["name"] for r in rows]
@@ -192,7 +207,8 @@ if a.report:
                     r2=float(1 - (dd ** 2).sum() / ((tt - tt.mean()) ** 2).sum()),
                     fail=float((np.abs(dd / tt) > 0.15).mean()))
 
-    print("\n⛔ EVAL #24 — Q2e OFFICIAL, frozen x%.1f, N=%d" % (FACTOR, len(names)))
+    print("\n⛔ EVAL %s — Q2e (%s convention), frozen calib x%.1f, N=%d"
+          % (EVAL_TAG, a.conv, FACTOR, len(names)))
     print("LEMON Fig12a ref: bias +0.01  RMSE 0.17  NMAD 0.07  R2 +0.71")
     ROWS = [("cnv2_3 (primary)", pA, sA), ("r50_3 (derived)", pB, sB),
             ("ens2 (derived)", p2, s2)]
@@ -231,7 +247,7 @@ if a.report:
                 print("    [%.2f,%.2f): N=%3d  %3.0f%%  %+5.1f%%"
                       % (lo, hi, mk.sum(), 100 * (np.abs(frac[mk]) > 0.15).mean(),
                          100 * np.median(frac[mk])))
-    out_fn = os.path.join(EC, "brian_run", "preds_l24_ens_q1_slde_f11p4.csv")
+    out_fn = os.path.join(EC, "brian_run", "preds_%s_ens_%s.csv" % (EVAL_TAG, SUFF))
     with open(out_fn, "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["name", "theta_E_gt", "pred_cnv2_3", "sig_cnv2_3",

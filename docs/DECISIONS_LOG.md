@@ -5,6 +5,41 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (morning) — POST-#24 FORENSICS (no model passes; Nurkyz bug-hunt request): a REAL preprocessing bug FOUND (upsample-texture convention), population story CONFIRMED visually, corrected re-eval STAGED as ⛔ #25 pending go-ahead
+
+- **BUG (code, mine): eval #24's Q1 preprocessing upsampled 0.1″→0.05″ with
+  blocky np.repeat(...)/4; euclidise.py's output side — i.e. THE TRAINING
+  CONVENTION — is zoom(order=1) bilinear with per-0.1″-pixel values.**
+  Global flux conventions (/4, ZP) are absorbed by the frozen ×11.4, but
+  the pixel TEXTURE is not: the model saw blockier, sharper-noise images
+  than anything it trained on, and faint wide arcs are exactly what that
+  degrades. Visual proof: q2e_inspection/texture_repeat_vs_zoom.png.
+  Fix staged in q2e_eval.py (--conv zoom; factor translated 11.4/4 = 2.85,
+  identical absolute calibration — NOT a new normalization decision).
+- **Failure-mode visual (worst-12 gallery): the wide arcs ARE in the
+  images** (radii 1.3–3.5″, clear at pct/asinh) around bright COMPACT
+  deflectors; the model reads the compact deflector and answers ~0.5″.
+  Training FJ pairing (big θ_E ⇔ big diffuse LRG) is broken by this
+  population — the compression is the FJ/light prior transferring wrongly.
+  Side-by-side gallery: bench deflectors fill the frame, Q1 deflectors are
+  points (q2e_inspection/side_by_side_bench_vs_q1.png).
+- PSF check: per-lens VIS_PSF FWHM q10/50/90 = 0.113/0.113/0.195″ —
+  quantization-limited at 0.1″ sampling (0.113 = 1 px above half-max);
+  bench kernel targeted the GRID-PSF-VIS MEAN, so per-lens spread (q90
+  0.195″) means some cutouts are blurrier than training. Inconclusive as a
+  primary cause; secondary contributor at most. FOV note: θ_E ≳ 2.5″ arcs
+  sit at/beyond the 6.4″ crop edge (3 systems).
+- Galleries + previews delivered to Nurkyz: q2e_inspection/ (root folder).
+- **PENDING ⛔ #25 (needs explicit go): re-run the SAME frozen lens set
+  with the zoom-convention h5 (q1_slde_eval_f2p85_zoom.h5), 6 members,
+  same pre-registered rows. Interpretation rule set BEFORE running: if
+  #25 ≈ #24, the texture bug was immaterial and the population finding
+  stands as headline; if #25 improves materially, #24's negative headline
+  is RETRACTED as a preprocessing artifact and #25 becomes the Q2e number
+  (both logged, nothing hidden).**
+
+---
+
 ## 2026-07-13 (night, cont.) — ⛔ EVAL #24 (count → 24): Q2e OFFICIAL on native real Q1 (N=322, frozen ×11.4) — a DECISIVE MISS of the LEMON bar and the project's most important NEGATIVE FINDING: zero-shot transfer to the real-Q1 deflector population fails in a way the Euclidised benchmark did not predict
 
 **Numbers (LEMON Fig 12a bar: +0.01 / 0.17 / 0.07 / R² +0.71):**
