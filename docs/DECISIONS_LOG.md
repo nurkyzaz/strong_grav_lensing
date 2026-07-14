@@ -5,6 +5,36 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (night, final) — G5c PILOT LANDED: chain mechanically CLEAN (200 renders, 93.5% acceptance, previews credible); sky gates PASS at FLUX 0.09; the remaining peak/sky FAIL is PHYSICS (z-shift brightness), not units — FLUX RULING PENDING before the full generation
+
+- Pilot job 48002 end-to-end: extended manifest (θ med 1.66 — note the
+  tempered prior sits FLATTER than Rung 0's small-θ-heavy population,
+  flagged), render 200 (acc 0.935), combine (companions ~15/img), romanise,
+  gate. First gate run at FLUX=1 failed everywhere (native signal+noise
+  swamped Roman sky — the euclidise ZP-shrink analogue was missing);
+  re-romanised at the gate-suggested **FLUX 0.09: sky level PASS (1.07),
+  skyRMS PASS (1.14)**; peak/sky 258 vs their 54 (4.75×) persists.
+- **Why peak/sky can't be "fixed" by flux alone: it's the population.**
+  Our SDSS deflectors (z med 0.14) are intrinsically brighter/bigger than
+  Rung 0's (z med 0.79). Dimming to match (FLUX→0.019) would corrupt the
+  photometric mass-light relation (FJ channel) AND starve arc SNR.
+  Options for the ruling: (A) stat-matched 0.019 — NOT recommended;
+  **(B) freeze FLUX 0.09 for v1 — sky-matched, deflector brightness
+  overlaps their upper range, skew DISCLOSED — recommended**; (C)
+  photometric ZP conversion (~1.3) — faithful photometry, poor population
+  overlap; (D) v2 = redshift-migration of stamps (dim+shrink by D_A/D_L
+  ratios + K-corr) — the physically right fix, real build, pairs with
+  G1b; staged as G5c-v2 regardless.
+- Previews banked (14 july/images/g5rom_pilot_preview.png): deflectors
+  centered, companions present, Roman noise texture right; deflectors
+  visibly more diffuse than Rung 0's compact population — the z-shift
+  made visible.
+- **HOLD: full 100k generation + 6-member training awaits the FLUX ruling
+  + Nurkyz's >1k-images confirm.** Chain driver ready to write against
+  whichever FLUX is frozen.
+
+---
+
 ## 2026-07-14 (late night) — G5c PATH B LAUNCHED TO PILOT (Nurkyz go; no installs needed): mejiro ships Roman PSFs in-repo; romanise.py operator built (euclidise pattern); extended-support manifest; 200-render pilot chain submitted (job 48002)
 
 - **PSF solved without STPSF**: mejiro's GitHub carries per-band Roman
