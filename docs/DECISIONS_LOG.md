@@ -5,6 +5,37 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (late night) — G5c PATH B LAUNCHED TO PILOT (Nurkyz go; no installs needed): mejiro ships Roman PSFs in-repo; romanise.py operator built (euclidise pattern); extended-support manifest; 200-render pilot chain submitted (job 48002)
+
+- **PSF solved without STPSF**: mejiro's GitHub carries per-band Roman
+  PSFs (F106/F129/F158, detector-1 center, 41px @ 0.11″, native
+  oversample) — pulled, banked in tiles/ + repo. F106 kernel sum 1.22 →
+  renormalized before use. Their full Rung 0 generation YAML is also
+  public (ahuang314/Roman_Data_Challenge): GalSim + full detector chain,
+  COSMOS sources, slhammocks halos, 642 s, SNR≥20 selection — banked
+  knowledge for the disclosure section.
+- **Recon numbers driving the design**: our library σ_v 154/207/281
+  matches Rung 0's 137/196/272 WELL; **z_l 0.06/0.14/0.54 vs their
+  0.39/0.79/1.38 is the disclosed population shift Path B measures.**
+  Rung 0 F106 raw-grid targets: sky 0.454 DN/s, skyRMS 0.0205 (implies
+  T_eff ≈ 1080 s — dither-averaged L2), peak/sky q10/50/90 = 7/32/149.
+- **Build (all compiled, shipped): build_acs2roman_kernel.py** (photutils
+  matching kernel, mean psf_bank_v2 ACS ePSF → F106 on the 0.05″ grid,
+  Tukey 0.3 — acs2vis recipe, provenance json); **romanise.py**
+  (convolve → global flux factor [band proxy F814W→F106, DISCLOSED] →
+  exact 0.05→0.11 rational rebin (×5 up, 11-block) → +sky, Poisson at
+  T_eff → 58px→128 zoom, the Path-A grid convention); **g5rom_pilot_gate**
+  (stats vs Rung-0-on-the-same-grid + suggested flux multiplier +
+  previews).
+- **Pilot chain (job 48002)**: kernel build → manifest --tmin 0.15
+  --tmax 3.70 --couple_shear (C10 sidecar prints; per-bin fill = the
+  honest support readout) → 200 renders (same GEN4/g4ar recipe incl.
+  arc_poisson) → romanise → gate. Arc-visibility selection SKIPPED in
+  Path B v1 (disclosed; Rung 0's own SNR≥20 selection differs anyway).
+  Full 100k generation only after pilot gates + Nurkyz confirm (>1k rule).
+
+---
+
 ## 2026-07-14 (later) — G5 PATH A COMPLETE (12/12 members trained, chain clean) and the challenge-val harvest is a NEAR-IDEAL result: 3-band all6 RMSE 0.127″ / NMAD 0.038″ / R² +0.94 / fail 6% with native χ² 0.96 (TDLMC ideal ≈ 1); "14 july" results pack delivered
 
 - Chain G5A_CHAIN_ALL_DONE 12:12 (quick-train gate passed; ~10 min/member
