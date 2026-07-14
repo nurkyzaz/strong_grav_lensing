@@ -5,6 +5,42 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (late afternoon) — NURKYZ REORIENTATION RULING: Q program PARKED (LEMON replied — will provide their lists/numbers); two-scoreboard confusion resolved (Sect 2.2 60-lens vs Sect 6.3/Fig 12 Q1-354, both real); SLACS inspection pack + LEMON-60 status delivered; NEXT PHASE = G5 ROMAN (Rung 0 Data Challenge set downloading)
+
+- **Where "354" came from (Nurkyz challenge, re-verified in the paper
+  HTML)**: LEMON has TWO real-data boards. (A) Sect. 2.2 + Table 3: 60
+  Euclidised HST lenses (29 SLACS + 13 EELs + 5 COSMOS + 13 Pawase) — the
+  passage Nurkyz quoted. (B) Sect. 6.3 + Fig. 12: real Euclid Q1, N=354 of
+  578 candidates (Walmsley 500 + Rojas 78), "filtered such that the
+  classical modelling is successful", PyAutoLens GT — the board eval #24
+  played. NOTE for #24 framing: their 354 is a SUCCESS-FILTERED subset;
+  our 322 was not filtered that way (and contained 2 collapsed GTs) —
+  additional disclosed asymmetry.
+- **"Did we beat LEMON on SLACS?" — YES on the 62-superset, both domains:**
+  Euclidised (eval #19) −0.010/0.137/0.056/+0.71/15% vs their Table 3
+  −0.03/0.14/0.11/+0.53 — every aggregate; native (eval #21) NMAD 0.048.
+  Standing caveats: their exact 29 unresolved (superset row defensible);
+  13/60 of their GT is arc radius, not θ_E.
+- **Model-run status on their 60**: SLACS-29 ⊂ our frozen 62 → RUN (exact-29
+  row = row-filter on saved CSVs when their list arrives, no new eval).
+  EELs-13 / COSMOS-5 / Pawase-13: images never fetched, NEVER RUN — Q1b
+  fetch PARKED by ruling until the LEMON reply (their lists supersede our
+  reconstruction; Pawase Table 3 undigitized was the blocker anyway).
+- **C8/Busillo: LEMON REPLIED to Nurkyz — they will provide the requested
+  info.** Nudge unnecessary; await their lists/per-lens numbers.
+- Deliverables to Mac: lemon60_inspection/ (4-page SLACS native|euclidised
+  gallery, both h5s, lemon60_targets.csv skeleton); q2e_inspection/ holds
+  the #24 forensics set.
+- **NEXT PHASE (Nurkyz): G5 ROMAN.** Kickoff executed: discovered the
+  **Roman Strong Lens Data Challenge** (roman-data-challenge.readthedocs.io,
+  built on mejiro/Wedig — a FORMAL external benchmark, stronger than
+  scoring their raw release; entering it = the visibility play);
+  Rung 0 v2.1 dataset (1.22 GB h5 + viewer notebook, Zenodo 21200584)
+  downloading to ~/cosmos_acs/roman_dc/. G1b stamp fetch continues in
+  background (feeds AR3, which addresses the #24 population finding).
+
+---
+
 ## 2026-07-14 (afternoon) — BENCHMARK AUDIT (Nurkyz challenge: "are the bench images fetched right + GT working right?"): VERIFIED CLEAN — GT 63/63 exact vs Bolton, natives healthy and centered, euclidised faithful; J1403+0006 mystery = bright COMPANION dominating the light centroid (lens IS centered); bench arcs faint-under-halo is REAL SLACS physics, not a bug; my azimuthal-median "arc reveal" panel RETRACTED (quadrupole butterfly = ellipticity residual, not arcs)
 
 - **GT join: 63/63 h5 theta_E_pub == Bolton b_SIE (0 mismatches); native

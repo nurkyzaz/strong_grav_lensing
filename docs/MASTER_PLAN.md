@@ -42,9 +42,13 @@ Q1 SLDE cutouts unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs).
    multi-domain reporting; provisional recipe = G4 cnv2_3 (SLACS-Euclid),
    g4ar r50_3 (S4TM-Euclid), #23 ens2 as the combined row; headline chosen
    at final paper drafting.**
-2. **Q program — LEMON head-to-head on their exact lenses** (§2; C16). Q2 is
-   unblocked NOW and is pure evaluation-side work (no retraining) — run it
-   alongside 3–4.
+2. **Q program — PARKED 2026-07-14 (Nurkyz ruling): LEMON replied and will
+   provide their exact lists/numbers — wait for that instead of
+   reconstructing.** Q2 arm complete (⛔ #24 miss + forensics, logged);
+   Q1a/Q1b (31 non-SLACS images) resume on their email; SLACS-29 row =
+   row-filter when the list arrives. Two-scoreboard note: their Sect 2.2
+   (60 Euclidised) vs Sect 6.3/Fig 12 (Q1-354, success-filtered) — both
+   real, don't conflate.
 3. **G1b library build**: Nurkyz visual prune of the 800-target fetch →
    measurement pass INCLUDING isophote a3/a4 (C5, feeds AR3) → C15a/b σ_v
    corrections (f_SIS = σ_fiber/0.948, +7% intrinsic scatter) in the next
@@ -161,6 +165,14 @@ reimplementation; own-pipeline-GT caveats cut both ways.
 
 ## 2R. G5 ROMAN program (researched 2026-07-13 from arXiv:2506.03390,
    Wedig et al. 2025; supersedes the one-line item 5 above)
+
+**UPDATE 2026-07-14 — G5 is the ACTIVE phase (Nurkyz ruling) and the slot
+got better: the mejiro team now runs a formal "Roman Strong Lens Data
+Challenge" (roman-data-challenge.readthedocs.io). Rung 0 v2.1 (Zenodo
+21200584, 1.22 GB h5 + viewer notebook) is downloading to
+~/cosmos_acs/roman_dc/. G5a now = inspect Rung 0 format + challenge rules
+(deadlines, metrics, submission format) FIRST — entering the challenge
+beats privately scoring their 2024 release. Rest of the ladder unchanged.**
 
 **The opening:** Wedig et al. release **16,214 simulated Roman HLWAS lens
 images on Zenodo (Wedig & Daylan 2024) WITH per-lens θ_E ground truth**, in
