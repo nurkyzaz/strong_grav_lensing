@@ -5,6 +5,30 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (later) — G5 PATH A COMPLETE (12/12 members trained, chain clean) and the challenge-val harvest is a NEAR-IDEAL result: 3-band all6 RMSE 0.127″ / NMAD 0.038″ / R² +0.94 / fail 6% with native χ² 0.96 (TDLMC ideal ≈ 1); "14 july" results pack delivered
+
+- Chain G5A_CHAIN_ALL_DONE 12:12 (quick-train gate passed; ~10 min/member
+  on these GPUs). Harvest (job 48001, TTA ×8, ensembles per variant):
+  **f106 all6 0.130/0.042/+0.94/7% (χ² raw 1.23); 3band all6
+  0.127/0.038/+0.94/6% (χ² raw 0.96, σ scale ×0.98 ≈ none needed);
+  3band r50_3 NMAD 0.037/fail 6%.** Multiband is worth NMAD 0.042→0.038
+  and fail 7→6%. vs the zero-shot baseline (R² +0.11, χ² 60): the
+  domain-matched training closes the whole gap — three-way table banked.
+- **Submission candidate: 3band all6** (σ pre-scaled ×0.98 rmsz in the
+  CSV; format ID/theta_E/theta_E_sigma already matches their grader).
+  HONESTY: best-epoch selection touched this val split — mildly
+  optimistic; the hidden test is the clean readout. The unlabeled-set
+  prediction run happens once, on Nurkyz's submission go; she sends the
+  email. CSVs banked results/g5a/ (6).
+- **"14 july" pack delivered to the Mac** (Nurkyz request): headline
+  vs-LEMON table, per-eval per-lens CSVs + scatters for evals 19 (the
+  beat-LEMON board, REPRO-OK), 21 (native best, REPRO-OK ×2), 22
+  (REPRO-OK), 23, 24 (negative finding), G5b, G5a; 17 gallery images;
+  README with the standing caveats. Every published row reproduced to
+  the digit from banked CSVs before inclusion.
+
+---
+
 ## 2026-07-14 (night, cont.) — G5b ZERO-SHOT BASELINE LANDED (challenge-val 1000, logged): cross-instrument transfer fails as expected — and the TRAINING-SUPPORT WALL is visible in the raw predictions (pred min pinned at 0.43–0.44″ = the old floor); their-grading numbers quantify how lethal overconfident σ is under TDLMC scoring
 
 - Numbers (ours | theirs=Ding+21): g4_cnv2_3 −0.156/0.489/0.202/R² +0.11/
