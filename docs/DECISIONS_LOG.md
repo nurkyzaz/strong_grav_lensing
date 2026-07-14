@@ -5,6 +5,29 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (night) — NURKYZ RULING: OPTION C (both paths, 3-band in scope); PATH A LAUNCHED disconnected-safe (12 members, 2 waves); trainer gains --in_chans (3-band); Path B staged with challenge-matched conventions
+
+- **Path A chain LIVE** (`run_g5a_chain.sh`, nohup login node; converter
+  job 47973): rung0_to_train.py → train/val h5s (f106 + 3band, 128px
+  bilinear zoom from 91px, seeded 1000-lens challenge-val split; previews
+  + gate stats in the converter log) → quick-train gate (cnv2 f106 10 ep,
+  val_MAE<0.25) → wave 1 six f106 members → wave 2 six 3-band members
+  (cnv2_3 @3e-4, r50_3 @1e-3, --nll, asinh, augment; **θ filter opened to
+  [0.10, 3.70]** — 24% of Rung 0 sits below the old 0.45 floor).
+- **train_cnn_paltas.py patched (.bak_g5, compiles):** --in_chans arg;
+  timm archs accept 3-band stacks; Dataset passes (C,H,W) through;
+  augment already channel-safe; non-timm archs refuse in_chans>1.
+- **Discipline:** model selection on the challenge-val split ONLY; the
+  unlabeled scored set gets model contact exactly once per approved
+  submission; submission email is Nurkyz's (outward-facing). θ_E_sigma
+  will come from ensemble+TTA + conformal on challenge-val (C11).
+- **Path B staged (not started):** InstrumentConfig must match the
+  CHALLENGE data convention (0.11″/px, DN/s, 610 s romanisim L2), PSF
+  source = mejiro Zenodo products if present else STPSF (install needs
+  approval); manifests = GEN4 + extended support + C15 + C10 spec block.
+
+---
+
 ## 2026-07-14 (evening) — G5a DONE: Roman Data Challenge Rung 0 format + rules decoded; BOTH datasets on the cluster; the submission mechanics are exactly as Nurkyz read them
 
 - **Mechanics confirmed:** labeled set = training (theta_e + rich truth in

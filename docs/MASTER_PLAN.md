@@ -166,13 +166,31 @@ reimplementation; own-pipeline-GT caveats cut both ways.
 ## 2R. G5 ROMAN program (researched 2026-07-13 from arXiv:2506.03390,
    Wedig et al. 2025; supersedes the one-line item 5 above)
 
-**UPDATE 2026-07-14 — G5 is the ACTIVE phase (Nurkyz ruling) and the slot
-got better: the mejiro team now runs a formal "Roman Strong Lens Data
-Challenge" (roman-data-challenge.readthedocs.io). Rung 0 v2.1 (Zenodo
-21200584, 1.22 GB h5 + viewer notebook) is downloading to
-~/cosmos_acs/roman_dc/. G5a now = inspect Rung 0 format + challenge rules
-(deadlines, metrics, submission format) FIRST — entering the challenge
-beats privately scoring their 2024 release. Rest of the ladder unchanged.**
+**UPDATE 2026-07-14 (evening) — RULING: OPTION C, both paths, 3-band in
+scope. G5a DONE (both Rung 0 sets banked + decoded: 11,160 lenses × 3
+bands F106/F129/F158, 91×91 @ 0.11″ DN/s; submission = CSV ID/theta_E/
+theta_E_sigma emailed to Stony Brook, hidden-label scoring; Rung 1 live
+since May 2026 = substructure era).**
+
+- **PATH A (their-train) — LAUNCHED 2026-07-14 (run_g5a_chain.sh, nohup,
+  disconnected-safe):** convert (128px zoom grid, 1000-lens seeded
+  challenge-val split) → quick-train gate (10-ep cnv2 f106, val_MAE<0.25)
+  → wave 1 = 6 f106 members (cnv2_3 @3e-4 + r50_3 @1e-3) → wave 2 = same
+  6 as 3-band (--in_chans 3; trainer patched, .bak_g5). θ filter opened
+  to [0.10, 3.70] (24% of the set sits below the old 0.45 floor).
+  Selection on the challenge-val split ONLY; the unlabeled test set gets
+  model contact exactly once per approved submission.
+- **PATH B (our-population G5c):** InstrumentConfig must match the
+  CHALLENGE convention (0.11″/px, DN/s, 610 s romanisim L2 — not the
+  paper's 146 s). PSF source decision first: mejiro Zenodo (20346761)
+  PSF products if present (no install), else STPSF (pip install — needs
+  Nurkyz approval). Manifests: GEN4 population + EXTENDED support
+  (θ_E 0.15–3.7, σ_v to ~120, z_l to ~1.5; the #24 population lesson) +
+  C15 corrections + C10 spec block (hard gate). Feeds off the G1b broad
+  fetch (running).
+- **G5d scoring:** both paths on challenge-val first → Nurkyz reviews →
+  submission CSVs (theta_E_sigma from ensemble+TTA, conformal on the val
+  split — C11 machinery) → NURKYZ sends the email (outward-facing).
 
 **The opening:** Wedig et al. release **16,214 simulated Roman HLWAS lens
 images on Zenodo (Wedig & Daylan 2024) WITH per-lens θ_E ground truth**, in

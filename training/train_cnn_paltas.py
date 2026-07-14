@@ -79,7 +79,9 @@ class HybridLensDataset(Dataset):
         return len(self.images)
 
     def __getitem__(self, i):
-        img = torch.from_numpy(self.images[i]).unsqueeze(0)
+        img = torch.from_numpy(self.images[i])
+        if img.ndim == 2:  # single-band (H,W) -> (1,H,W); 3-band already (C,H,W)
+            img = img.unsqueeze(0)
         s = torch.tensor([(self.pix_scale[i] - self.s_mean) / self.s_std],
                          dtype=torch.float32)
         y = torch.tensor(self.theta[i], dtype=torch.float32)
@@ -310,11 +312,97 @@ class InceptionNeXtScale(nn.Module):
         return out.squeeze(1) if self.out_dim == 1 else out
 
 
-def build_model(arch, out_dim):
+
+
+class TimmScale(nn.Module):
+    """Pretrained timm backbone (grayscale stem auto-adapted from RGB weights)
+    + the same scale-conditioning pattern as EinsteinCNNScale: the arcsinh
+    peak-scale scalar is concatenated to pooled features before the head.
+    convnextv2 = ConvNeXt V2 nano, FCMAE pretraining (arXiv:2301.00808,
+    professor + Nurkyz 2026-07-10); resnet50 = the LEMON-comparable backbone."""
+    NAMES = {"convnextv2": "convnextv2_nano.fcmae_ft_in22k_in1k",
+             "resnet50": "resnet50.a1_in1k"}
+
+    def __init__(self, arch, out_dim=1, in_chans=1):
+        super().__init__()
+        import timm
+        self.backbone = timm.create_model(self.NAMES[arch], pretrained=True,
+                                          in_chans=in_chans, num_classes=0)
+        nf = self.backbone.num_features
+        self.head = nn.Sequential(nn.Linear(nf + 1, 256), nn.ReLU(),
+                                  nn.Linear(256, out_dim))
+
+    def forward(self, x, s):
+        return self.head(torch.cat([self.backbone(x), s], dim=1))
+
+
+
+
+class LogPolarScale(nn.Module):
+    """GEN4-NET (P6): task-specific theta_E architecture.
+    Polar branch: the image is resampled to (r, phi) around the centre, so a
+    ring becomes a horizontal line whose ROW IS theta_E -- radius estimation
+    turns into 1-D localization, rotation invariance comes free from phi
+    pooling, and no stride ever destroys radial resolution (strides act on
+    phi only). Cartesian branch: small strided CNN for global context incl.
+    deflector photometry (the Faber-Jackson light->mass channel). Fusion with
+    the peak-scale scalar -> out_dim head (2 = Gaussian NLL)."""
+
+    def __init__(self, out_dim=1, n_r=64, n_phi=96, r_min=1.5, r_max=62.0, img=128):
+        super().__init__()
+        self.out_dim = out_dim
+        rr = torch.linspace(r_min, r_max, n_r)
+        pp = torch.linspace(0, 2 * float(np.pi), n_phi + 1)[:-1]
+        c = (img - 1) / 2.0
+        gx = (c + rr[:, None] * torch.cos(pp[None, :])) / (img - 1) * 2 - 1
+        gy = (c + rr[:, None] * torch.sin(pp[None, :])) / (img - 1) * 2 - 1
+        self.register_buffer("pgrid", torch.stack([gx, gy], dim=-1).unsqueeze(0))
+
+        def blk(i, o, s):
+            return nn.Sequential(
+                nn.Conv2d(i, o, 3, stride=(1, s), padding=1,
+                          padding_mode="circular", bias=False),
+                nn.BatchNorm2d(o), nn.ReLU(inplace=True))
+        self.polar = nn.Sequential(blk(1, 32, 2), blk(32, 64, 2),
+                                   blk(64, 64, 2), blk(64, 64, 2))
+        self.radial = nn.Sequential(
+            nn.Conv1d(64, 64, 5, padding=2), nn.ReLU(inplace=True),
+            nn.Conv1d(64, 64, 5, padding=2), nn.ReLU(inplace=True))
+        self.cart = nn.Sequential(
+            nn.Conv2d(1, 16, 7, stride=2, padding=3, bias=False),
+            nn.BatchNorm2d(16), nn.ReLU(inplace=True),
+            nn.Conv2d(16, 32, 3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(32), nn.ReLU(inplace=True),
+            nn.Conv2d(32, 64, 3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(64), nn.ReLU(inplace=True),
+            nn.AdaptiveAvgPool2d(1))
+        self.head = nn.Sequential(nn.Linear(64 * 2 + 64 + 1, 128),
+                                  nn.ReLU(inplace=True), nn.Linear(128, out_dim))
+
+    def forward(self, x, s):
+        b = x.shape[0]
+        pol = torch.nn.functional.grid_sample(
+            x, self.pgrid.expand(b, -1, -1, -1), align_corners=True)
+        f = self.polar(pol)          # [b, 64, n_r, n_phi/16]
+        f = f.mean(dim=3)            # phi pooling -> [b, 64, n_r]
+        f = self.radial(f)
+        rad = torch.cat([f.mean(dim=2), f.max(dim=2).values], dim=1)
+        cart = self.cart(x).flatten(1)
+        return self.head(torch.cat([rad, cart, s], dim=1))
+
+
+def build_model(arch, out_dim, in_chans=1):
+    # G5 (2026-07-14): in_chans>1 (Roman 3-band) supported on timm archs only
+    if in_chans != 1 and arch not in ("convnextv2", "resnet50"):
+        raise ValueError("in_chans>1 only supported for timm archs, got %s" % arch)
     if arch == "resnet":
         return EinsteinCNNScale(out_dim=out_dim)
     if arch == "inceptionnext":
         return InceptionNeXtScale(out_dim=out_dim)
+    if arch == "logpolar":
+        return LogPolarScale(out_dim=out_dim)
+    if arch in ("convnextv2", "resnet50"):
+        return TimmScale(arch, out_dim, in_chans=in_chans)
     raise ValueError(f"unknown arch {arch}")
 
 
@@ -348,7 +436,7 @@ def main():
     ap.add_argument("--min_theta_e", type=float, default=0.4)
     ap.add_argument("--max_theta_e", type=float, default=2.5)
     ap.add_argument("--loss", choices=["mse", "huber"], default="huber")
-    ap.add_argument("--arch", choices=["resnet", "inceptionnext"], default="resnet",
+    ap.add_argument("--arch", choices=["resnet", "inceptionnext", "convnextv2", "resnet50", "logpolar"], default="resnet",
                     help="backbone: resnet (m3 baseline) or inceptionnext "
                          "(arXiv:2303.16900)")
     ap.add_argument("--nll", action="store_true",
@@ -368,6 +456,8 @@ def main():
                     help="epochs of linear ramp-up for the DA weight")
     ap.add_argument("--init_ckpt", default=None,
                     help="fine-tune from this checkpoint instead of scratch")
+    ap.add_argument("--in_chans", type=int, default=1,
+                    help="input channels (G5: 3 for Roman F106/F129/F158 stacks)")
     ap.add_argument("--norm", choices=["asinh", "minmax"], default="asinh")
     ap.add_argument("--asinh_a", type=float, default=1.0)
     ap.add_argument("--augment", action="store_true", default=True)
@@ -395,7 +485,7 @@ def main():
           f"scale_norm mean {train_set.s_mean:.5f} std {train_set.s_std:.5f}")
 
     out_dim = 2 if args.nll else 1
-    model = build_model(args.arch, out_dim).to(device)
+    model = build_model(args.arch, out_dim, in_chans=args.in_chans).to(device)
     if args.init_ckpt:
         ick = torch.load(args.init_ckpt, map_location=device)
         model.load_state_dict(ick["state_dict"])
