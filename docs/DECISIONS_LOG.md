@@ -5,6 +5,39 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (midday) — FORENSICS ROUND 2+3 (Nurkyz image review; no model passes): cutouts VERIFIED correct (WCS 0.1000″/px, centered); 2 GT-COLLAPSED systems found (θ_E 0.004″/0.011″); eval set is 185 A + 129 B + 8 C — grade-A-only re-slice improves but the miss STANDS; LEMON's own 0.71 on this GT proves the gap is OURS (domain), not the referee's
+
+- **Cutout integrity (Nurkyz "cutout is wrong?"): VERIFIED FINE** — WCS
+  exactly 0.1000″/px, 300×300, lens centered; the "empty" outsupport panel
+  is a GT-collapsed candidate, not a bad crop.
+- **GT failures found: 102020065 (θ_E=0.004″), 102042915_NEG5285
+  (θ_E=0.011″)** — PyAutoLens collapsed fits inside the released GT
+  (gt001_system_102042915.png). Disclose; they sit in the below-support 8.
+- **Grade audit: our 322 = 185 A + 129 B + 8 C.** Re-slice of the SAVED #24
+  preds (row filter, no passes): A-only cnv2_3 −0.251/0.380/R² +0.16/64%;
+  A-only r50_3 −0.213/0.346/R² **+0.31**/53% (vs +0.25 all). Contamination
+  is real but SECONDARY — the −0.21″ bias persists in every slice.
+- **Arc-radius metric attempts (2) FAILED honestly**: annulus p95−median
+  measures deflector ellipticity, not arcs (control with pred=GT=1.89″
+  returned 0.45″) — no quantitative GT-vs-pred arc verdict from it; do NOT
+  cite the "closer to pred" tables. Visual evidence stands: worst-12 have
+  real wide arcs; the CTRL system with a bright complete ring at 1.89″ is
+  HIT exactly → the model CAN read wide arcs on Q1 when they are strong.
+- **Display bug in the first side-by-side fixed** (percentile stretch
+  saturated bench halos): side_by_side_asinh_FIXED.png shows bench arcs
+  faint under halos — the training domain is halo-dominated, Q1 is
+  compact-deflector — the population gap in one figure.
+- **Zoom question (Nurkyz): NO** — input FOV is fixed by training (128 px
+  @ 0.05″); zooming at eval would break the learned px→arcsec calibration.
+  Arcs "look small" because Q1 θ_E median is 0.88″ on a 6.4″ frame.
+- **Sharpened conclusion: LEMON scored R² 0.71 against this same GT** (CNN,
+  Euclid-matched sim training) — so "GT is garbage" cannot explain OUR
+  miss; the gap is model-side domain mismatch: (a) the texture bug (⛔ #25
+  staged), (b) the deflector-population prior (FJ), (c) minor: grade-B/C +
+  2 collapsed-GT rows (report A-only rows at #25 too).
+
+---
+
 ## 2026-07-14 (morning) — POST-#24 FORENSICS (no model passes; Nurkyz bug-hunt request): a REAL preprocessing bug FOUND (upsample-texture convention), population story CONFIRMED visually, corrected re-eval STAGED as ⛔ #25 pending go-ahead
 
 - **BUG (code, mine): eval #24's Q1 preprocessing upsampled 0.1″→0.05″ with
