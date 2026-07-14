@@ -5,6 +5,35 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-14 (strategy session, cont.) — ⛔ #25 + Path A submission run LAUNCHED (jobs 48007/48008); COMMITMENTS.md fully REWRITTEN (all streams swept, C19–C27 added); PROFESSOR COMMENTS EVALUATED (act on all four, but three are analysis-only)
+
+- **P1 (arch-insensitivity on real data)**: evaluated as a FINDING, not a
+  deficiency — on real lenses all four archs land within noise while
+  sim-val separates them → the binding constraint is the training
+  DISTRIBUTION, not model capacity (this is the GEN4 thesis, now with an
+  arch/seed spread table from saved CSVs). The "better model" bar Chan
+  asks for is DEFINED: (i) same arch ± DA scored on real GT (C22), (ii)
+  σ quality under TDLMC-style grading (C23). → C25, analysis-only.
+- **P2 (retry DA)**: agreed and scheduled — C22, target = native real Q1
+  (only domain with a measured gap AND a real unlabeled pool); baseline =
+  ⛔ #25. Aligns the professor's ask with I9's trigger, already fired.
+- **P3 (UQ / error bars, arXiv:1912.02757)**: we already run deep
+  ensembles + TTA + NLL heads + recal + conformal; what's missing is the
+  PAPER treatment — per-domain coverage tables, ensemble-vs-single
+  ablation from saved CSVs, the #24 OOD σ-collapse as the honest exhibit.
+  → C23, analysis-only, high value.
+- **P4 (compare to the ORIGINAL LEMON, MNRAS 522 5442, 2023)**: accepted —
+  C24, LITERATURE entry + comparison row alongside the 2026 A&A paper.
+- Jobs: ⛔ #25 (q2e --conv zoom, job 48007, pre-registered interpretation
+  rule) and the Path A EXACTLY-ONCE unlabeled submission run (job 48008;
+  frozen σ scales ×0.98/×1.11; grader-format CSVs; Nurkyz emails).
+- COMMITMENTS.md rewritten as the single execution ledger: closed rows
+  archived, live rows C2–C27 with next actions, I-item sweep, AR sweep;
+  key consolidation: **ONE z-migration regen (C21) carries AR3 + C2 +
+  C15-verify + C10-check + C14 wiring** — no physics item rides alone.
+
+---
+
 ## 2026-07-14 (strategy session) — NURKYZ RULINGS after reviewing the Roman/Q1 imagery: Path B v1 CANCELLED (big low-z deflectors cannot mimic the compact high-z population by flux scaling); ENDGAME LADDER written (MASTER_PLAN §1R); Path B v2 = REDSHIFT MIGRATION of the real-stamp library
 
 - **Her observation, confirmed by the pilot numbers**: Roman/Q1 deflectors
