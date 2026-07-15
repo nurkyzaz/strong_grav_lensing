@@ -43,6 +43,30 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-15 — SLACS-29 RESULT INDEPENDENTLY VERIFIED against fresh-fetched primary sources (Nurkyz request): ZERO discrepancies, identical numbers — the beat-LEMON finding is confirmed, not an artifact of our cached table
+
+- Re-fetched Bolton et al. 2008 Table 5 directly from VizieR (J/ApJ/682/964/
+  table5, 63 grade-A rows) and Auger et al. 2009 Table 3 directly from CDS
+  (raw table3.dat, exact byte-column spec per the paper's own ReadMe:
+  Imag bytes 90–94, Re(I) bytes 96–99) — matching LEMON's own stated
+  method verbatim ("first three columns of Table 5... re,I and mI of
+  Table 3"). Parsed independently of any of our prior files.
+- **All 29 LEMON SLACS names matched the fresh Bolton fetch (0 misses);
+  Auger Re(I)/Imag matched for 29/29 too. Cross-check against our cached
+  tables/bolton08_table5.csv: 0 discrepancies across all 29 rows** — the
+  file we'd been using was already a faithful transcription.
+- **Recomputed metrics from the fresh, independent sources are IDENTICAL
+  to the earlier result** (to 3 decimal places): LEMON N=29 bias +0.288
+  RMSE 0.473 NMAD 0.307 **R² −4.26** fail 55%; OURS native N=29 −0.017/
+  0.174/0.038/**R² +0.29**/10%; OURS Euclid N=29 −0.044/0.136/0.045/
+  **R² +0.57**/7%. The beat-LEMON-on-their-own-lenses finding is now
+  verified from primary literature, not just our internal cache.
+  Files: analysis/lemon_slacs29_verify.py (repo);
+  lemon_headtohead/slacs29_verified_fresh_sources.csv +
+  slacs29_verification_report.md (Mac + tables/lemon_headtohead/).
+
+---
+
 ## 2026-07-14 (near midnight) — Q1b COORDINATES FULLY RESOLVED for all 30 non-SLACS lenses (12 EEL + 5 COSMOS + 13 ACS/Pawase); ONE VERIFIED CORRECTION caught mid-flight (a WebFetch table-extraction error on J2228, self-corrected via SIMBAD before use); MAST pilot-3 fetch launched (1/subsample, standing gate)
 
 - **Delegation failure, noted for future reference**: the background
