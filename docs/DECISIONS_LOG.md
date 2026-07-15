@@ -43,6 +43,46 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-15 (cont.) — LEMON's SENT PREDICTIONS DO NOT REPRODUCE THEIR OWN PUBLISHED TABLE 3 (Nurkyz request: check all 4 subsamples against GT from the exact papers/tables their methods cite) — this is now a 4/4 pattern, not an SLACS-specific anomaly
+
+- **GT sourced directly from each cited table, matched by name, zero
+  ambiguity:** EELs (12/12) from Oldham & Auger 2017 (MNRAS 465 3185)
+  Table 2 R_Ein — values match our existing skeleton exactly, now
+  confirmed straight from the paper table. COSMOS (5/5) from Faure et al.
+  2008 (ApJS 176 19) **Table 4** Erad (the "erratum" table LEMON's email
+  cites — fetched the raw table4.dat at the exact byte columns from the
+  paper's own ReadMe; values match our skeleton exactly). ACS/Pawase
+  (13/13, already verified 2026-07-14) arc-radius substitute, LEMON's own
+  disclosed convention.
+- **Recomputed LEMON's own predictions vs this GT, per subsample:**
+  | subsample | N | bias | RMSE | NMAD | R² | fail>15% |
+  |---|---|---|---|---|---|---|
+  | SLACS | 29 | +0.288 | 0.473 | 0.307 | **−4.26** | 55% |
+  | EEL | 12 | +0.081 | 0.126 | 0.110 | **+0.21** | 42% |
+  | COSMOS | 5 | +0.359 | 0.886 | 0.483 | **+0.12** | 60% |
+  | ACS/Pawase (arc-radius) | 13 | +0.009 | 0.707 | 0.598 | +0.35 | 85% |
+  | **ALL COMBINED** | 59 | **+0.190** | **0.538** | **0.305** | **+0.25** | 59% |
+  **vs their published Table 3 (N~60): bias −0.03, RMSE 0.14, NMAD 0.11,
+  R²=0.53.** Every subsample underperforms the published aggregate;
+  combined RMSE is ~3.8× and NMAD ~2.8× worse than published, with a
+  consistent positive bias (over-prediction) in 3 of 4 subsamples.
+- **Reading (hedged, no accusation): the sent CSVs likely do NOT
+  correspond to whatever produced their Table 3 number** — plausible
+  mundane causes: a different/uncalibrated model checkpoint used for this
+  ad-hoc export, a processing difference in how the "Euclid_VIS" cutouts
+  were regenerated for our request vs. their paper pipeline, or a
+  units/scale slip specific to this file. The GT side is now
+  triple-verified (exact tables, exact columns, exact byte offsets, 100%
+  name-match, values matching our pre-existing skeleton) — the
+  discrepancy is not a GT-sourcing artifact on our end.
+  **Not sending anything to Busillo without Nurkyz's explicit sign-off**
+  (standing rule from the SLACS-only finding, now reinforced).
+- Files: analysis/lemon_full_accuracy_check.py (repo);
+  lemon_headtohead/lemon_full60_accuracy_check.csv +
+  lemon_full60_accuracy_report.md (Mac + tables/lemon_headtohead/).
+
+---
+
 ## 2026-07-15 — SLACS-29 RESULT INDEPENDENTLY VERIFIED against fresh-fetched primary sources (Nurkyz request): ZERO discrepancies, identical numbers — the beat-LEMON finding is confirmed, not an artifact of our cached table
 
 - Re-fetched Bolton et al. 2008 Table 5 directly from VizieR (J/ApJ/682/964/
