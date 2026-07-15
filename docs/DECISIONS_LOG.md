@@ -43,6 +43,31 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-15 (cont.) — Q1b FETCH LANDED CLEAN (30/30, zero download failures), ONE LENS EXCLUDED on data-quality diagnosis (ACS_221501p12M135822p9: chip-gap cutout), FROZEN (C18), euclidised, ⛔ eval SUBMITTED (native + Euclid, 29 lenses, same G4n/G4 ensembles as SLACS-29)
+
+- Full 30-lens MAST fetch completed with 0 failures (12 EEL + 5 COSMOS +
+  13 ACS). Gallery previews built for all 30 (standing rule) — EELs show
+  clean Einstein rings/arcs, COSMOS and most ACS show real, reasonably
+  centered galaxies.
+- **One confirmed bad cutout, diagnosed before trusting it**:
+  `ACS_221501p12M135822p9` looked wrong in the quick preview (flat field,
+  bright streak, no visible source at the crosshair). Three-stretch
+  diagnostic confirmed it: **62% of pixels are exactly zero** — a
+  chip-gap/detector-edge cutout, with what little signal exists crammed
+  into one corner, far from the target position. The other three
+  visually-suspect cutouts (001426, 140339, 122332) were checked the same
+  way and are FINE — real galaxies, just poorly rendered by the quick
+  preview stretch.
+- **Excluded 221501, froze the remaining 29** (real_LEMON{EEL,COSMOS,ACS}
+  _frozen.h5, C18) — 12 EEL + 5 COSMOS + 12 ACS. Euclidised all three
+  (euclid_LEMON*_frozen.h5, same operator as the SLACS benchmark).
+- **⛔ Q1b eval SUBMITTED (job 48049)**: G4n cnv2_3 native + G4 cnv2_3
+  Euclid-domain, TTA, all 29 — the same ensembles/recipe used for the
+  verified SLACS-29 row, so the combined SLACS+EEL+COSMOS+ACS table will
+  be apples-to-apples. Harvest + combined table next.
+
+---
+
 ## 2026-07-15 (cont.) — LEMON's SENT PREDICTIONS DO NOT REPRODUCE THEIR OWN PUBLISHED TABLE 3 (Nurkyz request: check all 4 subsamples against GT from the exact papers/tables their methods cite) — this is now a 4/4 pattern, not an SLACS-specific anomaly
 
 - **GT sourced directly from each cited table, matched by name, zero
