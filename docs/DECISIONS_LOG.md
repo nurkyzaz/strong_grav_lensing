@@ -43,6 +43,60 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-15 (cont.) — ⛔ Q1b EVAL HARVESTED: COMBINED LEMON HEAD-TO-HEAD complete (N=58, all 4 subsamples); the picture is MORE NUANCED than the SLACS-only report — we win clearly on real-θ_E targets, but our own Euclid-domain arm has a real weakness on EELs/COSMOS specifically, and the SLACS-only "clear sweep" framing needs qualifying
+
+**Combined table (N=58, our eval vs LEMON's own predictions, same GT for
+both, per-subsample and pooled):**
+| domain | N | bias | RMSE | NMAD | R² | fail>15% |
+|---|---|---|---|---|---|---|
+| LEMON (all 4 subsamples, pooled like their own Table 3) | 58 | +0.181 | 0.535 | 0.303 | +0.26 | 59% |
+| OURS native HST | 58 | −0.158 | 0.539 | 0.062 | +0.25 | 28% |
+| OURS Euclid-domain | 58 | −0.250 | 0.669 | 0.086 | **−0.15** | 29% |
+
+**Pooled across all 4 exactly as LEMON pools them: native is a near-tie
+(0.25 vs 0.26) and Euclid-domain LOSES to LEMON's pooled number (−0.15 vs
++0.26).** This is a materially different picture than yesterday's
+SLACS-only framing and needs to replace it, not sit alongside it uncritically.
+
+**But pooling ACS (arc-RADIUS, not real θ_E — LEMON's own disclosed
+substitute) into an R² against a real-θ_E target is questionable
+methodology even though LEMON's own paper does it. The cleaner cut —
+real-θ_E only (SLACS+EEL+COSMOS, N=46):**
+| config | N | bias | RMSE | NMAD | R² | fail>15% |
+|---|---|---|---|---|---|---|
+| LEMON | 46 | +0.241 | 0.480 | 0.226 | −0.02 | 52% |
+| **OURS native** | 46 | −0.048 | **0.307** | **0.047** | **+0.58** | **13%** |
+| **OURS Euclid** | 46 | −0.092 | 0.440 | 0.056 | **+0.14** | 15% |
+On real θ_E, we win clearly in BOTH domains — but the Euclid-domain
+margin (+0.14 vs −0.02) is far smaller than SLACS alone suggested
+(+0.57), because of a real, specific weakness below.
+
+**Per-subsample (the finding worth flagging honestly): our Euclid-domain
+model underperforms notably on EELs (R²=−1.15, N=12) and COSMOS
+(R²=−0.76, N=5) specifically** — small, noisy samples, but the SAME
+population-transfer signature as eval #24: the Euclid operator doesn't
+generalize uniformly across every real population, only cleanly
+demonstrated on SLACS so far. Native stays strong everywhere (SLACS +0.29,
+EEL +0.84, COSMOS +0.24). **COSMOS N=5 is too small for any R² here to be
+trustworthy on its own — flagged, not load-bearing.**
+ACS (N=12, arc-radius GT): all three configs (LEMON, ours native, ours
+Euclid) show high fail rates (83% each) against this crude proxy — not
+informative about θ_E accuracy for anyone; reported separately, not
+folded into the headline claim.
+
+**Retraction/qualification of yesterday's framing**: "we beat LEMON
+decisively in both domains" was accurate for SLACS-29 alone but
+overgeneralized once EEL/COSMOS join the picture — native remains a clean
+win everywhere measured; Euclid-domain is a real win on real-θ_E targets
+but with a smaller margin and a genuine specific weakness (EEL/COSMOS)
+that deserves the same honest treatment as eval #24's population finding,
+not a victory-lap headline.
+Files: analysis/lemon_combined_headtohead.py (repo);
+lemon_headtohead/lemon_combined_headtohead.csv +
+_report.md (Mac + tables/lemon_headtohead/).
+
+---
+
 ## 2026-07-15 (cont.) — Q1b FETCH LANDED CLEAN (30/30, zero download failures), ONE LENS EXCLUDED on data-quality diagnosis (ACS_221501p12M135822p9: chip-gap cutout), FROZEN (C18), euclidised, ⛔ eval SUBMITTED (native + Euclid, 29 lenses, same G4n/G4 ensembles as SLACS-29)
 
 - Full 30-lens MAST fetch completed with 0 failures (12 EEL + 5 COSMOS +
