@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>G1b deflector review</title>
+<style>
+  :root { --bg:#111; --card:#1b1b1b; --fg:#eee; --muted:#888; --bad:#c62828; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, Helvetica, Arial, sans-serif; margin: 0; }
+  header { position: sticky; top: 0; background: #000; padding: 10px 20px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid #333; z-index: 10; flex-wrap: wrap; }
+  header h1 { font-size: 15px; margin: 0; font-weight: 600; }
+  #progress { color: var(--muted); font-size: 12px; }
+  .spacer { flex: 1; }
+  button { cursor: pointer; border: none; border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
+  .btn-export { background: #1565c0; color: white; }
+  .btn-export:hover { background: #1976d2; }
+  .btn-reset { background: #444; color: #ccc; }
+  select { background: #222; color: #eee; border: 1px solid #444; border-radius: 6px; padding: 5px 8px; font-size: 12px; }
+  .hint { color: var(--muted); font-size: 11px; padding: 8px 20px 0; }
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px; padding: 10px 20px 90px; }
+  .cell { position: relative; border-radius: 6px; overflow: hidden; border: 2px solid #222; cursor: pointer; background: #000; }
+  .cell.rejected { border-color: var(--bad); }
+  .cell img { width: 100%; display: block; aspect-ratio: 1; object-fit: cover; }
+  .cell .id { position: absolute; bottom: 0; left: 0; right: 0; font-size: 8px; color: #ccc; background: rgba(0,0,0,.65); padding: 1px 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cell .xmark { position: absolute; top: 2px; right: 2px; color: var(--bad); font-weight: 900; font-size: 14px; display: none; text-shadow: 0 0 3px #000; }
+  .cell.rejected .xmark { display: block; }
+  .cell .cbtn { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: rgba(0,0,0,.6); border-radius: 3px; font-size: 10px; display: flex; align-items: center; justify-content: center; color: #ffb74d; }
+  .cell .cbtn.has-comment { color: #4fc3f7; }
+  #pager { display: flex; gap: 6px; align-items: center; padding: 10px 20px; }
+  #pager button { background: #2a2a2a; color: #ccc; }
+  #pager span { color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>G1b deflector review</h1>
+  <span id="progress"></span>
+  <select id="filterVerdict">
+    <option value="all">show all</option>
+    <option value="rejected">show rejected only</option>
+    <option value="kept">show kept only</option>
+  </select>
+  <div class="spacer"></div>
+  <button class="btn-reset" onclick="resetAll()">Reset</button>
+  <button class="btn-export" onclick="exportCSV()">Download CSV</button>
+</header>
+<div class="hint">Click a stamp to reject it (red X). Click the ⚑ icon (top-left) to add a comment on any stamp. All start as "keep" by default.</div>
+<div id="pager"></div>
+<div id="grid"></div>
+<div id="pager2" style="padding:10px 20px 40px"></div>
+
+<script src="imgs/manifest.js"></script>
+<script>
+const STORAGE_KEY = "g1b_review_v1";
+const PAGE_SIZE = 200;
+
+let manifest = [];
+let state = {};   // id -> {rejected: bool, comment: str}
+let page = 0;
+
+function loadState() {
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { state = {}; }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function resetAll() {
+  if (!confirm("Clear all review progress?")) return;
+  state = {}; saveState(); render();
+}
+
+function toggleReject(id) {
+  state[id] = state[id] || {};
+  state[id].rejected = !state[id].rejected;
+  saveState(); render();
+}
+function editComment(id, ev) {
+  ev.stopPropagation();
+  state[id] = state[id] || {};
+  const cur = state[id].comment || "";
+  const val = prompt("Comment for " + id + ":", cur);
+  if (val !== null) { state[id].comment = val; saveState(); render(); }
+}
+
+function progressText() {
+  const total = manifest.length;
+  const rejected = manifest.filter(m => state[m.id] && state[m.id].rejected).length;
+  const commented = manifest.filter(m => state[m.id] && state[m.id].comment).length;
+  return total + " stamps — " + rejected + " rejected, " + commented + " commented, " + (total - rejected) + " kept";
+}
+
+function filtered() {
+  const f = document.getElementById("filterVerdict").value;
+  return manifest.filter(m => {
+    const rej = !!(state[m.id] && state[m.id].rejected);
+    if (f === "rejected") return rej;
+    if (f === "kept") return !rej;
+    return true;
+  });
+}
+
+function renderPager(container, items) {
+  const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+  if (page >= totalPages) page = totalPages - 1;
+  container.innerHTML = "";
+  const prev = document.createElement("button");
+  prev.textContent = "‹ prev"; prev.onclick = () => { page = Math.max(0, page - 1); render(); };
+  const next = document.createElement("button");
+  next.textContent = "next ›"; next.onclick = () => { page = Math.min(totalPages - 1, page + 1); render(); };
+  const label = document.createElement("span");
+  label.textContent = "page " + (page + 1) + " / " + totalPages + "  (" + items.length + " items in filter)";
+  container.appendChild(prev); container.appendChild(label); container.appendChild(next);
+}
+
+function render() {
+  document.getElementById("progress").textContent = progressText();
+  const items = filtered();
+  renderPager(document.getElementById("pager"), items);
+  renderPager(document.getElementById("pager2"), items);
+  const pageItems = items.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  pageItems.forEach(m => {
+    const s = state[m.id] || {};
+    const cell = document.createElement("div");
+    cell.className = "cell" + (s.rejected ? " rejected" : "");
+    cell.onclick = () => toggleReject(m.id);
+    cell.innerHTML = `
+      <img src="imgs/${m.img}" loading="lazy" alt="${m.id}">
+      <div class="cbtn ${s.comment ? 'has-comment' : ''}" onclick="editComment('${m.id}', event)" title="${s.comment ? s.comment.replace(/"/g,'&quot;') : 'add comment'}">⚑</div>
+      <div class="xmark">✕</div>
+      <div class="id">${m.id}</div>
+    `;
+    grid.appendChild(cell);
+  });
+}
+
+function csvEscape(s) {
+  s = String(s == null ? "" : s);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+function exportCSV() {
+  const rows = [["stamp_id", "keep", "comment"]];
+  manifest.forEach(m => {
+    const s = state[m.id] || {};
+    rows.push([m.id, s.rejected ? 0 : 1, s.comment || ""]);
+  });
+  const csv = rows.map(r => r.map(csvEscape).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "g1b_prune_results.csv";
+  a.click();
+}
+
+document.getElementById("filterVerdict").addEventListener("change", () => { page = 0; render(); });
+
+manifest = MANIFEST_DATA;
+loadState();
+render();
+</script>
+</body>
+</html>

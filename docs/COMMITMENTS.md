@@ -32,7 +32,7 @@ Status: OPEN / IN-PROGRESS / DONE / RETIRED (reason).
 |---|---|---|---|---|
 | C2 | q_mass–q_light exact relation fitted from Shajib+2021/Etherington+2022 (currently ad-hoc q ⊕ 0.08) | GEN4 P1.3 | OPEN — **rides the z-migration regen (C21)**: fit script BEFORE that manifest build | fit script + C10 sidecar shows it |
 | C3 | WFC3/UVIS 0.04″→0.05″ resample in the stamp builder | G1b | OPEN (blocks 541 of 1,982 G1b targets; ACS-only fetch running meanwhile) | g1b builder, before phase-2 fetch |
-| C5 | G1b measurement pass INCLUDING isophote a3/a4 (feeds AR3) | AR plan | OPEN — fetch running (~120+ stamps); then Nurkyz visual prune → measurement pass | g1b builder; AR3 blocked on it |
+| C5 | G1b measurement pass INCLUDING isophote a3/a4 (feeds AR3) | AR plan | OPEN — fetch DONE (779 stamps); **visual-prune tool DELIVERED 2026-07-15** (review_g1b/index.html, Mac) — Nurkyz prunes via the tool, exports CSV, then the measurement pass runs | g1b builder; AR3 blocked on it |
 | C6 | AR7 LOS structure needs a θ_E-label-convention ruling BEFORE implementation | AR plan | OPEN (ruling needed, then implement or retire) | this ledger |
 | C7 | AR4 HUDF deep source-morphology tier | GEN4 P4 | OPEN (only if the arc gate shows a gap after AR3) | AR4 |
 | C8 | Emails: LEMON/Busillo REPLIED (awaiting their lists — gates workstream 1); Bergamini (HST2EUCLID), Cao/TinyLensGPU (per-lens, I1), Brian (authorship, I15) still to send | 2026-07-10+ | IN-PROGRESS | EMAIL_DRAFTS_20260710.md; Nurkyz sends |

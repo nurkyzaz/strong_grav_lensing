@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LEMON lens review</title>
+<style>
+  :root { --ok:#2e7d32; --bad:#c62828; --bg:#111; --card:#1b1b1b; --fg:#eee; --muted:#888; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+  header { position: sticky; top: 0; background: #000; padding: 12px 20px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #333; z-index: 10; flex-wrap: wrap; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 600; }
+  #progress { color: var(--muted); font-size: 13px; }
+  #filterbar { margin-left: auto; display: flex; gap: 8px; align-items: center; font-size: 13px; }
+  button { cursor: pointer; border: none; border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
+  .btn-export { background: #1565c0; color: white; }
+  .btn-export:hover { background: #1976d2; }
+  .btn-reset { background: #444; color: #ccc; }
+  select { background: #222; color: #eee; border: 1px solid #444; border-radius: 6px; padding: 5px 8px; }
+  main { padding: 16px 20px 80px; max-width: 1100px; margin: 0 auto; }
+  .card { background: var(--card); border-radius: 10px; padding: 14px; margin-bottom: 14px; border: 2px solid transparent; }
+  .card.good { border-color: var(--ok); }
+  .card.bad { border-color: var(--bad); }
+  .card-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .card-head .name { font-weight: 700; font-size: 15px; }
+  .card-head .sub { color: var(--muted); font-size: 12px; padding: 2px 8px; background: #2a2a2a; border-radius: 10px; }
+  .card-head .gt { color: var(--muted); font-size: 12px; }
+  .autoflag { color: #ffb74d; font-size: 12px; margin-bottom: 8px; }
+  img.stretch { width: 100%; border-radius: 6px; display: block; background: #000; image-rendering: pixelated; }
+  .row-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+  .toggle { padding: 7px 16px; border-radius: 6px; background: #2a2a2a; color: #ccc; font-size: 13px; }
+  .toggle.good.active { background: var(--ok); color: white; }
+  .toggle.bad.active { background: var(--bad); color: white; }
+  input.comment { flex: 1; background: #0f0f0f; border: 1px solid #333; color: #eee; border-radius: 6px; padding: 7px 10px; font-size: 13px; }
+  .hint { color: var(--muted); font-size: 11px; margin-top: 4px; }
+  #done-banner { display:none; text-align:center; padding: 20px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>LEMON lens review</h1>
+  <span id="progress"></span>
+  <div id="filterbar">
+    <select id="filterSub"><option value="all">all subsamples</option></select>
+    <select id="filterVerdict">
+      <option value="all">all</option>
+      <option value="unset">unreviewed</option>
+      <option value="good">good</option>
+      <option value="bad">no good</option>
+    </select>
+    <button class="btn-reset" onclick="resetAll()">Reset</button>
+    <button class="btn-export" onclick="exportCSV()">Download CSV</button>
+  </div>
+</header>
+<main id="main"></main>
+<div id="done-banner">All items reviewed. Click "Download CSV" above.</div>
+
+<script src="imgs/manifest.js"></script>
+<script>
+const STORAGE_KEY = "lemon_review_v1";
+
+let manifest = [];
+let state = {};
+
+function loadState() {
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { state = {}; }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function resetAll() {
+  if (!confirm("Clear all review progress for this set?")) return;
+  state = {}; saveState(); render();
+}
+
+function setVerdict(id, v) {
+  state[id] = state[id] || {};
+  state[id].verdict = (state[id].verdict === v) ? "" : v;
+  saveState(); render();
+}
+function setComment(id, text) {
+  state[id] = state[id] || {};
+  state[id].comment = text;
+  saveState();
+}
+
+function progressText() {
+  const total = manifest.length;
+  const done = manifest.filter(m => state[m.id] && state[m.id].verdict).length;
+  const good = manifest.filter(m => state[m.id] && state[m.id].verdict === "good").length;
+  const bad = manifest.filter(m => state[m.id] && state[m.id].verdict === "bad").length;
+  return done + " / " + total + " reviewed  (" + good + " good, " + bad + " no good)";
+}
+
+function populateFilterSub() {
+  const subs = [...new Set(manifest.map(m => m.subsample))];
+  const sel = document.getElementById("filterSub");
+  subs.forEach(s => { const o = document.createElement("option"); o.value = s; o.textContent = s; sel.appendChild(o); });
+}
+
+function render() {
+  document.getElementById("progress").textContent = progressText();
+  const fSub = document.getElementById("filterSub").value;
+  const fVerdict = document.getElementById("filterVerdict").value;
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+  let shown = 0;
+  manifest.forEach(m => {
+    const v = (state[m.id] && state[m.id].verdict) || "";
+    if (fSub !== "all" && m.subsample !== fSub) return;
+    if (fVerdict === "unset" && v) return;
+    if (fVerdict === "good" && v !== "good") return;
+    if (fVerdict === "bad" && v !== "bad") return;
+    shown++;
+    const card = document.createElement("div");
+    card.className = "card" + (v ? " " + v : "");
+    card.innerHTML = `
+      <div class="card-head">
+        <span class="name">${m.id}</span>
+        <span class="sub">${m.subsample}</span>
+        <span class="gt">GT/arc-radius: ${m.gt.toFixed(2)}"</span>
+      </div>
+      ${m.autoflag ? `<div class="autoflag">⚠ ${m.autoflag}</div>` : ""}
+      <img class="stretch" src="imgs/${m.img}" loading="lazy" alt="${m.id}">
+      <div class="hint">panels: linear / percentile / asinh</div>
+      <div class="row-actions">
+        <button class="toggle good ${v==='good'?'active':''}" onclick="setVerdict('${m.id}','good')">✓ Good</button>
+        <button class="toggle bad ${v==='bad'?'active':''}" onclick="setVerdict('${m.id}','bad')">✕ No good</button>
+        <input class="comment" placeholder="comment (optional)" value="${(state[m.id]&&state[m.id].comment)||''}"
+               onchange="setComment('${m.id}', this.value)">
+      </div>
+    `;
+    main.appendChild(card);
+  });
+  document.getElementById("done-banner").style.display = shown === 0 ? "block" : "none";
+}
+
+function csvEscape(s) {
+  s = String(s == null ? "" : s);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+function exportCSV() {
+  const rows = [["id", "subsample", "gt_or_arc_radius", "verdict", "comment"]];
+  manifest.forEach(m => {
+    const s = state[m.id] || {};
+    rows.push([m.id, m.subsample, m.gt, s.verdict || "", s.comment || ""]);
+  });
+  const csv = rows.map(r => r.map(csvEscape).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "lemon_review_results.csv";
+  a.click();
+}
+
+document.getElementById("filterSub").addEventListener("change", render);
+document.getElementById("filterVerdict").addEventListener("change", render);
+
+manifest = MANIFEST_DATA;
+loadState();
+populateFilterSub();
+render();
+</script>
+</body>
+</html>

@@ -43,6 +43,46 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-15 (cont.) — Two visual-review HTML tools built + tested (Nurkyz: "review without editing CSVs by hand"): LEMON 30-lens per-item 3-stretch reviewer + G1b 779-stamp grid reviewer, both self-contained, no manual CSV editing, tested end-to-end in a live browser before delivery
+
+- **review_lemon/** (Mac, 4.3 MB): per-lens card view, all 30 fetched
+  lenses (12 EEL + 5 COSMOS + 13 ACS incl. the auto-flagged bad one, for
+  independent confirmation), each with 3-stretch panels (linear/pct/asinh
+  — standing rule: a blob under one stretch can be a lens under another).
+  Good/No-good toggle + free-text comment per lens, subsample + verdict
+  filters, localStorage autosave (survives closing the browser),
+  "Download CSV" button (id, subsample, gt_or_arc_radius, verdict,
+  comment).
+- **review_g1b/** (Mac, 11 MB): grid view, all 779 deflector stamps,
+  default "keep" (matches the existing prune-CSV convention), click a
+  thumbnail to reject (red X), flag icon opens a comment prompt, paged
+  200/page, filter by kept/rejected, same autosave + CSV export
+  (stamp_id, keep, comment — drop-in compatible with the existing
+  g1b_prune_template.csv schema).
+- **Design note (caught before delivery): both tools originally used
+  fetch() to load a manifest.json, which most browsers BLOCK under
+  file:// (the CORS-on-local-files restriction) — exactly how these would
+  normally be opened (double-click, no server).** Fixed by embedding the
+  manifest as a plain `<script src="imgs/manifest.js">` (a JS literal, not
+  a fetch target) — works with zero setup, no local server needed.
+  Verified by actually testing in a live browser (not just code review):
+  loaded both tools via preview_start, confirmed images render, clicked
+  through good/bad + reject/comment interactions, inspected localStorage
+  state directly to confirm persistence, and checked the CSV-export data
+  construction — all before declaring done, per the "test the feature in
+  a browser" standing rule.
+- **779-image transfer**: initial per-file scp was too slow (~0.4 files/s,
+  would have taken ~30 min for 779 tiny PNGs); switched to tar on the
+  cluster + single-file transfer (9 MB, seconds) — worth remembering for
+  any future bulk-thumbnail delivery.
+- Generator scripts + HTML templates banked: pipeline/review_tools/
+  (gen_lemon_review_imgs.py, gen_g1b_review_imgs.py, both *_template.html).
+  **Unlocks C5** (Nurkyz's G1b visual prune, previously blocked on "where
+  do I even look at these") — she can now do it via review_g1b/index.html
+  directly, export the CSV, hand it back for the measurement pass.
+
+---
+
 ## 2026-07-15 (cont.) — ⛔ Q1b EVAL HARVESTED: COMBINED LEMON HEAD-TO-HEAD complete (N=58, all 4 subsamples); the picture is MORE NUANCED than the SLACS-only report — we win clearly on real-θ_E targets, but our own Euclid-domain arm has a real weakness on EELs/COSMOS specifically, and the SLACS-only "clear sweep" framing needs qualifying
 
 **Combined table (N=58, our eval vs LEMON's own predictions, same GT for
