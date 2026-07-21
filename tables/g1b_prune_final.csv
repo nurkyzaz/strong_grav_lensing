@@ -1,0 +1,780 @@
+stamp_id,keep_nurkyz,keep_final,reason,flags,nurkyz_comment
+G4B_00004,1,1,,,
+G4B_00006,1,1,,,
+G4B_00007,1,0,"KNOWN lens-type object within 10arcsec: [BBC2005] 6.4 (LeG, 3.05"")",,
+G4B_00008,1,0,"KNOWN lens-type object within 10arcsec: [BBC2005] 13.2 (LeG, 7.07"")",,
+G4B_00009,1,0,"KNOWN lens-type object within 10arcsec: [BBC2005] 8.5 (LeI, 1.41"")",,many bright in the image
+G4B_00010,1,1,,,
+G4B_00011,1,1,,,
+G4B_00012,1,1,,neighbors_mask,many bright in the image
+G4B_00013,1,1,,,
+G4B_00014,1,0,"KNOWN lens-type object within 10arcsec: [SSK2002] ERO J003707+0909.5 (LeI, 8.91"")",,
+G4B_00015,1,0,"KNOWN lens-type object within 10arcsec: [DSB2018] A370  7.2.2 (LeI, 5.37"")",,
+G4B_00016,1,0,"KNOWN lens-type object within 10arcsec: [RSK2010] A  773 2.1 (LeG, 9.61"")",,
+G4B_00017,1,1,,neighbors_mask|bcg,many bright light sources in the image
+G4B_00018,1,1,,,
+G4B_00019,1,1,,,
+G4B_00020,1,1,,,
+G4B_00022,1,1,,,
+G4B_00023,1,1,,,
+G4B_00025,1,0,"KNOWN lens-type object within 10arcsec: [CRB2019] 2.3 (LeG, 9.01"")",,many bright light sources in the image
+G4B_00026,1,1,,bcg,
+G4B_00031,1,0,"KNOWN lens-type object within 10arcsec: VIRTUAL PARENT SDSS J1152+0930 (gLS, 0.37"")",,
+G4B_00032,1,1,,,
+G4B_00033,1,1,,,
+G4B_00034,1,0,edge-on disk with dust lane (the 'line'),,small line crossing the middle
+G4B_00037,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,small galaxy with arms
+G4B_00038,0,0,,,
+G4B_00039,1,1,,,
+G4B_00040,1,0,"double nuclei/superposed point sources, off-center",,"not centered, but okay?"
+G4B_00041,1,1,,,
+G4B_00042,1,1,,,
+G4B_00044,1,1,,,
+G4B_00045,1,1,,neighbors_mask|bcg,3 bright light sources in the image
+G4B_00046,1,0,"KNOWN lens-type object within 10arcsec: [ZBC2011] 1.2 (LeI, 3.01"")",,
+G4B_00047,1,1,,bcg,
+G4B_00049,1,0,"KNOWN lens-type object within 10arcsec: VIRTUAL PARENT MACS J1311.0-0310 (gLS, 2.24"")",,
+G4B_00050,1,1,,,
+G4B_00051,1,0,"KNOWN lens-type object within 10arcsec: [CUZ2012] 6b (LeG, 4.59"")",,
+G4B_00052,1,1,,,
+G4B_00054,1,1,,bcg,
+G4B_00055,1,0,"KNOWN lens-type object within 10arcsec: [ZFM2015] A611 1.6 (LeI, 1.53"")",,
+G4B_00056,1,1,,,
+G4B_00057,1,1,,,
+G4B_00058,1,0,"KNOWN lens-type object within 10arcsec: [ZFM2015] M1720 4.3 (LeI, 2.07"")",,
+G4B_00059,1,1,,,
+G4B_00060,1,0,"KNOWN lens-type object within 10arcsec: [DRJ2018] RX J2129 5.2 (LeI, 4.06"")",,
+G4B_00061,1,1,,,
+G4B_00062,1,1,,close_pair_check_isophote_fit,2 lights
+G4B_00065,1,1,,,
+G4B_00068,1,1,,,
+G4B_00069,0,0,,,
+G4B_00070,1,1,,,
+G4B_00071,1,1,,,
+G4B_00072,1,1,,bcg,
+G4B_00075,1,1,,,
+G4B_00076,1,1,,,
+G4B_00080,1,1,,,
+G4B_00081,1,1,,bcg,
+G4B_00082,1,0,"KNOWN lens-type object within 10arcsec: [SBD2020] SDSS J1723+3411 1.5 (LeI, 0.29"")",,"there a bright line above the light, looks like a big arc or some light contamination"
+G4B_00086,1,1,,,
+G4B_00087,1,1,,,
+G4B_00094,1,1,,,
+G4B_00097,1,1,,,
+G4B_00101,0,0,,,
+G4B_00107,1,1,,neighbors_mask,3 bright light sources in the image
+G4B_00108,1,1,,bcg,
+G4B_00109,1,1,,bcg,
+G4B_00110,0,0,,,
+G4B_00111,1,1,,,
+G4B_00112,1,1,,bcg,
+G4B_00113,1,1,,neighbors_mask,3 bright light sources in the image
+G4B_00114,1,1,,,
+G4B_00115,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,small galaxy
+G4B_00116,1,1,,,
+G4B_00117,1,1,,neighbors_mask,2 bright light sources in the image
+G4B_00118,0,0,,,
+G4B_00119,1,1,,,
+G4B_00120,0,0,,,
+G4B_00121,0,0,,,
+G4B_00122,1,1,,bcg,
+G4B_00123,1,0,"near-empty dark stamp, no extended light",,"maybe bad image quality, black background with white dot in the middle"
+G4B_00124,1,1,,,
+G4B_00125,1,1,,,
+G4B_00126,1,1,,bcg,
+G4B_00127,1,1,,close_pair_check_isophote_fit|bcg,2 in the center
+G4B_00128,1,1,,neighbors_mask,3 bright light sources in the image
+G4B_00129,0,0,,,
+G4B_00130,1,1,,bcg,
+G4B_00131,0,0,,,
+G4B_00132,1,1,,,
+G4B_00133,0,0,,,
+G4B_00134,0,0,,,
+G4B_00135,1,0,"KNOWN lens-type object within 10arcsec: SLACS SDSS J0903+4116 (gLS, 8.51"")",,
+G4B_00136,1,1,,,
+G4B_00137,1,1,,,
+G4B_00138,1,1,,,very bright
+G4B_00140,1,1,,,
+G4B_00141,1,1,,,
+G4B_00143,1,1,,,
+G4B_00144,0,0,,,
+G4B_00145,1,1,,,
+G4B_00146,0,0,,,
+G4B_00148,1,1,,,
+G4B_00149,1,0,visual arc suspect - excluded from library pending investigation,,"looks like there is an arc, is it a lens?"
+G4B_00152,1,1,,,
+G4B_00153,1,1,,bcg,
+G4B_00154,1,1,,close_pair_check_isophote_fit,2 in the center
+G4B_00155,0,0,,,
+G4B_00156,1,1,,,
+G4B_00157,1,1,,,
+G4B_00158,1,1,,low_snr,black background
+G4B_00159,1,1,,bcg,
+G4B_00160,1,1,,,
+G4B_00161,1,1,,,
+G4B_00162,1,1,,,
+G4B_00163,1,1,,close_pair_check_isophote_fit,2 in the center
+G4B_00164,1,1,,,
+G4B_00165,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,some faint circles around the light - maybe galaxy arms
+G4B_00166,1,1,,,
+G4B_00167,1,1,,close_pair_check_isophote_fit,2 in the center
+G4B_00168,1,0,"KNOWN lens-type object within 10arcsec: [FKC2008] COSMOS 0254+1430 (gLS, 1.06"")",,
+G4B_00169,1,1,,,
+G4B_00170,1,1,,,
+G4B_00171,1,1,,,
+G4B_00172,1,1,,,
+G4B_00173,1,1,,,
+G4B_00174,1,1,,,
+G4B_00175,1,1,,,
+G4B_00176,1,1,,,
+G4B_00177,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_00178,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_00179,1,1,,low_snr,"black backrgound, maybe bad image quality"
+G4B_00180,1,1,,,
+G4B_00181,1,1,,neighbors_mask,2 bright light sources in the image
+G4B_00182,1,1,,,
+G4B_00183,1,1,,,
+G4B_00184,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_00185,1,1,,close_pair_check_isophote_fit,2 lights close in the center
+G4B_00187,1,1,,,
+G4B_00191,1,1,,,
+G4B_00193,0,0,,,
+G4B_00194,1,1,,bcg,
+G4B_00195,1,1,,neighbors_mask|bcg,3 bright light sources in the image
+G4B_00196,0,0,,,
+G4B_00206,0,0,,,
+G4B_00207,0,0,,,
+G4B_00208,1,1,,,
+G4B_00213,1,1,,,
+G4B_00214,1,1,,bcg,
+G4B_00215,0,0,,,
+G4B_00216,0,0,,,
+G4B_00217,1,1,,neighbors_mask|bcg,many bright light sources in the image
+G4B_00218,1,1,,,
+G4B_00219,1,1,,neighbors_mask|bcg,many bright light sources in the image
+G4B_00220,1,1,,,
+G4B_00221,0,0,"(was already keep=0) known lens-type within 10"": NAME Eyelash",,
+G4B_00222,1,1,,,
+G4B_00223,1,1,,close_pair_check_isophote_fit,2 light close in the center
+G4B_00224,1,1,,bcg,
+G4B_00225,1,1,,bcg,
+G4B_00226,1,1,,bcg,
+G4B_00227,0,0,"(was already keep=0) known lens-type within 10"": VIRTUAL PARENT MCS J0150.3-1005",,
+G4B_00228,1,1,,,
+G4B_00229,1,1,,close_pair_check_isophote_fit,2 in the center
+G4B_00230,1,1,,bcg,
+G4B_00231,1,1,,,
+G4B_00232,1,1,,,
+G4B_00233,1,1,,close_pair_check_isophote_fit,2 light close in the center
+G4B_00234,1,1,,bcg,
+G4B_00235,1,1,,,
+G4B_00236,1,1,,close_pair_check_isophote_fit|bcg,2 light close in the center
+G4B_00237,1,1,,,
+G4B_00238,1,1,,bcg,
+G4B_00239,1,1,,,
+G4B_00240,1,1,,neighbors_mask,many bright light sources in the image
+G4B_00241,1,1,,close_pair_check_isophote_fit,2 light close in the center
+G4B_00242,1,1,,bcg,
+G4B_00243,1,1,,neighbors_mask,3 bright light sources in the image
+G4B_00244,1,1,,bcg,
+G4B_00245,1,1,,,
+G4B_00246,1,1,,close_pair_check_isophote_fit|bcg,2-3 light close in the center
+G4B_00247,1,1,,,
+G4B_00248,0,0,,,
+G4B_00249,1,1,,,
+G4B_00250,1,1,,,
+G4B_00251,1,1,,,
+G4B_00252,1,1,,,
+G4B_00253,1,1,,,
+G4B_00254,1,1,,,
+G4B_00255,1,0,"KNOWN lens-type object within 10arcsec: [RER2016] MACSJ0140-1028 (LeG, 9.85"")",,
+G4B_00256,1,1,,bcg,
+G4B_00257,1,1,,,
+G4B_00258,1,1,,,
+G4B_00259,1,1,,,
+G4B_00260,0,0,,,
+G4B_00261,1,0,"KNOWN lens-type object within 10arcsec: [KAA2009] SDSS J1113+2356 (gLS, 0.87"")",,2 lights close in the center
+G4B_00262,1,0,"KNOWN lens-type object within 10arcsec: CSWA 11 (gLS, 0.13"")",,many bright light sources in the image
+G4B_00266,1,0,visual arc suspect - excluded from library pending investigation,,there seems to be smth similar to an arc
+G4B_00267,1,1,,close_pair_check_isophote_fit,2 lights
+G4B_00268,0,0,,,
+G4B_00269,0,0,,,
+G4B_00270,1,1,,,
+G4B_00271,1,1,,,
+G4B_00272,1,1,,,
+G4B_00273,1,0,"KNOWN lens-type object within 10arcsec: [BHG2011] SDSS J1115+5319 E1 (LeG, 6.58"")",,
+G4B_00274,1,1,,,
+G4B_00275,1,0,"KNOWN lens-type object within 10arcsec: [MCM2012] SA98 lens (gLe, 0.1"")",,
+G4B_00276,1,1,,,
+G4B_00277,1,0,BCG of lensing cluster ClG J1115+5319 (arcs in stamp),,maybe there is an arc
+G4B_00278,1,1,,bcg,
+G4B_00279,1,1,,,
+G4B_00280,1,1,,,
+G4B_00282,1,1,,,
+G4B_00283,1,1,,bcg,
+G4B_00284,1,1,,bcg,
+G4B_00285,1,1,,,
+G4B_00286,1,1,,low_snr,dim
+G4B_00287,1,1,,low_snr|bcg,"dim center, brighter neighbour"
+G4B_00288,1,1,,,
+G4B_00289,1,1,,bcg,
+G4B_00290,1,0,BCG of ZwCl 0104+0048 with visible faint arc,,looks like there is an arc
+G4B_00291,1,1,,,
+G4B_00292,0,0,,,
+G4B_00293,1,0,visual arc suspect - excluded from library pending investigation,,maybe there is an arc
+G4B_00294,1,1,,,
+G4B_00295,1,1,,,
+G4B_00296,1,1,,,
+G4B_00297,1,1,,,
+G4B_00298,1,1,,,
+G4B_00299,1,1,,bcg,
+G4B_00300,1,1,,neighbors_mask,3 bright light sources in the image
+G4B_00301,1,1,,,
+G4B_00302,1,1,,,
+G4B_00303,1,1,,,
+G4B_00304,1,1,,,
+G4B_00305,1,1,,,
+G4B_00306,1,1,,,
+G4B_00307,1,1,,,
+G4B_00308,1,1,,,
+G4B_00309,1,1,,,
+G4B_00310,0,0,,,
+G4B_00311,1,1,,neighbors_mask,3 bright light sources in the image
+G4B_00312,1,1,,bcg,
+G4B_00313,1,1,,neighbors_mask,3 bright light sources in the image
+G4B_00314,1,0,S-shaped spiral arms,,maybe there is an arc
+G4B_00315,1,1,,,
+G4B_00316,1,1,,,
+G4B_00317,1,1,,,
+G4B_00318,1,1,,,
+G4B_00319,1,1,,,
+G4B_00320,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,small galaxy maybe
+G4B_00321,1,1,,bcg,
+G4B_00322,1,1,,,
+G4B_00323,1,1,,,
+G4B_00324,1,1,,bcg,
+G4B_00325,1,1,,,
+G4B_00326,0,0,,,
+G4B_00327,1,0,"KNOWN lens-type object within 10arcsec: [OAF2017] EEL J1218 system (gLS, 0.38"")",,looks like a circular light
+G4B_00329,1,1,,,
+G4B_00331,1,0,"KNOWN lens-type object within 10arcsec: [OAF2017] EEL J1248 system (gLS, 0.24"")",,
+G4B_00332,0,0,,,
+G4B_00333,1,0,"KNOWN lens-type object within 10arcsec: [OAF2017] EEL J0913 system (gLS, 0.06"")",,black background and circular light
+G4B_00336,1,1,,,
+G4B_00337,0,0,,,
+G4B_00339,1,1,,,
+G4B_00340,1,1,,,
+G4B_00341,1,1,,,
+G4B_00343,0,0,,,
+G4B_00344,1,1,,,
+G4B_00345,0,0,,,
+G4B_00347,1,1,,low_snr,dim and small
+G4B_00348,0,0,,,
+G4B_00349,0,0,,,
+G4B_00350,0,0,,,
+G4B_00354,1,1,,,
+G4B_00355,0,0,,,
+G4B_00356,1,1,,,
+G4B_00357,1,1,,,
+G4B_00358,1,1,,,
+G4B_00359,1,1,,,
+G4B_00361,0,0,,,
+G4B_00362,1,1,,,
+G4B_00364,1,1,,,
+G4B_00365,1,1,,,
+G4B_00366,1,1,,,
+G4B_00367,0,0,,,
+G4B_00368,1,1,,,
+G4B_00371,1,1,,,
+G4B_00393,1,1,,,
+G4B_00394,1,1,,,
+G4B_00395,1,0,"KNOWN lens-type object within 10arcsec: [WSL2017b] SDSS J1640+1932 (gLS, 0.04"")",,"there is a very clear arc on this image, is it a known strong lense?"
+G4B_00396,0,0,,,
+G4B_00397,1,1,,,
+G4B_00398,1,1,,,
+G4B_00399,1,0,"KNOWN lens-type object within 10arcsec: [LKS2009]SDSS J0212+0034 (Le?, 0.13"")",,
+G4B_00400,0,0,,,
+G4B_00401,1,0,"KNOWN lens-type object within 10arcsec: AGEL J133145+513431 system (gLS, 0.6"")",,there something similar to a big arc
+G4B_00404,1,1,,,
+G4B_00405,1,0,interacting/merging pair,,"a very beutiful image, like 2 galaxies merging, what is it?"
+G4B_00406,1,1,,,
+G4B_00413,1,1,,low_snr,dim and a bit grey
+G4B_00414,0,0,,,
+G4B_00415,1,1,,,
+G4B_00416,1,1,,,
+G4B_00417,1,1,,,
+G4B_00418,1,1,,low_snr|bcg,dim and grey
+G4B_00420,0,0,,,
+G4B_00421,0,0,,,
+G4B_00422,0,0,,,
+G4B_00423,0,0,,,
+G4B_00424,1,1,,,
+G4B_00425,1,1,,,
+G4B_00426,0,0,"(was already keep=0) known lens-type within 10"": [SBB2017] SDSS J0832+1334",,
+G4B_00427,0,0,,,
+G4B_00428,1,1,,,
+G4B_00429,1,1,,bcg,
+G4B_00430,0,0,,,
+G4B_00431,0,0,"(was already keep=0) known lens-type within 10"": [SBB2017] SDSS J1119+1357",,
+G4B_00432,0,0,,,
+G4B_00433,1,1,,bcg,
+G4B_00434,1,1,,,
+G4B_00435,0,0,,,
+G4B_00436,0,0,,,
+G4B_00437,1,1,,,
+G4B_00438,0,0,,,
+G4B_00439,0,0,,,
+G4B_00440,1,1,,,
+G4B_00441,1,1,,low_snr,dim and grey
+G4B_00442,0,0,,,
+G4B_00443,0,0,"(was already keep=0) known lens-type within 10"": [MCM2012] SA22 source",,
+G4B_00446,0,0,,,
+G4B_00464,1,1,,,
+G4B_00465,1,1,,,
+G4B_00466,0,0,,,
+G4B_00467,1,1,,,
+G4B_00468,1,1,,bcg,
+G4B_00470,1,1,,,
+G4B_00471,0,0,,,
+G4B_00472,1,0,"KNOWN lens-type object within 10arcsec: CLASH MACSJ1115.9+0129  850 (LeG, 8.3"")",,
+G4B_00473,1,1,,close_pair_check_isophote_fit,2 lights in the center
+G4B_00474,0,0,,,
+G4B_00477,1,1,,,
+G4B_00478,1,1,,,
+G4B_00479,0,0,,,
+G4B_00481,0,0,,,
+G4B_00482,1,1,,,
+G4B_00483,1,0,"KNOWN lens-type object within 10arcsec: COOL J1153+0755 source (LeQ, 0.23"")",,many bright light sources in the image
+G4B_00484,1,1,,,
+G4B_00485,0,0,,,
+G4B_00486,1,1,,,
+G4B_00490,1,1,,,
+G4B_00491,1,1,,,
+G4B_00492,1,1,,bcg,
+G4B_00493,1,1,,,
+G4B_00494,1,1,,,
+G4B_00495,1,1,,,
+G4B_00496,0,0,,,
+G4B_00497,1,1,,,
+G4B_00498,0,0,,,
+G4B_00499,1,1,,bcg,
+G4B_00500,1,1,,,
+G4B_00501,1,1,,,
+G4B_00502,1,1,,,
+G4B_00503,1,1,,neighbors_mask,many bright light sources in the image
+G4B_00505,1,1,,,
+G4B_00506,0,0,,,
+G4B_00507,0,0,,,
+G4B_00508,0,0,,,
+G4B_00509,0,0,,,
+G4B_00510,1,1,,,
+G4B_00514,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy with arms
+G4B_00515,0,0,,,
+G4B_00516,0,0,,,
+G4B_00517,1,1,,,
+G4B_00518,1,1,,low_snr,"small light, maybe very far away"
+G4B_00521,0,0,,,
+G4B_00523,0,0,,,
+G4B_00527,1,1,,bcg,
+G4B_00529,1,1,,,
+G4B_00530,0,0,,,
+G4B_00531,1,1,,,
+G4B_00533,0,0,,,
+G4B_00534,0,0,,,
+G4B_00535,1,1,,,
+G4B_00536,1,1,,,
+G4B_00538,1,1,,,
+G4B_00539,1,1,,,
+G4B_00540,1,1,,,
+G4B_00541,1,1,,,
+G4B_00542,0,0,,,"very big and beautiful, looks like a galaxy with rings, what is it? is it a known galaxy?"
+G4B_00543,1,1,,bcg,
+G4B_00544,1,1,,,
+G4B_00546,1,1,,,
+G4B_00548,0,0,,,
+G4B_00549,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy with arms
+G4B_00550,1,1,,,
+G4B_00551,0,0,,,
+G4B_00552,1,0,"KNOWN lens-type object within 10arcsec: [BBC2005] 27.1 (LeG, 4.79"")",,looks like a galaxy but with weird arms
+G4B_00553,1,1,,bcg,
+G4B_00554,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00555,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00557,1,1,,,
+G4B_00558,1,0,visual arc suspect - excluded from library pending investigation,,maybe there is an arc
+G4B_00559,1,1,,,
+G4B_00560,1,1,,,
+G4B_00561,1,1,,,
+G4B_00562,1,1,,,
+G4B_00564,0,0,,,
+G4B_00565,1,1,,low_snr,black background
+G4B_00566,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_00567,1,1,,,
+G4B_00568,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_00569,1,1,,,
+G4B_00572,1,1,,,
+G4B_00573,1,1,,,
+G4B_00574,1,1,,,
+G4B_00575,1,1,,,
+G4B_00576,1,1,,,
+G4B_00577,1,1,,,
+G4B_00578,1,1,,,
+G4B_00579,1,1,,,
+G4B_00580,1,1,,,
+G4B_00584,1,1,,,
+G4B_00587,1,1,,,
+G4B_00589,0,0,,,
+G4B_00590,0,0,,,
+G4B_00591,0,0,,,
+G4B_00592,1,1,,,
+G4B_00594,1,1,,,
+G4B_00595,1,1,,,
+G4B_00596,1,1,,,
+G4B_00597,1,0,"KNOWN lens-type object within 10arcsec: [RSK2010] A 1835 5.3 (LeG, 3.55"")",,
+G4B_00598,0,0,,,
+G4B_00600,0,0,,,
+G4B_00602,0,0,,,
+G4B_00603,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00604,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00605,1,1,,,
+G4B_00608,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00609,1,1,,,
+G4B_00610,1,1,,,
+G4B_00611,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00612,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00613,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00618,1,1,,,
+G4B_00619,1,1,,,
+G4B_00620,1,1,,,
+G4B_00621,1,1,,,
+G4B_00622,1,1,,,
+G4B_00623,0,0,,,
+G4B_00627,1,1,,,
+G4B_00629,1,1,,,
+G4B_00633,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_00634,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00635,1,1,,close_pair_check_isophote_fit|bcg,4 lights in the center
+G4B_00636,1,1,,,
+G4B_00639,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"looks like a galaxy with swirling arms, is it ok?"
+G4B_00640,1,1,,,
+G4B_00642,1,1,,,
+G4B_00643,1,1,,,
+G4B_00644,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00645,1,1,,,
+G4B_00646,1,0,face-on barred spiral (the 'inner+outer circle'),,"looks like a galaxy but it has inner circle like a full arc, and outer uneven bigger circle, likely should reject?"
+G4B_00648,0,0,,,
+G4B_00649,1,1,,,
+G4B_00650,0,0,,,
+G4B_00652,1,1,,,
+G4B_00654,1,1,,,
+G4B_00655,1,1,,,
+G4B_00656,1,0,"KNOWN lens-type object within 10arcsec: [FIK97] D (LeG, 1.51"")",,
+G4B_00657,1,1,,,
+G4B_00658,1,1,,,
+G4B_00659,0,0,,,
+G4B_00660,1,0,"KNOWN lens-type object within 10arcsec: [SKE2001] B15 (LeI, 6.9"")",,
+G4B_00661,1,0,"KNOWN lens-type object within 10arcsec: [SKE2001] B02d (LeI, 2.04"")",,
+G4B_00662,1,1,,,
+G4B_00663,1,1,,,
+G4B_00664,0,0,,,
+G4B_00665,1,1,,bcg,
+G4B_00666,1,1,,,
+G4B_00667,1,1,,,
+G4B_00668,1,1,,,
+G4B_00669,1,1,,,
+G4B_00670,0,0,,,
+G4B_00671,0,0,,,
+G4B_00672,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"galaxy, looks like far away"
+G4B_00673,1,1,,,
+G4B_00674,1,1,,,
+G4B_00675,1,1,,,
+G4B_00676,1,1,,,
+G4B_00677,1,1,,,
+G4B_00678,1,1,,,
+G4B_00679,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00681,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00682,1,1,,,
+G4B_00683,0,0,,,
+G4B_00684,1,1,,,
+G4B_00686,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00688,1,1,,,
+G4B_00689,1,1,,,
+G4B_00690,1,1,,,
+G4B_00691,1,1,,,
+G4B_00692,1,1,,,
+G4B_00693,1,1,,close_pair_check_isophote_fit,2 lights close by
+G4B_00694,1,0,"KNOWN lens-type object within 10arcsec: [LHC2023] RX2129-ID11022 (LeG, 8.69"")",,
+G4B_00695,1,1,,close_pair_check_isophote_fit,2 lights
+G4B_00696,1,1,,,
+G4B_00697,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00699,1,1,,,
+G4B_00700,0,0,,,
+G4B_00701,1,1,,,
+G4B_00702,1,1,,,
+G4B_00707,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00708,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful galaxy with swirling arms, is it ok?"
+G4B_00709,0,0,,,
+G4B_00710,1,1,,,
+G4B_00711,1,1,,,
+G4B_00712,1,1,,,
+G4B_00714,1,1,,,
+G4B_00715,1,1,,,
+G4B_00716,1,1,,bcg,
+G4B_00717,1,1,,,
+G4B_00718,1,1,,,
+G4B_00721,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,likely galaxy not sure
+G4B_00725,1,1,,,
+G4B_00732,1,1,,,
+G4B_00734,0,0,,,
+G4B_00740,1,1,,,
+G4B_00741,1,1,,,
+G4B_00742,1,1,,,
+G4B_00743,1,1,,close_pair_check_isophote_fit,2 lights
+G4B_00747,1,1,,,
+G4B_00749,1,1,,,
+G4B_00751,1,1,,,
+G4B_00755,0,0,,,
+G4B_00756,1,1,,,
+G4B_00758,0,0,,,
+G4B_00759,1,1,,,
+G4B_00760,1,1,,,
+G4B_00761,1,1,,close_pair_check_isophote_fit,2 lights
+G4B_00767,1,1,,,
+G4B_00768,1,1,,,
+G4B_00769,1,1,,close_pair_check_isophote_fit,2 lights in the center
+G4B_00770,1,1,,,
+G4B_00773,1,1,,,
+G4B_00774,1,1,,,
+G4B_00777,1,0,visual arc suspect - excluded from library pending investigation,,"there is an arc, is it a known lens?"
+G4B_00781,1,1,,,
+G4B_00783,1,1,,,
+G4B_00786,0,0,,,
+G4B_00789,1,1,,close_pair_check_isophote_fit,"light in the center, but there is like a galaxy in the lower left part"
+G4B_00790,1,1,,,
+G4B_00791,1,1,,,
+G4B_00793,1,1,,,
+G4B_00796,0,0,,,
+G4B_00797,1,1,,,
+G4B_00798,1,1,,,
+G4B_00799,1,1,,bcg,
+G4B_00800,1,1,,,
+G4B_00801,1,1,,,
+G4B_00803,0,0,,,
+G4B_00804,1,1,,low_snr,"black background, also the light in the low left is brighter than center"
+G4B_00807,0,0,,,
+G4B_00810,1,1,,,
+G4B_00811,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00812,1,1,,,
+G4B_00813,1,1,,,
+G4B_00814,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy with 2 arms
+G4B_00815,1,1,,,very bright
+G4B_00816,0,0,,,
+G4B_00817,0,0,,,
+G4B_00818,1,1,,,
+G4B_00819,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00820,1,1,,low_snr,dim and small
+G4B_00821,1,1,,,
+G4B_00822,1,0,faint outer arms (ambiguous ring),,looks like an arc
+G4B_00823,0,0,,,
+G4B_00824,0,0,,,
+G4B_00825,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00826,1,1,,neighbors_mask,2 bright lights
+G4B_00827,0,0,,,
+G4B_00828,1,1,,,
+G4B_00829,1,1,,,
+G4B_00830,0,0,,,
+G4B_00831,0,0,,,
+G4B_00832,0,0,,,
+G4B_00833,1,1,,,
+G4B_00834,1,1,,,
+G4B_00836,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,likely a galaxy
+G4B_00837,1,1,,,
+G4B_00838,1,1,,,
+G4B_00839,1,1,,,
+G4B_00840,1,1,,,
+G4B_00841,1,1,,,
+G4B_00842,1,1,,,
+G4B_00843,1,1,,,
+G4B_00844,1,1,,low_snr,small and dim
+G4B_00845,1,1,,bcg,
+G4B_00846,1,1,,neighbors_mask,3 bright lights in the photo
+G4B_00847,1,1,,,
+G4B_00848,1,1,,,
+G4B_00849,1,1,,low_snr,black background
+G4B_00850,0,0,,,
+G4B_00851,1,1,,,
+G4B_00852,0,0,,,
+G4B_00853,1,1,,bcg,
+G4B_00855,1,1,,,
+G4B_00856,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok? + other source of light very bright but small"
+G4B_00857,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00858,0,0,,,
+G4B_00859,1,1,,,
+G4B_00860,1,1,,,
+G4B_00861,1,1,,close_pair_check_isophote_fit|low_snr|bcg,dim and 2 lights in the center
+G4B_00862,0,0,,,
+G4B_00863,1,0,interacting pair,,2 lights like clashing
+G4B_00865,1,1,,,
+G4B_00866,1,1,,,
+G4B_00867,1,1,,,
+G4B_00869,1,1,,,
+G4B_00870,1,1,,,
+G4B_00871,1,1,,,
+G4B_00872,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00873,1,1,,,
+G4B_00874,1,1,,,
+G4B_00875,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00876,0,0,"(was already keep=0) known lens-type within 10"": [NMT2009] HST J114331.46-014508.0",,
+G4B_00877,0,0,,,
+G4B_00878,1,1,,,
+G4B_00879,0,0,,,
+G4B_00880,1,1,,,
+G4B_00881,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00882,0,0,,,
+G4B_00883,1,1,,,
+G4B_00885,1,1,,,
+G4B_00886,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,maybe a galaxy with 2 arms
+G4B_00887,1,1,,,
+G4B_00888,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00889,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful galaxy with swirling arms, is it ok?"
+G4B_00890,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_00892,1,1,,,
+G4B_00893,0,0,,,
+G4B_00894,1,1,,,
+G4B_00895,1,1,,,
+G4B_00896,1,1,,,
+G4B_00898,0,0,,,
+G4B_00899,1,1,,,
+G4B_00900,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"galaxy with swirling arms, is it ok?"
+G4B_00901,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,looks like a big bright galaxy
+G4B_00906,1,1,,,
+G4B_00912,1,0,"KNOWN lens-type object within 10arcsec: CSWA 38 (gLS, 0.2"")",,
+G4B_00913,0,0,,,
+G4B_00914,1,1,,,
+G4B_00915,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"g galaxy with swirling arms, is it ok?"
+G4B_00917,1,1,,,
+G4B_00918,1,1,,,
+G4B_00919,1,0,suspected contamination near center (wisp+companion),,looks like a galaxy or like there is an arc already
+G4B_00920,0,0,,,
+G4B_00921,0,0,,,
+G4B_00922,1,0,"KNOWN lens-type object within 10arcsec: [FKC2008] COSMOS 0056+1226 (gLS, 1.3"")",,"3 britgh sources of light in the image, the one in the center looks like it has an arc"
+G4B_00923,1,0,flocculent spiral,,"either a galaxy with arms, or an arc"
+G4B_00924,1,1,,,
+G4B_00925,1,1,,,
+G4B_00926,1,1,,bcg,
+G4B_00927,1,1,,neighbors_mask,3 bright lights
+G4B_00928,1,1,,,
+G4B_00929,1,1,,,
+G4B_00930,1,1,,,
+G4B_00931,1,1,,,
+G4B_00932,1,1,,,
+G4B_00933,1,1,,neighbors_mask,3 bright lights
+G4B_00934,1,1,,,
+G4B_00935,1,1,,,
+G4B_00936,1,1,,neighbors_mask,2-6 bright lights
+G4B_00937,1,1,,,
+G4B_00938,1,1,,,
+G4B_00939,1,1,,,
+G4B_00940,1,0,"KNOWN lens-type object within 10arcsec: [FKC2008] COSMOS 5940+5012 (gLS, 1.53"")",,
+G4B_00941,1,1,,,
+G4B_00942,1,1,,close_pair_check_isophote_fit,2 lights
+G4B_00943,1,1,,,
+G4B_00944,1,1,,bcg,
+G4B_00945,1,1,,,
+G4B_00946,1,1,,bcg,
+G4B_00947,1,0,"KNOWN lens-type object within 10arcsec: [FKC2008] COSMOS 5951+1236 (gLS, 1.05"")",,
+G4B_00948,1,0,"KNOWN lens-type object within 10arcsec: [FKC2008] COSMOS 0013+2249 source (LeG, 0.73"")",,
+G4B_00949,1,1,,,
+G4B_00950,1,1,,,
+G4B_00951,1,1,,,
+G4B_00952,1,1,,,
+G4B_00953,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"galaxy with swirling arms, is it ok?"
+G4B_00954,1,1,,bcg,
+G4B_00955,1,1,,,
+G4B_00956,1,1,,,
+G4B_00957,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,likely a galaxy
+G4B_00958,1,1,,,
+G4B_00959,1,1,,bcg,
+G4B_00960,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"galaxy with swirling arms, is it ok?"
+G4B_00961,1,1,,,
+G4B_00962,1,1,,,
+G4B_00963,1,1,,close_pair_check_isophote_fit,2 lights in the center
+G4B_00964,1,1,,,
+G4B_00965,1,1,,,
+G4B_00966,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_00967,1,1,,,
+G4B_00968,1,1,,,
+G4B_00969,1,1,,,
+G4B_00970,1,1,,bcg,
+G4B_00971,1,1,,,
+G4B_00972,1,1,,,
+G4B_00973,1,1,,bcg,
+G4B_00974,1,0,"KNOWN lens-type object within 10arcsec: [FKC2008] COSMOS 5906+4524 source (LeG, 0.89"")",,
+G4B_00975,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy likely
+G4B_00976,0,0,,,
+G4B_00977,1,1,,,
+G4B_00978,1,1,,bcg,
+G4B_00979,0,0,,,
+G4B_00980,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"galaxy with swirling arms, is it ok?"
+G4B_00981,1,1,,,
+G4B_00982,1,1,,,
+G4B_00983,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"galaxy with uneven swirling arms, is it ok?"
+G4B_00984,1,1,,,
+G4B_00985,1,1,,,
+G4B_00986,1,0,two overlapping edge-on disks,,2 bright slashes
+G4B_00987,1,1,,,
+G4B_00988,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"big galaxy with swirling arms, is it ok?"
+G4B_00989,1,1,,,
+G4B_00990,1,1,,,
+G4B_00991,1,1,,,
+G4B_00992,1,1,,,
+G4B_00993,1,1,,,
+G4B_00994,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"big galaxy with swirling arms, is it ok?"
+G4B_00995,1,1,,,
+G4B_00996,0,0,,,
+G4B_00997,1,1,,,
+G4B_00998,0,0,,,
+G4B_00999,1,1,,,
+G4B_01000,1,1,,,
+G4B_01001,1,1,,,
+G4B_01002,1,1,,,
+G4B_01003,1,1,,,
+G4B_01004,1,1,,bcg,
+G4B_01005,1,1,,,
+G4B_01006,0,0,,,
+G4B_01007,1,1,,bcg,
+G4B_01008,1,1,,,
+G4B_01009,0,0,,,
+G4B_01010,1,1,,,
+G4B_01011,1,1,,,
+G4B_01012,1,1,,,
+G4B_01013,1,1,,bcg,
+G4B_01014,1,1,,,
+G4B_01015,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,"very beutiful and big galaxy with swirling arms, is it ok?"
+G4B_01016,1,1,,,
+G4B_01017,1,1,,bcg,
+G4B_01018,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,again looks like a galaxy
+G4B_01019,1,1,,,
+G4B_01020,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_01021,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_01022,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy with 2 arms
+G4B_01023,1,1,,,
+G4B_01024,1,1,,,
+G4B_01025,0,0,,,"rejected because there is a line crossing the light in the diagonal , is it physical or a telescope error"
+G4B_01026,1,1,,,
+G4B_01027,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_01028,1,1,,,
+G4B_01029,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_01030,0,0,,,line crossing
+G4B_01031,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_01032,1,1,,,
+G4B_01033,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy with arms
+G4B_01034,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy with arms
+G4B_01035,1,1,,close_pair_check_isophote_fit|neighbors_mask,2 bright lights in the center
+G4B_01036,1,1,,,
+G4B_01037,1,0,disk with faint arms + close companion,,either a compact galaxy with circular arms or an arc like a strong lens
+G4B_01038,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_01039,1,1,,,
+G4B_01040,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy
+G4B_01041,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,circles around the light - likely a galaxy
+G4B_01042,1,1,,,
+G4B_01043,1,0,late-type morphology (disk/spiral arms) - not an LRG deflector,,galaxy

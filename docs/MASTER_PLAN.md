@@ -22,23 +22,30 @@ GEN4 (self-consistent population: real HST galaxy = light AND mass, SDSS σ_v �
 | Euclid-domain SLACS (eval #19) | −0.010″ | 0.137″ | 0.056″ | +0.71 | 15% |
 
 Beats/matches Cao 2025 (conventional, same lenses); beats LEMON Table 3 on every
-θ_E aggregate in their Euclidised domain. In flight on the cluster:
-run_night_resume.sh → g4ar (AR1 arc-Poisson + AR2 coupled shear) regen → grid →
-⛔ eval #22 (pre-authorized, count → 22); g1b 800-target stamp fetch; Q1 SLDE
-cutouts downloaded + unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs, 4.7 GB).
+θ_E aggregate in their Euclidised domain.
+
+Update 2026-07-21: ⛔ eval #22 harvested — g4ar (AR1+AR2) LOST to the incumbent
+on SLACS (0.157/+0.62/15% vs #19's 0.137/+0.71/15%); **incumbent keeps the
+production crown**; AR1/AR2 carried forward as physics honesty, not promoted.
+G1b prune COMPLETE: 514 clean deflectors (tables/g1b_prune_final.csv); 44
+known-lens fields removed (incl. EELs J1218/J0913/J1248 — Q1 contamination
+averted); 6 new lens candidates (tables/g1b_lens_candidates.csv). LEMON-31
+review ruled: ACS-13 excluded (their GT is arc radius/absent), Q1 set =
+SLACS + EEL-13 + COSMOS-3 ≈ 45 lenses, all with real θ_E.
 
 ## 1. Priority ladder (Nurkyz-set direction + Q program; work top-down,
    parallel where independent)
 
-1. **Harvest ⛔ eval #22** (g4ar) → decide the production Euclid recipe
-   (incumbent: G4-trained cnv2_3 on the real-PSF bench, 0.137/+0.71/15%).
+1. ~~**Harvest ⛔ eval #22**~~ DONE 07-21: g4ar not promoted; production
+   Euclid recipe = G4-trained cnv2_3 on the real-PSF bench (0.137/+0.71/15%).
 2. **Q program — LEMON head-to-head on their exact lenses** (§2; C16). Q2 is
    unblocked NOW and is pure evaluation-side work (no retraining) — run it
    alongside 3–4.
-3. **G1b library build**: Nurkyz visual prune of the 800-target fetch →
-   measurement pass INCLUDING isophote a3/a4 (C5, feeds AR3) → C15a/b σ_v
-   corrections (f_SIS = σ_fiber/0.948, +7% intrinsic scatter) in the next
-   manifests; C15c validation figure (analysis-only) can be made immediately.
+3. **G1b library build**: ~~visual prune~~ DONE 07-21 (514 clean,
+   g1b_prune_final.csv) → **measurement pass INCLUDING isophote a3/a4 (C5,
+   feeds AR3) is NOW THE CRITICAL PATH** → C15a/b σ_v corrections
+   (f_SIS = σ_fiber/0.948, +7% intrinsic scatter) in the next manifests;
+   C15c validation figure (analysis-only) can be made immediately.
 4. **AR3 isophote-anchored multipoles** (one pilot, gates incl. AR0 arc gate)
    → regen with the BIG G1b library + C15 corrections → ⛔ eval pair
    (native + Euclid). Expect less tempering (stronger training FJ ρ).
@@ -76,11 +83,14 @@ admits real < sim performance.
   (defensible; already beats their aggregate). Gate: any claimed 29-list must
   reproduce their Fig. 9 scatter. Deliverable: tables/lemon60_targets.csv
   (skeleton exists).
-- **Q1b imaging (31 non-SLACS)**: MAST F814W fetch (g1/g1b driver pattern;
-  COSMOS 5 may be in local COSMOS tiles — check first) → benchmark-grid
-  cutouts → files FROZEN at creation (`real_lemon31_*`, C18) → euclidise
-  (real Q1 VIS PSF) → three-stretch previews on ALL before any eval. Pilot 3
-  lenses (1/subsample) first.
+- **Q1b imaging — RULED 2026-07-21 after Nurkyz's cutout review
+  (lemon_review_results.csv): ACS-13 EXCLUDED** (12/13 bad, all GT=0.00 —
+  Pawase has no θ_E; disclosed in Q3 honesty box). COSMOS 0047+5023 and
+  0211+1139 dropped (arc half-visible / θ_E 3.14″ out of support). **Q1 set =
+  SLACS(29 or 62) + EEL-13 + COSMOS-3 ≈ 45 lenses, all real θ_E.** EEL J0913
+  imaging is in hand (= G4B_00333 from the g1b fetch). Files FROZEN at
+  creation (`real_lemon31_*`, C18) → euclidise (real Q1 VIS PSF) →
+  three-stretch previews on ALL before any eval.
 - **Q1c ⛔ eval (logged)**: current Euclid primary + TTA; LEMON-convention
   table per subsample + combined; SLACS row = 29-exact when resolved (then it
   is a ROW-FILTER on saved per-lens CSVs — no re-run). Bar: beat their 60-lens

@@ -5,6 +5,68 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-21 — ⛔ EVAL #22 HARVESTED (count stays 22; g4ar LOSES to incumbent on SLACS); G1b VISUAL PRUNE RULED (Nurkyz review + Claude adjudication + full SIMBAD crossmatch): 514 clean deflectors, 44 KNOWN-LENS fields caught (incl. TWO LEMON EELs sitting in our library), 6 new lens candidates flagged; LEMON-31 review ruled (ACS-13 dropped)
+
+**EVAL #22 (g4ar = AR1 arc-Poisson + AR2 coupled shear; ran 07-13, harvested
+today from slurm_l22_eval_47875.out):**
+- SLACS Euclid bench, ens: bias −0.028, RMSE 0.157, NMAD 0.061, R² +0.62,
+  fail 15% — WORSE than eval #19's G4-trained cnv2_3 (0.137/+0.71/15%).
+- S4TM: cnv2_3 0.134/+0.76/25%; r50_3 0.103/+0.86/22% (vs #18 r50 0.117/+0.81/22%
+  — slight S4TM gain, SLACS regression).
+- **RULING: incumbent KEEPS the production-Euclid crown (G4 cnv2_3, eval #19).**
+  AR1+AR2 are physics-honesty upgrades, not accuracy wins on this bench; carry
+  them into the AR3 regen (they cost nothing) but the g4ar grid is not promoted.
+  Per-lens CSVs banked to results/preds_l22_ens_euclid_{slacs,s4tm}_images_g3.csv.
+
+**G1b PRUNE (779 fetched stamps; Nurkyz keep=646/reject=133 + comments; Claude
+viewed every commented stamp + ran a FULL-LIBRARY SIMBAD crossmatch, 10″):**
+- **C4 precheck was too narrow** (only BELLS+SL2S+SLACS VizieR tables). The
+  full SIMBAD crossmatch of all 779 found **lens-type objects (gLS/gLe/LeI/LeG)
+  within 10″ of 44 kept stamps** — the σ_v≥250 SDSS selection lands exactly on
+  the galaxies that lens. Caught: CSWA 11, CSWA 14 (=Nurkyz's "very clear arc"
+  00082), CSWA 38, SDSS J1640+1932 (=00395, the textbook Einstein ring),
+  AGEL J133145+513431 (=00401), SDSS J1113+2356, SDSS J1152+0930, SA98,
+  6 Faure+2008 COSMOS lenses (incl. 0056+1226 from LEMON's candidate table),
+  SLACS J0903+4116 field, and BCGs/members of lensing clusters A1689, A370,
+  A611, A383, A1835, RXJ2129, ZwCl1358, MACS J1311, MCS J0150/J0940.
+- **INTEGRITY CATCH: EEL J1218 (G4B_00327), EEL J0913 (G4B_00333), EEL J1248
+  (G4B_00331) were in the deflector library. J1218 + J0913 are in the LEMON
+  60-lens comparison sample — training on them would have contaminated the Q1
+  head-to-head.** All removed. (Bonus: J0913 is the EEL missing from the
+  lemon-31 review — its ACS imaging is in hand as G4B_00333.)
+- Morphology rulings (every commented stamp eyeballed): ALL "galaxy with
+  swirling arms" and ALL plain-"galaxy" flags are late-type disks/spirals →
+  REJECTED (77). Nurkyz's instinct confirmed: LRG deflector libraries contain
+  no arms; arms in a "deflector" stamp are either a spiral contaminant or a
+  real lensed arc. Mergers/artifacts (00405, 00863, 00986, 00040, 00123,
+  00034 dust-lane disk) → REJECTED (6). Uncatalogued arc-suspects → REJECTED
+  from library, kept for follow-up (5).
+- **NEW LENS CANDIDATES (not in SIMBAD as lenses): G4B_00266 (clear arclet, no
+  counterpart at all — HIGH), G4B_00777 (bright ~1″ arc around radio galaxy
+  Cul 2335+000 — HIGH), G4B_00558 (MED), 00149/00165/00822 (LOW).**
+  → tables/g1b_lens_candidates.csv (coords, σ_v, z, priority).
+- Final: **keep_final=514 clean LRG deflectors** (from 646).
+  tables/g1b_prune_final.csv (keep_nurkyz vs keep_final + reason + flags:
+  close_pair_check_isophote_fit / neighbors_mask / low_snr / bcg — close-pair
+  and BCG flags resolve mechanically at the C5 isophote measurement pass).
+  Both CSVs also at ~/cosmos_acs/tiles/g1b_prune/ on the cluster.
+- Process fix: SIMBAD all-otype crossmatch is now a STANDING precheck for
+  every future library fetch (C19).
+
+**LEMON-31 REVIEW RULED (lemon_review_results.csv, Nurkyz):** EEL 12/12 good;
+COSMOS 3/5 good (0047+5023 arc half-visible, 0211+1139 θ_E=3.14″ out of
+support — both dropped); **ACS 13: 12/13 bad, and ALL have GT=0.00 — the
+Pawase arc radii were never extracted and their θ_E doesn't exist. RULING:
+ACS-13 EXCLUDED from Q1 (disclosed), not worth the extraction effort for a
+GT that isn't θ_E.** Q1 comparison set = SLACS(29-exact or 62-superset) +
+EEL-13 (J0913 imaging = G4B_00333) + COSMOS-3 ≈ 45/60 of their sample, every
+lens with a real θ_E. This is STRONGER than SLACS-only: same-composition
+per-subsample rows + the honesty point that 13/60 of LEMON's own GT is arc
+radius, not θ_E. Q2 (native Q1-354, PyAutoLens GT) remains the primary board.
+Busillo nudge is DUE (planned ~07-20).
+
+---
+
 ## 2026-07-13 (PM, cont.) — DOC CONSOLIDATION (Nurkyz directive: "one plan"): MASTER_PLAN.md rewritten as the SINGLE live plan; five plan docs + the superseded LensFusion instructions ARCHIVED to docs/archive/ with banners; root folder synced
 
 - New MASTER_PLAN.md = priority ladder (eval #22 → Q program → G1b → AR3 →

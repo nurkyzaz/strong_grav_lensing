@@ -15,7 +15,7 @@ Status: OPEN / IN-PROGRESS / DONE / RETIRED (reason).
 | C1 | ΔPA ↔ γ_ext coupling in the generator | G0 2026-07-11 | IN-PROGRESS (patched 07-12, AR2 pilot overnight) | manifest spec block (C10) |
 | C2 | q_mass–q_light exact relation fitted from Shajib+2021 / Etherington+2022 tables (currently ad-hoc q ⊕ 0.08) | GEN4 plan P1.3 "at G2 — flagged for verification" | OPEN | fit script + manifest spec block |
 | C3 | WFC3/UVIS 0.04″→0.05″ resample step in the stamp builder | G1b 2026-07-12 | OPEN (blocks 541 of 1,982 G1b targets) | g1b fetch/builder |
-| C4 | Known-lens catalog crossmatch (BELLS/SL2S/…) added to G1b exclusions before fetch | G1b 2026-07-12 | DONE (g1b_fetch_precheck.py, VizieR w/ fallback) | g1b fetch precondition |
+| C4 | Known-lens catalog crossmatch (BELLS/SL2S/…) added to G1b exclusions before fetch | G1b 2026-07-12 | DONE but PROVEN TOO NARROW 07-21 (3 catalogs missed 44 lens fields incl. 3 EELs, 3 CSWAs, 6 Faure COSMOS) — superseded by C19 | g1b fetch precondition |
 | C5 | AR3 isophote (a3/a4) fits added to the G1b measurement pass | AR plan 2026-07-12 | OPEN | g1b builder |
 | C6 | AR7 LOS structure needs a θ_E-label-convention ruling BEFORE implementation | AR plan 2026-07-12 | OPEN (ruling needed, then implement or retire) | this ledger |
 | C7 | HUDF deeper source-morphology tier as ablation | GEN4 plan P4 | OPEN (→ AR4 tier 2) | AR4 |
@@ -30,3 +30,5 @@ Status: OPEN / IN-PROGRESS / DONE / RETIRED (reason).
 | C16 | LEMON head-to-head program (Q1a–Q3): reconstruct their exact 60-lens Euclidised sample (31 non-SLACS from cited tables; 29 SLACS via email/H-flags/H-fig9) + native Q1-354 eval vs PyAutoLens GT — full staging in MASTER_PLAN.md §2 (LEMON plan archived) | Nurkyz directive 2026-07-13 | IN-PROGRESS (Q0 done; Q1a/Q2a started) | MASTER_PLAN.md §2 + §6 checklist, reconciled at every ⛔ |
 | C17 | Q2c flux/ZP gate on real VIS cutouts BEFORE any Q1 eval (LEMON needed −0.22 mag; measure ours, don't assume) | Q program 2026-07-13 | OPEN | Q2c gate script + DECISIONS_LOG |
 | C18 | New real-lens files (real_lemon31, Q1 cutouts) frozen at creation; every eval on them logged with the running count | Q program 2026-07-13 | OPEN (standing rule extension) | DECISIONS_LOG eval entries |
+| C19 | Full-SIMBAD all-otype crossmatch (10″, lens types gLS/gLe/LeI/LeG/LS?/Le?) is a STANDING precheck for every future deflector/library fetch AND was applied retroactively to g1b (44 removals) | G1b prune 2026-07-21 | DONE for g1b; STANDING for future fetches | g1b_prune_final.csv; future fetch prechecks |
+| C20 | G1b measurement pass must consume keep_final from tables/g1b_prune_final.csv (NOT the raw Nurkyz CSV) and must resolve the close_pair/bcg flags via isophote-fit quality gates | G1b prune 2026-07-21 | OPEN | g1b builder + C5 measurement pass |
