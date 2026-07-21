@@ -32,7 +32,7 @@ Status: OPEN / IN-PROGRESS / DONE / RETIRED (reason).
 |---|---|---|---|---|
 | C2 | q_mass–q_light exact relation fitted from Shajib+2021/Etherington+2022 (currently ad-hoc q ⊕ 0.08) | GEN4 P1.3 | OPEN — **rides the z-migration regen (C21)**: fit script BEFORE that manifest build | fit script + C10 sidecar shows it |
 | C3 | WFC3/UVIS 0.04″→0.05″ resample in the stamp builder | G1b | OPEN (blocks 541 of 1,982 G1b targets; ACS-only fetch running meanwhile) | g1b builder, before phase-2 fetch |
-| C5 | G1b measurement pass INCLUDING isophote a3/a4 (feeds AR3) | AR plan | OPEN — **prune COMPLETE 2026-07-21 (Nurkyz review + adjudication + SIMBAD crossmatch): 514 clean deflectors in tables/g1b_prune_final.csv** — measurement pass on the 514 is NOW THE CRITICAL PATH (gates AR3 + C21 z-migration) | g1b builder; consumes keep_final (C29) |
+| C5 | G1b measurement pass INCLUDING isophote a3/a4 (feeds AR3) | AR plan | **DONE 2026-07-21** (jobs 48446/48447): 488 stamps measured, iso OK 487, AR3-usable 394; g1b_kinematics_v1.csv (cluster + tables/) | consumed by the C21 merge (carry iso_* columns) |
 | C6 | AR7 LOS structure needs a θ_E-label-convention ruling BEFORE implementation | AR plan | OPEN (ruling needed, then implement or retire) | this ledger |
 | C7 | AR4 HUDF deep source-morphology tier | GEN4 P4 | OPEN (only if the arc gate shows a gap after AR3) | AR4 |
 | C8 | Emails: LEMON/Busillo REPLIED (awaiting their lists — gates workstream 1); Bergamini (HST2EUCLID), Cao/TinyLensGPU (per-lens, I1), Brian (authorship, I15) still to send | 2026-07-10+ | IN-PROGRESS | EMAIL_DRAFTS_20260710.md; Nurkyz sends |
@@ -52,7 +52,7 @@ Status: OPEN / IN-PROGRESS / DONE / RETIRED (reason).
 | C26 | Rung 1/2 decision: Rung 1 (substructure) is LIVE — decide enter/skip after the Rung 0 grade returns; 8-band ruled out for Rung 0 (3 bands shipped) but recheck band count on later rungs | Roman program | OPEN — decision with Nurkyz | MASTER_PLAN §2R |
 | C27 | Housekeeping: truncated Rung 0 h5 on the Mac (775 of 1225 MB — unusable); resume via rsync --partial or delete | 2026-07-14 | OPEN (Nurkyz preference) | roman_dc/ on Mac |
 | C28 | Full-SIMBAD all-otype crossmatch (10″; lens types gLS/gLe/LeI/LeG/LS?/Le?) is a STANDING precheck for every future deflector/library fetch — C4's 3-catalog version missed 44 lens fields incl. 3 EELs, 3 CSWAs, 6 Faure COSMOS lenses | G1b prune 2026-07-21 | DONE for g1b (44 removals); STANDING for future fetches | fetch prechecks + g1b_prune_final.csv |
-| C29 | G1b measurement pass must consume keep_final from tables/g1b_prune_final.csv (NOT the raw review CSV) and resolve the close_pair/bcg/low_snr flags via isophote-fit quality gates; the 6 new lens candidates (tables/g1b_lens_candidates.csv: 00266/00777 HIGH) get a follow-up decision with Nurkyz | G1b prune 2026-07-21 | OPEN | C5 measurement pass |
+| C29 | G1b measurement pass must consume keep_final from tables/g1b_prune_final.csv (NOT the raw review CSV) and resolve the close_pair/bcg/low_snr flags via isophote-fit quality gates; the 6 new lens candidates (tables/g1b_lens_candidates.csv: 00266/00777 HIGH) get a follow-up decision with Nurkyz | G1b prune 2026-07-21 | keep_final consumption DONE (builder --keep_csv); flags resolved via iso diagnostics (94 pair-flagged); candidate follow-up with Nurkyz still OPEN | C5 measurement pass |
 
 ## Inherited I-items (MASTER_PLAN §4) — next-action sweep 2026-07-14
 

@@ -5,6 +5,38 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-21 (cont.) — C5 MEASUREMENT PASS COMPLETE (jobs 48446 pilot / 48447 full): 488-stamp G1b library MEASURED incl. isophote a3/a4 — AR3 and the C21 z-migration build are UNBLOCKED
+
+- Chain (cluster-resident, survives logout): build_deflector_from_lrg.py
+  gained --keep_csv (C29: consumes keep_final from g1b_prune_final.csv) ->
+  514 pass the prune, 488 survive the standing auto-screens (13 faint,
+  10 q<0.5, 3 chip-edge). New g1b_measure_stamps.py = g1c base schema
+  (drop-in for g2_merge_libs) + isophote Fourier analysis: per-annulus
+  ellipse fitted by NULLING 1st+2nd harmonics (Jedrzejewski fixpoint via
+  Nelder-Mead; no photutils dependency — not installed, env pinned), then
+  A3/B3/A4/B4 -> RELATIVE amplitudes a_k = A_k/(|dI/da| a) (Bender
+  convention; a4>0 disky), median over gradient-significant annuli in
+  [0.35,1.6] Re; diagnostics: harm12 residual (blend), centre drift
+  (close pair), annulus count.
+- Pilot gate PASSED (20 stamps, previews inspected): ellipses track the
+  light; the two known pathologies (neighbour-pulled outer annuli) were
+  auto-flagged by exactly the intended diagnostics. flag_arcy fired 17/20
+  — verified HISTORICAL-NORMAL (old library: 40/41, 87/90) — the circular-
+  median prominence flag is a vestige superseded by the SIMBAD crossmatch +
+  visual prune; g2 never filtered on it.
+- FULL RESULT (g1b_kinematics_v1.csv, mirrored to tables/): 488 stamps,
+  sigma_v joined 488/488, isophote fits OK 487/488, pair-flagged 94,
+  **AR3-usable clean subset 394**. Distributions: sigma_v med 248
+  [120,444]; z_l med 0.346 [0.05,0.55]; Re med 1.27"; q med 0.86;
+  a4 med +0.17% (16/84: -0.61/+1.21%) — matches published elliptical
+  isophote statistics; m3 med 0.79%.
+- vs the GEN4 library: 131 -> 488 measured deflectors (3.7x), now WITH
+  per-stamp multipole anchors. NEXT (per §1R): C21 z-migration pilot
+  consuming this catalogue (carries C2 fit + C15a/b verify + C10 sidecar
+  gate + C14 arc gate + AR3 multipoles from iso_a3/a4); the g2_merge_libs
+  variant must carry the iso_* columns (fixed field list drops them today)
+  and DECIDE old-131-vs-pure-488 at pilot time.
+
 ## 2026-07-21 — G1b VISUAL PRUNE RULED (Nurkyz review + adjudication of every commented stamp + FULL-library SIMBAD crossmatch): 514 clean deflectors; 44 KNOWN-LENS fields caught (incl. THREE EELs sitting in our library — Q1 contamination averted); 6 new lens candidates; LEMON-31 quality review ruled (ACS-13 excluded); docs/ mirrors resynced (were stale at 07-13)
 
 **G1b PRUNE (779 stamps; Nurkyz keep=646/reject=133 via the 07-15 reviewer

@@ -39,8 +39,7 @@ Q1 SLDE cutouts unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs).
 crossmatch (incl. EELs J1218/J0913/J1248 — Q1 contamination averted); 6 new
 lens candidates (tables/g1b_lens_candidates.csv). LEMON-31 quality review
 ruled: primary head-to-head = real-θ_E rows only (SLACS-29 + EEL + COSMOS-3
-≈ 44, row-filter on banked CSVs); ACS-13 excluded/disclosed. NEXT: C5
-measurement pass on the 514 (gates AR3 AND the C21 z-migration build).**
+≈ 44, row-filter on banked CSVs); ACS-13 excluded/disclosed. C5 measurement pass DONE same day (488 measured, 394 AR3-clean) — AR3 + C21 z-migration UNBLOCKED.**
 
 ## 1R. ENDGAME LADDER (Nurkyz strategy session 2026-07-14 — supersedes the
    ladder below where they conflict; the four remaining workstreams)
@@ -93,8 +92,7 @@ measurement pass on the 514 (gates AR3 AND the C21 z-migration build).**
    real, don't conflate.
 3. **G1b library build**: ~~visual prune~~ DONE 07-21 (514 clean; 44
    known-lens fields caught, C28 standing crossmatch adopted) →
-   measurement pass INCLUDING isophote a3/a4 (C5, feeds AR3; consumes
-   keep_final per C29) → C15a/b σ_v corrections (f_SIS = σ_fiber/0.948, +7% intrinsic scatter) in the next
+   ~~measurement pass~~ DONE 07-21 (488 measured incl. a3/a4, 394 AR3-clean; g1b_kinematics_v1.csv) → C15a/b σ_v corrections (f_SIS = σ_fiber/0.948, +7% intrinsic scatter) in the next
    manifests; C15c validation figure (analysis-only) can be made immediately.
 4. **AR3 isophote-anchored multipoles** (one pilot, gates incl. AR0 arc gate)
    → regen with the BIG G1b library + C15 corrections → ⛔ eval pair
