@@ -319,19 +319,33 @@ def main():
     g2_assign = None
     if args.deflector_manifest:
         import csv as _csv
-        g2_assign = {int(r["file_row"]): (int(r["stamp_id"]), int(r["dihedral_k"]))
-                     for r in _csv.DictReader(open(args.deflector_manifest))}
+        g2_assign = {}
+        n_mig = 0
+        for r in _csv.DictReader(open(args.deflector_manifest)):
+            # C21 z-migration: optional per-row (angular shrink, SB dim)
+            sc = float(r.get("mig_scale", 1.0) or 1.0)
+            sb = float(r.get("mig_sb", 1.0) or 1.0)
+            if sc != 1.0 or sb != 1.0:
+                n_mig += 1
+            g2_assign[int(r["file_row"])] = (int(r["stamp_id"]),
+                                             int(r["dihedral_k"]), sc, sb)
         print("G2 manifest mode: %d assignments, native amplitude, no mag draw"
-              % len(g2_assign))
+              % len(g2_assign)
+              + ("; C21 z-migration on %d rows (zoom by D_A ratio, "
+                 "(1+z)^4 SB dimming)" % n_mig if n_mig else ""))
 
     def inject_deflector_g2(sim, i):
-        """GEN4-G2: the assigned real galaxy at its own brightness."""
-        di, k = g2_assign[i]
+        """GEN4-G2: the assigned real galaxy at its own brightness
+        (C21: optionally z-migrated — shrunk and Tolman-dimmed)."""
+        di, k, mig_scale, mig_sb = g2_assign[i]
         st = deflectors[di]
         st = np.rot90(st, k % 4)
         if k >= 4:
             st = np.fliplr(st)
         st = np.ascontiguousarray(st).copy()
+        if mig_scale != 1.0 or mig_sb != 1.0:
+            from scipy.ndimage import zoom as _ndi_zoom
+            st = _ndi_zoom(st, mig_scale, order=1) * mig_sb
         sp = st.shape[0]
         jy = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
         jx = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
