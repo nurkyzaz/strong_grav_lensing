@@ -351,7 +351,10 @@ def main():
         jx = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
         if sp >= n_px:
             c0 = (sp - n_px) // 2
-            y0, x0 = c0 + jy, c0 + jx
+            # clamp: a z-migrated stamp can land at exactly n_px, where the
+            # jitter would push the crop window out of bounds
+            y0 = min(max(c0 + jy, 0), sp - n_px)
+            x0 = min(max(c0 + jx, 0), sp - n_px)
             sim += st[y0:y0 + n_px, x0:x0 + n_px]
         else:
             y0 = (n_px - sp) // 2 + jy
