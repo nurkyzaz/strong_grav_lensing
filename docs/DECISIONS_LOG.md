@@ -5,6 +5,48 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-22 (cont.) — PHASE 0: real Euclid Q1 CHARACTERIZED (322 lenses) vs GEN5 v4, same estimator (analysis/phase0_characterize.py, tables/*_characterization.csv); Nurkyz's review turned into measured targets — 2 firm, 1 needs a better metric, eval-set auto-audit RULED unreliable
+
+Motivated by Nurkyz's side-by-side eye-check (too many companions; arcs not
+visible / too ellipse-like; deflector a compact blob; several suspect real
+lenses). Measured, honest read:
+
+**FIRM target — COMPANIONS (Nurkyz right):** real field companions q10/50/90
+= 0/2/4, frac>4 = 8%; GEN5 v4 = 0/3/8, frac>4 = 33%. GEN5 injects ~4x too
+many in the tail. FIX justified: cut the companion rate ~3-4x to match.
+
+**ROOT CAUSE of "arcs not visible" = DYNAMIC RANGE, not faint arcs.** Metrics
+say GEN5 arcs are BRIGHTER than real: arc_contrast med 74 vs 33, arc/deflector
+flux 0.37 vs 0.25. So the arc is present and bright — but too many bright
+companions + the evo-brightened deflector blob dominate the per-image stretch
+and bury it. => the companion cut is ALSO the primary arc-visibility fix; also
+check the deflector isn't over-dominating (Re 0.63" vs real 0.56", evo_q).
+
+**"Too perfect ellipse" — NOT CONFIRMED by the coverage metric** (needs a
+better one): azimuthal arc coverage real med 0.67 (full-ring>0.8 only 9%,
+partial 31%) vs GEN5 0.54 (partial 63%). GEN5 is if anything MORE azimuthally
+broken than real — so the complaint is about arc SMOOTHNESS/beadiness WITHIN
+the arc (smooth band vs 3-4 dots), which coverage cannot see. Phase 1 needs a
+smoothness/gap metric + visual confirm before tuning source offset/knots.
+
+**EVAL-SET AUTO-AUDIT RULED UNRELIABLE (do NOT auto-prune the frozen 322).**
+Cross-checked Nurkyz's flagged lenses: the estimator OVER-reads arcs from
+deflector ellipticity (#86 read cov 0.67 but is genuinely no-arc by eye+RGB)
+and from bright companions (#155 read strong-arc; RGB confirms a real
+lens+ring but Nurkyz's "two lights" read is fair on grayscale). Only DEFENSIBLE
+auto-flag = tiny_theta (θ_E_pub < 0.1"): 2 lenses incl. #161 (θ=0.011, the
+misplaced-cutout Nurkyz caught = a FAILED PyAutoLens model). Everything else →
+her eye + the official RGB. Real gallery UPGRADED
+(q1_real_review/index.html): per-lens cov/companions/contrast + sort-by
+(partial-first / companion-heavy / faint-first) + tiny-theta filter + badges,
+so she adjudicates the eval set visually.
+
+Deliverables: tables/real_q1_characterization.csv (322),
+tables/gen5_v4_characterization.csv (200), analysis/phase0_characterize.py,
+upgraded real gallery. NEXT (Phase 1, pending her go): companion cut to the
+measured rate; deflector-dominance check; a smoothness metric + source-offset/
+AR4-knot tuning for arc beadiness; re-pilot -> re-show.
+
 ## 2026-07-22 (cont.) — GEN5 v2→v4 GATE PROGRESSION COMPLETE: every gate on every arm PASSES (one soft FLAG); v4 recipe FROZEN pending Nurkyz eye-check + evo_q physics confirm; eye-check gallery delivered (g5_c21_pilot_review)
 
 Progression (each step one change, gates re-read; jobs 48482/48483/48484/
