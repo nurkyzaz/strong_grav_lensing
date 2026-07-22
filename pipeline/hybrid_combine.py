@@ -298,7 +298,10 @@ def main():
     fo.attrs["run"] = run
     fo.attrs["seed"] = args.seed
 
-    def inject_companions(img):
+    def inject_companions(img, dim=1.0):
+        """dim: GEN5 z-migration SB factor (Nurkyz fix 2026-07-22) — the
+        companion field must dim with the migrated scene, else native-
+        brightness COSMOS companions outshine the dimmed central deflector."""
         rate = rng.uniform(args.companion_rate_lo, args.companion_rate_hi)
         n = int(rng.poisson(rate))
         sp = companions.shape[1]; h = sp // 2
@@ -312,7 +315,7 @@ def main():
             if y0 < 0 or x0 < 0 or y0 + sp > n_px or x0 + sp > n_px:
                 continue
             st = companions[rng.choice(len(companions), p=comp_p)]
-            img[y0:y0 + sp, x0:x0 + sp] += st
+            img[y0:y0 + sp, x0:x0 + sp] += st * dim
             placed += 1
         return placed
 
@@ -454,7 +457,10 @@ def main():
                 skipped_topup += 1
             img = sim + cut
             if companions is not None:
-                nc = inject_companions(img)
+                comp_dim = (g2_assign[i][3]
+                            if (g2_assign is not None and i in g2_assign)
+                            else 1.0)
+                nc = inject_companions(img, dim=comp_dim)
             img = img + rng.normal(0.0, top, sim.shape).astype("float32")
         d_img[i] = img
         d_cut[i] = ci

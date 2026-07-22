@@ -5,6 +5,53 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-22 (cont.) — NURKYZ PILOT REVIEW RULING: GEN4 = low-z native (SLACS/S4TM), **GEN5 = the high-z build (Euclid-Q1 + Roman)**; her 6-item bug list ADJUDICATED item-by-item against the code (3 refuted with evidence, 2 confirmed and FIXED, 1 adopted as process); v2 pilot resubmitted — NO full generation until her next eye-check
+
+Verification (diagnose-before-fix; every claim tested against the v1 pilot
+artifacts before touching code):
+- **#1 "theta_E not recomputed at target z" — REFUTED.** Manual SIS
+  recomputation from each assignment row's (z_l_new, z_source, sigma_v):
+  0/50 mismatches >0.02". The manifest theta IS the target-z theta; paltas
+  renders it via the per-row override.
+- **#6 "training label = old theta" — REFUTED.** h5 theta_E == assignment
+  theta_E to machine precision (max |diff| = 0.0); the 1:1 join assert had
+  already verified render<->row identity. The "huge ring, small label" look
+  is the TEMPERED FLAT-THETA TRAINING PRIOR (P(theta>1.5") ~ 0.23-0.48 by
+  design) on a now-compact deflector population — visual, not a label bug.
+- **#5 "verify AR3 amplitude scaling" — VERIFIED CORRECT.** Row example:
+  mult4_a/theta = 0.014561 vs the stamp's measured iso_m4 = 0.01457 —
+  amplitudes are the isophote FRACTION x the NEW theta_E (shape property
+  preserved, absolute amplitude scales with theta, as she required).
+- **#2 "arcs not dimmed" — CONFIRMED, mechanism identified (subtle):**
+  paltas's COSMOSCatalog DOES shrink (D_A ratio) and dim sources — but
+  only by (1+z)^1 (its get_k_correction uses np.log, natural log, in a
+  magnitude formula) — AND it doesn't matter anyway, because
+  HighSBCOSMOSCatalog.normalize_to_mag then OVERWRITES the flux with a
+  Newton apparent-mag draw (mean 24.3) that was MEASURED on the z_s~0.65
+  SLACS source population. At GEN5's z_s~2.0 that prior is ~2.4 mag too
+  bright. **FIX: Gen5HighZSource (config_lensfusion_acs_g5.py) dims each
+  Newton draw by dm = 5log10(D_L(z_s)/D_L(0.65)) - 2.5log10((1+z_s)/1.65)
+  (distance modulus + flat-f_nu K-correction; LF evolution disclosed as
+  not modeled — AR0 vs real Q1 arbitrates).** Consistent with v1 AR0
+  reading (sim arc contrast 14.0 vs real 7.75 — bright but in-band).
+- **#3 "companions not dimmed" — CONFIRMED.** inject_companions pasted
+  native-brightness COSMOS stamps. **FIX: per-image dim = the row's mig_sb**
+  (companions migrate with the scene; equivalent to her z_comp~0.3 since
+  library z_orig med 0.35).
+- **#4 sky recalibration — ADOPTED as process: gates re-read AFTER the
+  dimming fixes; v1 FLUX/exposure numbers treated as contaminated.**
+- Deflector shrink/dim (her #1a/1b): verified correct and kept.
+
+Renames (naming ruling): g4b_* -> g5_* (g5_make_manifest.py,
+config_lensfusion_acs_g5.py, g5_c21_pilot.sbatch; pilot dir
+~/paltas_g5_c21_pilot). Sidecar spec C10v3-gen5 adds source_dimming +
+companion_dimming axes; the sbatch HARD-FAILS if the "GEN5 SOURCE DIMMING
+ACTIVE" banner is missing from the render log (set -o pipefail added so a
+render crash can't hide behind tee). Mac-side gallery tool delivered:
+g4b_c21_pilot_review/index.html (200 thumbs + click-through 3-domain x
+3-stretch details) — v2 gallery will be rebuilt on the same tool for her
+eye-check. v2 pilot = job 48482.
+
 ## 2026-07-22 — C21 z-MIGRATION + AR3 PILOT PASSES EVERY GATE (job 48480; one 200-render chain, 488-stamp G1b library STANDALONE per Nurkyz ruling): the population gap that sank ⛔ #24 and blocked G5c Path B is CLOSED at pilot scale
 
 - **The chain** (all new code in pipeline/, C10-hard-gated): g4b_make_manifest

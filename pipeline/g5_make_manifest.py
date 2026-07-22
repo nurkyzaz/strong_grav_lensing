@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""C21 (G4b): z-MIGRATION population manifest + AR3 isophote-anchored
+"""GEN5 (C21): z-MIGRATION population manifest + AR3 isophote-anchored
 multipoles — one row per render attempt, extending g2_make_manifest.py.
 
 Each row: a real G1b library galaxy (stamp = light; measured sigma_v = mass,
@@ -35,7 +35,7 @@ the iso-convergence contour perturbation is delta_r/r = a_m/theta_E, so
 parametrisation, used as the polar-contour phase — second-order difference
 at q~0.86, disclosed). Flagged stamps get mult a = 0 (pure PEMD+shear).
 
-Usage: g4b_make_manifest.py --kine g1b_kinematics_v1.csv --n 1400 --seed 950
+Usage: g5_make_manifest.py --kine g1b_kinematics_v1.csv --n 1400 --seed 950
        [--tmin 0.15 --tmax 3.70] [--couple_shear] --out m.csv
 """
 import argparse
@@ -270,7 +270,7 @@ print("multipoles: nonzero %d/%d | mult4_a med %.4f (of theta med %.2f)"
 
 import json as _json
 SPEC = dict(
-    spec_version="C10v2-g4b",
+    spec_version="C10v3-gen5",
     fj_channel="ON (measured sigma_v -> theta_E, SIS)",
     c15a_sigma_norm="ON (sigma_SIS = sigma_fiber/%.3f)" % F_SIS,
     c15b_intrinsic_scatter="ON (%.0f%% multiplicative)" % (100 * SIG_INT),
@@ -287,6 +287,8 @@ SPEC = dict(
                  "N(2.0,0.6) trunc [zl+0.2, 3.5] DISCLOSED)"
                  % (a.zl_med, a.zl_sln, a.zl_min, a.zl_max)),
     arc_poisson="COMBINE-STAGE (AR1 via hybrid_combine --arc_poisson)",
+    source_dimming="CONFIG-STAGE (Gen5HighZSource: Newton mags + DL/K dimming z_ref 0.65 -> row z_s; sbatch greps the ACTIVE banner)",
+    companion_dimming="COMBINE-STAGE (inject_companions dim = row mig_sb)",
     slope_sigma_coupling="OFF (AR6 not implemented)",
     los_structure="OFF (AR7 deferred, C6 ruling needed)",
     theta_range=[a.tmin, a.tmax],
