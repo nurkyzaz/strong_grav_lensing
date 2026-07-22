@@ -5,6 +5,45 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-22 (cont.) — GEN5 v2→v4 GATE PROGRESSION COMPLETE: every gate on every arm PASSES (one soft FLAG); v4 recipe FROZEN pending Nurkyz eye-check + evo_q physics confirm; eye-check gallery delivered (g5_c21_pilot_review)
+
+Progression (each step one change, gates re-read; jobs 48482/48483/48484/
+48485 + a scalar Roman re-center):
+- **v2 (dimming fixes)**: arcs dimmed DL+K from Newton z_ref 0.65 →
+  arc_contrast 14.0 → 7.23 vs real 7.75 (DEAD-ON — the Gen5HighZSource
+  mechanism validated); companions dimmed by mig_sb. Euclid sky-RMS 0.673
+  CHECK; Roman peak/sky 0.53 (overshoot after dimming, expected per
+  Nurkyz #4).
+- **v3 (sky recal)**: LF_EUC_SKY_SCALE=2.2 (real Q1 measures noisier than
+  the nominal EWS depth spec — new disclosed env knob in euclidise.py) →
+  sky-RMS 0.946 PASS; deflector peak/sky 78.9 vs [103,727] CHECK.
+- **v3b (production selection in the pilot)**: arc_visibility_select
+  (thresh 0.8/150px, the g4 recipe step the pilot had skipped) keeps
+  89/200; peak/sky barely moves (81.8) → the residual is DEFLECTOR
+  brightness, not arc selection.
+- **v4 (deflector passive evolution)**: mig_sb × 10^(0.4·Q·Δz), Q=1.2
+  mag/z (Faber+2007 red sequence) — **PHYSICS PENDING NURKYZ/BRIAN
+  CONFIRM**, flagged in the sidecar. Determinism guard PASS (1400 rows
+  identical except mig_sb → v2 renders reused legitimately). RESULT:
+  **peak/sky 141 in [103,727] PASS, sky-RMS 0.955 PASS, theta range PASS,
+  FJ −0.48 PASS, AR0 arc_contrast 7.82 vs 7.75 + asym + width PASS;
+  n_knots med 7 vs real [2,6] soft FLAG** (sim arcs knottier than real —
+  AR4 source-morphology tier is the designated remedy if it persists at
+  scale). Selection keeps 72/200 (36%).
+- **Roman arm re-centered at LF_ROM_FLUX=0.11**: sky 1.03 / skyRMS 1.02 /
+  peak/sky 1.05 ALL PASS; quantiles PILOT 32/57/119 vs RUNG0 12/54/243.
+
+**FROZEN v4 PILOT RECIPE** (for the full generation, when authorized):
+g5_make_manifest --evo_q 1.2 [+ standard args] → config_lensfusion_acs_g5
+(Gen5HighZSource banner-gated) → hybrid_combine (migration+companion dim)
+→ euclidise LF_EUC_SKY_SCALE=2.2 + arc_visibility_select 0.8/150 →
+romanise LF_ROM_FLUX=0.11.
+
+**STILL BLOCKING FULL GENERATION: (1) Nurkyz eye-check (gallery:
+g5_c21_pilot_review/index.html — 200 systems, ✓/✗ selection badges,
+3-domain × 3-stretch details); (2) her/Brian confirm on evo_q=1.2;
+(3) C2 q_mass–q_light fit (Zenodo 6104823); (4) her >1k scale ruling.**
+
 ## 2026-07-22 (cont.) — NURKYZ PILOT REVIEW RULING: GEN4 = low-z native (SLACS/S4TM), **GEN5 = the high-z build (Euclid-Q1 + Roman)**; her 6-item bug list ADJUDICATED item-by-item against the code (3 refuted with evidence, 2 confirmed and FIXED, 1 adopted as process); v2 pilot resubmitted — NO full generation until her next eye-check
 
 Verification (diagnose-before-fix; every claim tested against the v1 pilot
