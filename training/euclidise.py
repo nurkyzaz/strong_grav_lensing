@@ -37,11 +37,16 @@ M_LIM, SN_LIM, APER_DIAM = 24.5, 10.0, 1.3
 
 def euclid_sky_variance_per_px():
     """Per-Euclid-pixel sky variance [e-^2 over the full exposure] such that an
-    m=24.5 extended source in a 1.3" diameter aperture reaches S/N=10."""
+    m=24.5 extended source in a 1.3" diameter aperture reaches S/N=10.
+    LF_EUC_SKY_SCALE (default 1.0): multiplicative variance scale — the GEN5
+    Q1 arm sets ~2.2 because REAL Q1 release imaging measures noisier than
+    the nominal EWS depth spec (stage0 sky-RMS ratio 0.673, 2026-07-22);
+    gate-tuned, disclosed."""
     n_pix = np.pi * (APER_DIAM / 2.0) ** 2 / (PIX_EUC ** 2)
     counts = 10.0 ** (-0.4 * (M_LIM - ZP_EUC)) * T_EXP
     total_var = (counts / SN_LIM) ** 2
-    return max((total_var - counts) / n_pix, 1.0)
+    scale = float(os.environ.get("LF_EUC_SKY_SCALE", "1.0"))
+    return max((total_var - counts) / n_pix, 1.0) * scale
 
 
 MATCH_KERNEL_FILE = os.path.expanduser(
