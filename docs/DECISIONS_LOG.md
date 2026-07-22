@@ -5,6 +5,44 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-07-22 — C21 z-MIGRATION + AR3 PILOT PASSES EVERY GATE (job 48480; one 200-render chain, 488-stamp G1b library STANDALONE per Nurkyz ruling): the population gap that sank ⛔ #24 and blocked G5c Path B is CLOSED at pilot scale
+
+- **The chain** (all new code in pipeline/, C10-hard-gated): g4b_make_manifest
+  (z_l -> Rung-0-anchored lognormal med 0.79, sln 0.36; z_s ~ N(2.0,0.6)
+  trunc, disclosed; stamp shrink = D_A ratio, dim = (1+z)^4 Tolman — total
+  flux exactly the D_L^2 ratio; AR3 multipoles anchored per stamp:
+  a_m = iso_amp x theta_E from the C5 measurements, phases from atan2(b,a)/m
+  with dihedral chirality; theta [0.15,3.7]) -> PEMDShearFourMultipole
+  paltas config (paltas 0.2.0 ships it — no env change) -> migration-aware
+  hybrid_combine paste (zoom+dim per row; one crop-clamp bug found and fixed,
+  job 48479) -> FJ/stage0/AR0/Roman gates.
+- **C10 sidecar: 6 axes PASS** (multipoles ON 1112/1400 rows anchored,
+  z-migration ON, FJ, C15a/b, AR2 coupling). Render 200/200, 1:1 assignment
+  verified (the multipole config draws correctly through paltas).
+- **FJ gate PASS (new C21 mode): rho(MIGRATED apparent mag, theta_E) = -0.53
+  vs real SLACS -0.32.** Key lesson logged: the ORIGINAL stamp mag shows
+  rho +0.12 — bookkeeping, not physics; after migration the rendered
+  brightness is what carries FJ, and it is STRONGER than any previous
+  generation (g2 ~ -0.3).
+- **vs REAL Q1 (frozen f2p85_zoom, the #25 board): peak/sky PASS — sim
+  median 117 inside real 16-84 [103, 727].** This is THE number that failed
+  4.75x in the pre-migration G5c pilot and drove #24's miss. theta range
+  PASS both ends (0.25-3.64). AR0 arc gate vs real Q1: ALL 4 METRICS PASS
+  (first AR0 pass against the Q1 population). Sky-RMS ratio 0.682 [CHECK]:
+  sim slightly cleaner than Q1 — single knob (euclidise exposure 675s ->
+  suggested ~314s), tune at the next pilot or fold into the full-gen config.
+- **Roman arm (romanise FLUX 0.09): sky 1.03 PASS, skyRMS 1.02 PASS,
+  peak/sky ratio 1.40 PASS (was 4.75 pre-migration); gate suggests
+  LF_ROM_FLUX ~ 0.064 to center it.** Previews inspected (Q1 side-by-side +
+  Roman three-stretch): compact deflectors, credible arcs/rings, no
+  artifacts; sim backgrounds slightly smoother (the sky-RMS knob, visible).
+- **REMAINING BEFORE FULL GENERATION (in order): (1) C2 q_mass-q_light fit
+  from Zenodo 6104823 (Etherington+2022 per-lens results) — the one physics
+  axis still AD-HOC in the sidecar; (2) sky-RMS + Roman-FLUX knob tune (one
+  cheap re-pilot); (3) Nurkyz >1k confirm + scale decision (100k, both
+  arms).** Pilot artifacts in ~/paltas_g4b_c21_pilot/; scripts pushed
+  (commits 211af6b..HEAD on claude/session-3127e1).
+
 ## 2026-07-21 (cont.) — C5 MEASUREMENT PASS COMPLETE (jobs 48446 pilot / 48447 full): 488-stamp G1b library MEASURED incl. isophote a3/a4 — AR3 and the C21 z-migration build are UNBLOCKED
 
 - Chain (cluster-resident, survives logout): build_deflector_from_lrg.py
