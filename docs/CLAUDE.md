@@ -6,40 +6,51 @@ It is project memory. **`DECISIONS_LOG.md` in this folder is the single most
 authoritative file — if anything here conflicts with it, DECISIONS_LOG.md wins,
 and say so out loud rather than silently picking one.**
 
-## CONTINUATION PROMPT (state as of 2026-07-14 EOD; delete this block when superseded)
+## CONTINUATION PROMPT (state as of 2026-07-22; delete this block when superseded)
 
-You are in the ENDGAME (MASTER_PLAN §1R). Read the top ~10 entries of
-DECISIONS_LOG.md, then COMMITMENTS.md (REWRITTEN 2026-07-14 as the single
-execution ledger — live rows C2–C27 each carry a next action; reconcile at
-every ⛔), then MODELS_AND_RESULTS.md for current numbers (eval count 25).
+Read the top ~8 entries of DECISIONS_LOG.md, then COMMITMENTS.md (live rows
+each carry a next action; reconcile at every checkpoint), then
+MODELS_AND_RESULTS.md (eval count 25). Two galleries live on the Mac (open in
+a browser): g5_c21_pilot_review/ (GEN5 renders, 3-domain x 3-stretch) and
+q1_real_review/ (the 322 real Q1 eval lenses + official RGB + Phase 0 metrics).
 
-WHERE WE ARE: two-domain real-GT result stands (native SLACS R² +0.64,
-S4TM r50 +0.90; Euclidised SLACS 0.137″/+0.71 = beats LEMON Table 3 on
-every aggregate). Native real Q1: ⛔ #25 (texture-FIXED) = official number,
-R² +0.57/fail 29% (#24's "decisive miss" RETRACTED as a preprocessing
-artifact; residual population effect modest). ROMAN: Path A trained on
-Rung 0 (3band all6: R² +0.94, χ² 0.96 on their TDLMC grading, challenge-val);
-submission CSVs DELIVERED to the Mac (roman_dc/) — the exactly-once
-unlabeled run is done. Path B v1 cancelled; v2 = z-migration (C21).
+NAMING RULING (Nurkyz 2026-07-22): **GEN4 = the low-z native generation
+(SLACS/S4TM); GEN5 = the high-z build (Euclid-Q1 + Roman) via z-migration.**
+Chain files renamed g4b_* -> g5_* (g5_make_manifest.py,
+config_lensfusion_acs_g5.py, g5_c21_*.sbatch; pilot dir ~/paltas_g5_c21_pilot).
 
-WAITING ON EXTERNALS (check first):
-- LEMON/Busillo email with their lens lists (fires workstream 1: exact-29
-  row-filter, 31-lens MAST fetch → euclidise → single ⛔ eval, table).
-- Nurkyz sending the Rung 0 submission email (C20); their grade thereafter.
-- g1b fetch (~/einstein_cnn/g1b_fetch.log) → Nurkyz visual prune → C5.
+WHERE WE ARE: the two-domain low-z result stands (native SLACS R2 +0.64,
+S4TM r50 +0.90; Euclidised SLACS 0.137"/+0.71; LEMON head-to-head won on the
+real-theta_E lenses, ACS-13 excluded). **The ACTIVE workstream is GEN5** (C21
+z-migration + AR3 isophote multipoles on the 514-prune / 488-measured /
+394-AR3-clean G1b library, 488 STANDALONE per Nurkyz). GEN5 v4 pilot passes
+every gate STAT (peak/sky 141 in [103,727], sky-RMS 0.955, FJ -0.48, AR0 4/4,
+Roman 1.03/1.02/1.05 at FLUX 0.11) BUT Nurkyz's EYE-CHECK found real visual
+gaps. Phase 0 (DONE) measured them vs the 322 real Q1 lenses: **companions
+~4x too many (FIRM fix); "arcs not visible" = dynamic-range from clutter, NOT
+faint arcs (GEN5 arcs measure brighter than real); "too-elliptical arcs"
+UNCONFIRMED by the coverage metric (needs a smoothness metric).** Phase 1
+(companion cut + deflector-dominance check + arc-smoothness metric + re-pilot
++ re-show) is NEXT, pending her go. The real-eval-set auto-audit was RULED
+unreliable (over-reads arcs from deflector ellipticity/companions); only
+tiny-theta (2 failed PyAutoLens models incl. #161) is a defensible flag ->
+Nurkyz adjudicates the eval set via the upgraded q1_real_review gallery.
 
-THE FOUR WORKSTREAMS (§1R): 1) LEMON finale (email-gated). 2) Roman: Path B
-v2 z-migration build — ONE regen carries AR3+C2+C15-verify+C10-check+C14
-(pilot-gated; >1k needs Nurkyz). 3) DA on real Q1 (C22; baseline = #25;
---da_pool exists in the trainer). 4) Consolidation: UQ paper section (C23),
-arch-insensitivity finding (C25), original-LEMON-2023 comparison (C24),
-paper §4/Q3, I-item sweep in COMMITMENTS.
+GEN5 FROZEN v4 RECIPE (for full generation when authorized): g5_make_manifest
+--evo_q 1.2 [Q PENDING NURKYZ/BRIAN CONFIRM] -> config_lensfusion_acs_g5
+(Gen5HighZSource banner-gated) -> hybrid_combine (migration + companion dim)
+-> euclidise LF_EUC_SKY_SCALE=2.2 + arc_visibility_select 0.8/150 -> romanise
+LF_ROM_FLUX=0.11. BLOCKING full gen: Phase-1 visual fixes; evo_q confirm;
+C2 q_mass-q_light fit (Zenodo 6104823, still ad-hoc); Nurkyz >1k scale ruling.
 
-STANDING OPERATIONAL PATTERN: chain stages with explicit nohup driver scripts
-on the CLUSTER (sbatch --wait waves, ≤8 jobs, gate-check between hops, abort
-markers, bank results before any deletion); session monitors are convenience
-only. Benchmark evals count and get reported immediately. One config change →
-one pilot → gates. Push to git at every milestone.
+STILL OPEN elsewhere: DA on real Q1 (C22); consolidation/paper (C23-C25);
+Rung 0 submission grade (C20, Nurkyz emailed).
+
+STANDING OPERATIONAL PATTERN: chain stages with explicit sbatch driver scripts
+on the CLUSTER (<=8 jobs, gate-check between hops, bank results before any
+deletion; jobs must survive Nurkyz's logout -- she asked); session monitors
+are convenience only. Benchmark evals count and get reported immediately. One
+config change -> one pilot -> gates. Push to git at every milestone.
 
 ## Superseded document warning
 

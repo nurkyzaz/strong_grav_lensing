@@ -30,7 +30,7 @@ Status: OPEN / IN-PROGRESS / DONE / RETIRED (reason).
 
 | id | commitment | origin | status | next action / enforced where |
 |---|---|---|---|---|
-| C2 | q_mass–q_light exact relation fitted from Shajib+2021/Etherington+2022 (currently ad-hoc q ⊕ 0.08) | GEN4 P1.3 | OPEN — **rides the z-migration regen (C21)**: fit script BEFORE that manifest build | fit script + C10 sidecar shows it |
+| C2 | q_mass–q_light exact relation fitted from Shajib+2021/Etherington+2022 (currently ad-hoc q ⊕ 0.08) | GEN4 P1.3 | OPEN — **data source RESOLVED (Zenodo 6104823, Etherington+2022 per-lens `model.results`); a TOP blocker for GEN5 full generation**: fit BEFORE the full-gen manifest | fit script + C10 sidecar shows it |
 | C3 | WFC3/UVIS 0.04″→0.05″ resample in the stamp builder | G1b | OPEN (blocks 541 of 1,982 G1b targets; ACS-only fetch running meanwhile) | g1b builder, before phase-2 fetch |
 | C5 | G1b measurement pass INCLUDING isophote a3/a4 (feeds AR3) | AR plan | **DONE 2026-07-21** (jobs 48446/48447): 488 stamps measured, iso OK 487, AR3-usable 394; g1b_kinematics_v1.csv (cluster + tables/) | consumed by the C21 merge (carry iso_* columns) |
 | C6 | AR7 LOS structure needs a θ_E-label-convention ruling BEFORE implementation | AR plan | OPEN (ruling needed, then implement or retire) | this ledger |
@@ -44,7 +44,7 @@ Status: OPEN / IN-PROGRESS / DONE / RETIRED (reason).
 | C18 | New real-lens files frozen at creation; every eval logged with count | Q program | STANDING (honored through #25) | DECISIONS_LOG |
 | C19 | ⛔ eval #25 texture-fixed Q1 re-run + pre-registered interpretation rule | #24 forensics | DONE (count → 25): R² +0.57/fail 29% — **#24 headline RETRACTED as preprocessing artifact; #25 = official Q2e number**; residual population effect modest, = the C21/C22 target | DECISIONS_LOG |
 | C20 | Path A Rung 0 submission: exactly-once unlabeled run → CSVs → **NURKYZ emails Stony Brook**; log the submission + their returned grade when it arrives | Nurkyz go 2026-07-14 | RUN DONE, CSVs DELIVERED to Mac roman_dc/ (3band all6 ×0.98 primary; f106 all6 ×1.11; N=11,067). **WAITING: Nurkyz's email, then their grade** | roman_dc/ + DECISIONS_LOG |
-| C21 | **Path B v2 = z-migration module** | strategy session 2026-07-14 | **PILOT PASSED 2026-07-22 (job 48480): C10 6-axes, FJ -0.53 (migrated mags), Q1 peak/sky 117 in [103,727] (was 4.75x off), AR0 4/4 vs Q1, Roman gates 1.03/1.02/1.40** — full generation blocked on: C2 fit (Zenodo 6104823), sky-RMS/FLUX knob re-pilot, Nurkyz >1k confirm | pipeline/g4b_* + pilot artifacts |
+| C21 | **GEN5 = z-migration + AR3 module** (renamed from Path B v2; Nurkyz GEN4/GEN5 naming ruling 2026-07-22) | strategy session 2026-07-14 | **v4 PILOT PASSES ALL GATE STATS 2026-07-22 (peak/sky 141, sky-RMS 0.955, FJ -0.48, AR0 4/4, Roman 1.03/1.02/1.05); recipe FROZEN (evo_q 1.2, EUC_SKY 2.2, selection 0.8/150, ROM_FLUX 0.11).** Full gen BLOCKED on: C30 (Phase-1 visual fixes), C31 (evo_q confirm), C2 fit, Nurkyz >1k confirm | pipeline/g5_* + g5_c21_pilot_review gallery |
 | C22 | DA experiment (I9 execution): target = native real Q1 (only domain with measured gap + real unlabeled pool, 322 cutouts); --da_pool machinery exists; baseline = ⛔ #25; scored on PyAutoLens GT (their referee, disclosed) — professor P2 alignment | strategy session | OPEN — after #25 harvest | training run + one logged eval |
 | C23 | UQ first-class paper section (professor P3): per-domain coverage tables, ρ(σ,|err|), ensemble-vs-single-member ablation (FROM SAVED CSVs — no new evals), conformal story incl. the #24 OOD collapse as the honest exhibit; cite Lakshminarayanan+17, Fort+19 (1912.02757) | professor P3 | OPEN — analysis-only, cheap, high paper value | PAPER_DRAFT §reliability |
 | C24 | Original LEMON paper (MNRAS 522, 5442, 2023) into LITERATURE.md + cite/compare alongside the 2026 A&A paper (professor P4) | professor P4 | OPEN — reading + one table row | LITERATURE.md |
@@ -79,6 +79,11 @@ AR8: paper-2.
 ⛔ #22 reconcile (2026-07-13): C1, C13 → DONE. C15 a/b implemented, c done.
 C17 measured. Others re-deferred with reasons (see git history for the full
 note).
+
+| C30 | GEN5 Phase-1 visual fixes (Nurkyz eye-check 2026-07-22): companion rate cut ~3-4x to the measured real Q1 rate (field comp med 2, frac>4 ~8%); deflector-dominance check (Re 0.63->0.56"); arc-SMOOTHNESS metric built + the 'too-elliptical' gap confirmed BEFORE tuning source-offset/AR4 | GEN5 Phase 0 2026-07-22 | OPEN — the immediate next step; re-pilot then re-show | Phase 0 CSVs (tables/*_characterization.csv) + re-pilot |
+| C31 | evo_q deflector passive-evolution brightening (Q=1.2 mag/z, Faber+2007) is my literature-anchored addition, NOT measured here — CONFIRM with Nurkyz/Brian before full generation | GEN5 v4 2026-07-22 | OPEN (physics confirm) | g5_make_manifest --evo_q; sidecar flags PENDING CONFIRM |
+| C32 | Real Q1 eval-set (322) data-quality: auto-audit RULED unreliable (over-reads arcs); Nurkyz adjudicates via the upgraded q1_real_review gallery. Only DEFENSIBLE machine flag = tiny-theta (2 failed PyAutoLens models, incl. #161). Frozen test data -> nothing dropped without Nurkyz | GEN5 Phase 0 2026-07-22 | OPEN (Nurkyz visual pass; then decide flag-vs-subset for the head-to-head) | q1_real_review/index.html + real_q1_characterization.csv |
+| C33 | Q1 SLDE full set is 336 dirs / 335 GT; frozen eval h5 has 322 — reconcile the 322-vs-335-vs-354(LEMON) counts and disclose at the Q1 eval | Q program | OPEN | eval writeup |
 
 ⛔ #24 reconcile (2026-07-13 night): C17 → DONE; C16 Q2-arm complete; C18
 honored; C11 urgency raised; C10 generator half done.

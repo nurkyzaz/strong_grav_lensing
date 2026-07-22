@@ -41,6 +41,33 @@ lens candidates (tables/g1b_lens_candidates.csv). LEMON-31 quality review
 ruled: primary head-to-head = real-θ_E rows only (SLACS-29 + EEL + COSMOS-3
 ≈ 44, row-filter on banked CSVs); ACS-13 excluded/disclosed. C5 measurement pass DONE same day (488 measured, 394 AR3-clean) — AR3 + C21 z-migration UNBLOCKED.**
 
+## 0b. GEN5 status (2026-07-22; the ACTIVE workstream) — see DECISIONS_LOG
+
+**Naming ruling (Nurkyz 2026-07-22): GEN4 = low-z native (SLACS/S4TM);
+GEN5 = high-z (Euclid-Q1 + Roman) via z-migration.** Roman is fully
+simulated (no real GT); Euclid-Q1 has PyAutoLens GT for 322 real lenses.
+
+GEN5 = C21 z-migration + AR3 isophote multipoles on the G1b library
+(514 pruned / 488 measured / 394 AR3-clean; 488 STANDALONE per Nurkyz).
+v4 pilot passes every gate STAT (peak/sky 141 in [103,727], sky-RMS 0.955,
+FJ -0.48, AR0 4/4, Roman 1.03/1.02/1.05 @ FLUX 0.11). Frozen v4 recipe:
+g5_make_manifest --evo_q 1.2 [PENDING CONFIRM] -> config_lensfusion_acs_g5
+(Gen5HighZSource) -> hybrid_combine (migration + companion dim) -> euclidise
+LF_EUC_SKY_SCALE=2.2 + arc_visibility_select 0.8/150 -> romanise FLUX 0.11.
+
+**Nurkyz eye-check -> Phase 0 (DONE, tables/*_characterization.csv): (1)
+companions ~4x too many [FIRM fix]; (2) "arcs not visible" = dynamic-range
+from clutter, NOT faint arcs (GEN5 arcs measure BRIGHTER than real); (3)
+"too-elliptical arcs" NOT confirmed by the coverage metric -> needs a
+smoothness metric before tuning; (4) real-eval-set auto-audit ruled
+unreliable -> Nurkyz adjudicates via the upgraded q1_real_review gallery
+(only 2 tiny-theta failed-model flags are defensible).**
+
+Phase 1 (NEXT, pending Nurkyz go): companion cut to the measured real rate
++ deflector-dominance check + arc-smoothness metric -> re-pilot -> re-show.
+BLOCKING full generation: Phase-1 visual fixes; evo_q confirm (Nurkyz/Brian);
+C2 q_mass-q_light fit (Zenodo 6104823, still ad-hoc); Nurkyz >1k scale ruling.
+
 ## 1R. ENDGAME LADDER (Nurkyz strategy session 2026-07-14 — supersedes the
    ladder below where they conflict; the four remaining workstreams)
 
