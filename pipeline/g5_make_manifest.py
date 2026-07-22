@@ -63,6 +63,13 @@ ap.add_argument("--zl_max", type=float, default=1.50)
 ap.add_argument("--zl_min", type=float, default=0.30)
 ap.add_argument("--mult_cap", type=float, default=0.10,
                 help="cap on mult_a as a fraction of theta_E")
+ap.add_argument("--evo_q", type=float, default=1.2,
+                help="passive luminosity evolution of the deflector, mag per "
+                     "unit z (Faber+2007 red sequence ~1.2): the migrated "
+                     "stamp BRIGHTENS by Q*(z_new-z_orig) mag on top of the "
+                     "cosmological dimming — LRGs at z~0.8 are younger and "
+                     "intrinsically brighter. Set 0 to disable. PHYSICS "
+                     "PENDING CONFIRMATION (Nurkyz/Brian), gate-arbitrated")
 ap.add_argument("--couple_shear", action="store_true",
                 help="AR2: gamma_ext coupled to |dPA| (C1); default OFF")
 a = ap.parse_args()
@@ -211,7 +218,8 @@ while len(rows) < a.n and attempts < a.n * 2000:
         ph4 = g["ph4"]
         il0, iln = zidx(g["z_l"]), zidx(float(zln[j]))
         mig_scale = float(DA[il0] / DA[iln])
-        mig_sb = float(((1.0 + g["z_l"]) / (1.0 + float(zln[j]))) ** 4)
+        mig_sb = float(((1.0 + g["z_l"]) / (1.0 + float(zln[j]))) ** 4
+                       * 10.0 ** (0.4 * a.evo_q * (float(zln[j]) - g["z_l"])))
         rows.append(dict(row=0, stamp_id=g["stamp_id"], lib=g["lib"],
                          dihedral_k=k, theta_E=round(thj, 6),
                          mass_e1=round(em * np.cos(2 * phi), 6),
@@ -283,9 +291,10 @@ SPEC = dict(
                 "cap %.2f*theta_E; anchored %d/%d galaxies, rest zeroed)"
                 % (a.mult_cap, n_iso, len(gal))),
     z_migration=("ON (C21: z_l -> lognormal(med %.2f, sln %.2f) clip "
-                 "[%.2f,%.2f]; shrink D_A ratio, dim (1+z)^4; z_s ~ "
-                 "N(2.0,0.6) trunc [zl+0.2, 3.5] DISCLOSED)"
-                 % (a.zl_med, a.zl_sln, a.zl_min, a.zl_max)),
+                 "[%.2f,%.2f]; shrink D_A ratio, dim (1+z)^4 x passive-evo "
+                 "brightening Q=%.1f mag/z [Faber+2007, PENDING CONFIRM]; "
+                 "z_s ~ N(2.0,0.6) trunc [zl+0.2, 3.5] DISCLOSED)"
+                 % (a.zl_med, a.zl_sln, a.zl_min, a.zl_max, a.evo_q)),
     arc_poisson="COMBINE-STAGE (AR1 via hybrid_combine --arc_poisson)",
     source_dimming="CONFIG-STAGE (Gen5HighZSource: Newton mags + DL/K dimming z_ref 0.65 -> row z_s; sbatch greps the ACTIVE banner)",
     companion_dimming="COMBINE-STAGE (inject_companions dim = row mig_sb)",
