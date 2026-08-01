@@ -283,6 +283,40 @@ training and evaluation protocol (benchmark evaluations logged as #3–#6).**
   full-sample — every metric 2–3× better without filtering, on native HST, on a ~1.7× larger
   real-GT sample.** Cite Busillo for the σ-filtering idea (they did it first); our additions are
   ρ(σ/μ, |err|) = +0.71 on real GT, failure-rate CIs, and the domain-aware σ finding.
+- **Same-lens head-to-head on LEMON's exact validation systems (added 2026-08-01).** Beyond the
+  distribution-level comparison above, we evaluate both methods on the *identical* lenses LEMON
+  reports predictions for, in their Euclidised-HST domain and conventions. Their released
+  predictions cover 59 systems (29 SLACS + 12 EELs + 5 COSMOS + 13 ACS; the paper lists 60, but
+  EEL J0913 is absent from the release). We split the comparison by whether a published θ_E
+  ground truth exists:
+  - **θ_E subsample (46 lenses with a real published θ_E) — we lead decisively.** SLACS-29
+    (Bolton b_SIE): ours R² **+0.57**, NMAD **0.045″**, catastrophic 7% vs. LEMON R² **−4.26**,
+    NMAD 0.307″, 55% (their SLACS predictions run systematically high, ~+0.29″ mean bias — e.g.
+    J1153+4612 2.00″ vs 1.05″, J2300+0022 2.29″ vs 1.24″). EELs-12 (Oldham 2017 PL+shear): ours
+    (native arm) R² **+0.83**, NMAD 0.023″, 8% vs. +0.21, 0.110″, 42%. COSMOS-5 (Faure Lenstool)
+    is a small-N wash where *both* struggle — LEMON over-predicts, we under-predict because 2/5
+    lie above our training θ_E ceiling (2.3″, out-of-support; disclosed). We do **not** pool
+    these three into a single R² (unstable on narrow-range N≤29 subsamples); lead with NMAD /
+    median-fractional / catastrophic rate, R² only per-subsample.
+  - **ACS subsample (13 lenses) has NO published θ_E** — only an arc radius (Pawase et al. 2014,
+    MNRAS 439, 3392, Table 3). We therefore **exclude it from the θ_E aggregate** (unlike LEMON's
+    Table 3, which appears to fold all four subsamples — 13/60 = 22% arc-radius — into one
+    "θ_E" number; their §6.1 states they "compared with the radius of the arc … as a substitute").
+    For transparency we still score *both* methods against the arc radius on the 12 usable ACS
+    lenses (one, ACS 221501.12−135822.9, excluded for a detector chip-gap over the cutout): LEMON
+    R² +0.36 / NMAD 0.358″ / bias −0.05″; ours R² −0.34 / NMAD **0.310″** / bias −0.57″. Our
+    *scatter is tighter*; the entire R² gap is a systematic negative bias — precisely the expected
+    θ_E < arc-radius offset, since we predict θ_E and the arc radius is systematically larger.
+    LEMON's near-zero arc-radius bias co-occurs with the **same +θ_E over-prediction that produces
+    its R² = −4.26 on SLACS**, where a genuine θ_E exists — so arc radius rewards the bias that
+    sinks the real-θ_E comparison. This is why ACS belongs *outside* the θ_E scoreboard.
+  - **Reproducibility caveat (honest):** we cannot recover LEMON's published Table 3 (RMSE 0.14″,
+    NMAD 0.11″, R² 0.53) by scoring their released predictions against the literature θ_E, and an
+    inquiry to the authors (confirming their per-lens ground truth, ACS handling, and metric
+    convention — linear vs log θ_E, σ-filtering) is in progress. We report our own inflated pooled
+    RMSE (0.44″, driven by the out-of-support COSMOS tail) transparently; the strength claim is the
+    per-subsample NMAD and the SLACS/EEL lead. Tables: `lemon_comparison_package/`,
+    `results/lemon_vs_ours_acs_arcradius.csv`.
 - **Uncertainty calibration-transfer gap (new result)**: σ coverage is 76%/96% (1σ/2σ) on
   sim-val but 52%/83% on real lenses — the miscalibration is a domain effect a sim-fitted
   recalibration cannot repair (it would overcorrect). This quantifies domain shift in the

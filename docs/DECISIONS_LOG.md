@@ -5,6 +5,86 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-01 (cont.) — Nurkyz directives: reframe LEMON email + draft paper paragraph + queue post-GEN5 Euclid comparison; then pivot to finishing GEN5
+
+- **LEMON email REWRITTEN** (EMAIL_DRAFTS_20260710.md) — dropped the "we cannot
+  reproduce your Table 3" framing per Nurkyz; now two concrete, collegial asks +
+  a forward note:
+  1. **ACS ground truth:** they predict 13 ACS systems; the only published GT we
+     could find is the Pawase et al. (2014, MNRAS 439, 3392) Table 3 *arc radius*
+     (link included). Ask whether they used the arc radius as GT or have a
+     different θ_E for these.
+  2. **SLACS:** share OUR per-lens SLACS predictions; report that scoring THEIR
+     SLACS preds vs Bolton b_SIE gives a low R² (≈−4.3, +0.29″ mean offset); ask
+     (a) whether that GT/convention is right, and (b) permission to include a
+     same-lens SLACS comparison (theirs vs ours on the identical 29) in our paper.
+  3. **Forward:** after GEN5 is finalized, extend the comparison to native Euclid
+     in their home domain (logged as COMMITMENTS C19).
+  Framing rule preserved: ask "which GT / may we compare", never "your numbers are
+  wrong". Ready for Nurkyz to set the provenance line + send.
+- **PAPER_DRAFT §4.6 paragraph DRAFTED** — the same-lens head-to-head on LEMON's
+  exact validation systems: θ_E subsample (46) where we lead (SLACS R²+0.57 vs
+  −4.26; EEL native +0.83 vs +0.21; COSMOS small-N wash, out-of-support disclosed),
+  ACS reported SEPARATELY as an arc-radius proxy (kept out of the θ_E aggregate,
+  unlike their Table 3), plus the honest Table-3 reproducibility caveat.
+- **Directive to finish GEN5** — Nurkyz: log the above, then pivot to completing
+  GEN5 (the z-migrated high-z population + AR3 isophote-anchored m=3,4 multipoles).
+  GEN5 completion also unblocks C19 (the native-Euclid LEMON comparison).
+
+---
+
+## 2026-08-01 (cont.) — DECISION: how we compare to LEMON fairly, incl. ACS. We DID now score ourselves on ACS-vs-arc-radius (first time) — result reframes the whole ACS question.
+
+**Question Nurkyz raised:** are we being fair to LEMON — have we scored OURSELVES
+on ACS the way they did (against the Pawase arc radius), not just excluded it?
+
+**Answer / what we found:** we had our model's ACS predictions banked all along
+(`results/preds_lemonq1b_g4_cnv2_s{1,2,3}_ACS_euclid.csv` + the g4n native trio),
+but `theta_E_pub` was 0 in them — we had NEVER scored them against the arc radius.
+We just did, for the first time, on the **12 usable ACS lenses** (chip-gap
+221501.12 excluded), both methods on identical footing. Arc radii = Pawase 2014
+T3 (`tables/pawase_arc_radius.csv`, mirrored from _local). Script:
+`analysis/lemon_acs_arcradius.py`; per-lens table:
+`results/lemon_vs_ours_acs_arcradius.csv`.
+
+| ACS vs Pawase arc radius (N=12) | bias | RMSE | NMAD | R² | med\|frac\| | fail>15% |
+|---|---|---|---|---|---|---|
+| **LEMON** | −0.05 | 0.71 | 0.358 | **+0.36** | 0.24 | 83% |
+| **OURS native-arm** | −0.57 | 1.02 | **0.310** | −0.34 | 0.29 | 83% |
+| **OURS euclid-arm** | −0.85 | 1.19 | 0.405 | −0.82 | 0.47 | 83% |
+
+**Read (this is the important part):** on the arc-radius proxy LEMON's R² looks
+better — but it is NOT a precision loss on our side. Our **scatter is as tight or
+tighter** (native NMAD 0.310 < LEMON 0.358). The entire gap is a **systematic
+negative bias** (−0.57 native, −0.85 euclid): we under-predict relative to the
+arc radius. That is EXACTLY the expected θ_E < arc-radius offset — arc radius
+(the radius where the arc sits, up to 3.3″ here, mean ~1.7″) is systematically
+LARGER than the Einstein radius, and our model is calibrated to θ_E. LEMON's
+near-zero arc-radius bias means its predictions are inflated to arc-radius scale —
+**the same positive θ_E bias (+0.29) that gives LEMON R²=−4.26 on SLACS**, where a
+real θ_E ground truth exists. So arc radius rewards the very over-prediction that
+sinks LEMON on the real-θ_E subsamples.
+
+**DECISION (fair-comparison protocol for the paper):**
+1. **Primary/headline = θ_E-only, 46 lenses** (SLACS 29 + EEL 12 + COSMOS 5), the
+   physically valid comparison. We lead. Do **NOT** fold ACS into the θ_E
+   aggregate — this is precisely where we diverge from LEMON's Table 3, which
+   silently mixes 13 arc-radius ACS systems into a "θ_E" number (13/60 = 22%).
+2. **Report ACS separately and transparently** — a proxy table for BOTH methods
+   (numbers above), explicitly labeled "arc-radius proxy, not θ_E accuracy."
+   Note our NMAD there ≈ LEMON's, and that our deficit is the known arc-radius >
+   θ_E offset, while LEMON's arc-radius fit co-occurs with the +θ_E bias driving
+   its SLACS R²=−4.26. This disarms any "you cherry-picked by dropping ACS"
+   critique: we ran their exact ACS protocol, report it, and explain why it is
+   the wrong scoreboard for θ_E accuracy.
+3. **Email Q2 stands / is reinforced** — still ask them to confirm ACS is in the
+   Table 3 aggregate and how arc-radius vs θ_E is handled there.
+
+Net: excluding ACS from the θ_E aggregate is the scientifically correct call, and
+we can now DEFEND it with our own measured ACS numbers rather than by omission.
+
+---
+
 ## 2026-08-01 (cont.) — LEMON QC + ACS handling confirmed from their paper (feeds the email)
 
 - **Unusable-lens record found** (Nurkyz's eyeball review, review_lemon tool):
