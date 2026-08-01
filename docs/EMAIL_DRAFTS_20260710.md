@@ -125,7 +125,7 @@ With thanks and best regards,
 Nurkyz Ydyrysova (CUHK), on behalf of the authors
 
 Notes for Nurkyz:
-- Attach results/lemon_perlens_comparison.csv. The three summary rows are from
+- Attach lemon_comparison_package/combined_comparison.csv (or zip the whole lemon_comparison_package/ folder). Summary rows regenerate via analysis/build_lemon_package.py.
   analysis/lemon_perlens_comparison.py (LEMON-vs-GT vs ours-vs-GT vs their Table 3).
 - Honest framing: "we can't reproduce your table, help us get it right" — NOT
   "your numbers are wrong". Our own pooled RMSE (0.44″) is also inflated, by a few
