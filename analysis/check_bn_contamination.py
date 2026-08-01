@@ -12,9 +12,9 @@ import sys
 import numpy as np
 import torch
 
-sys.path.insert(0, os.path.expanduser("~/Desktop/LensFusion"))
+sys.path.insert(0, os.path.expanduser("~/code/LensFusion"))
 
-EIN = os.path.expanduser("~/Desktop/LensFusion/da_pool_inspection")
+EIN = os.path.expanduser("~/code/LensFusion/da_pool_inspection")
 
 
 def bn_stats(ckpt_path):

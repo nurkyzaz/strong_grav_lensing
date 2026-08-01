@@ -78,6 +78,6 @@ def summarize(path, label):
 summarize(os.path.join(HERE, "real_dapool_images.h5"), "DA POOL")
 for b, lab in [("real_slacs_images.h5", "BENCHMARK SLACS"),
                ("real_s4tm_images.h5", "BENCHMARK S4TM")]:
-    bp = os.path.expanduser(f"~/Desktop/LensFusion/audit/{b}")
+    bp = os.path.expanduser(f"~/code/LensFusion/audit/{b}")
     if os.path.exists(bp):
         summarize(bp, lab)

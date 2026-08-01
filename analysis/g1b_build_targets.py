@@ -35,7 +35,7 @@ from astropy.coordinates import SkyCoord
 from astroquery.mast import Observations
 from astroquery.sdss import SDSS
 
-PROJ = "/Users/nurkyz/Desktop/LensFusion"
+PROJ = "/Users/nurkyz/code/LensFusion"
 OUT = os.path.join(PROJ, "lrgdefl2b_labels.csv")
 FIELD_R_ARCMIN = 1.55   # stay inside an ACS/WFC frame with margin
 MIN_SEP_EXCL = 5.0      # arcsec

@@ -1,0 +1,38 @@
+exclusion coords: 304 (benchmark + LRGDEFL1 + G1a targets)
+
+=== MAST bulk inventory: public F814W frames (ACS/WFC + WFC3/UVIS) ===
+  ACS/WFC: 31769 usable frames
+  WFC3/UVIS: 16352 usable frames
+total frames: 48121
+
+=== SDSS sigma_v pool (tiers A/B), paged ===
+  dec [-15,-10]: pool now 3504
+  dec [-10,-5]: pool now 36238
+  dec [-5,+0]: pool now 128402
+  dec [+0,+5]: pool now 269062
+  dec [+5,+10]: pool now 393785
+  dec [+10,+15]: pool now 517330
+  dec [+15,+20]: pool now 637908
+  dec [+20,+25]: pool now 754313
+  dec [+25,+30]: pool now 874948
+  dec [+30,+35]: pool now 981883
+  dec [+35,+40]: pool now 1063386
+  dec [+40,+45]: pool now 1141765
+  dec [+45,+50]: pool now 1213097
+  dec [+50,+55]: pool now 1271129
+  dec [+55,+60]: pool now 1319899
+  dec [+60,+65]: pool now 1350836
+  dec [+65,+70]: pool now 1360018
+  dec [+70,+75]: pool now 1360025
+sigma_v pool: 1360025 galaxies (tier A 1167915 / tier B 192110)
+
+=== footprint crossmatch ===
+galaxies inside >=1 usable F814W frame: 2278
+after benchmark/LRGDEFL/G1a exclusions: 1999
+after 5" self-dedupe: 1982
+
+wrote /Users/nurkyz/Desktop/LensFusion/lrgdefl2b_labels.csv: 1982 targets
+sigma_v: median 216  >=250: 526  >=300: 181
+tier A: 1710
+tier B: 272
+WFC3/UVIS (needs 0.04->0.05 resample in builder): 541

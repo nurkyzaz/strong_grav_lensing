@@ -15,7 +15,7 @@ from astroquery.mast import Observations
 from astroquery.sdss import SDSS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PROJ = "/Users/nurkyz/Desktop/LensFusion"
+PROJ = "/Users/nurkyz/code/LensFusion"
 OUT = os.path.join(HERE, "lrgdefl2_labels.csv")
 
 # --- exclusion coordinates: benchmark + current LRGDEFL

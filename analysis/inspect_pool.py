@@ -109,7 +109,7 @@ if pool_names and empty.any():
 
 # compare against benchmark SLACS
 for bench in ["real_slacs_images.h5", "real_s4tm_images.h5"]:
-    bp = os.path.expanduser(f"~/Desktop/LensFusion/audit/{bench}")
+    bp = os.path.expanduser(f"~/code/LensFusion/audit/{bench}")
     if not os.path.exists(bp):
         continue
     bimgs, _ = load(bp)
