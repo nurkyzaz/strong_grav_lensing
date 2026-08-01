@@ -5,6 +5,55 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 — GEN5 PRE-FULL-GEN AUDIT (Nurkyz: "I have to eyeball first; last time I noted several Euclid-match fixes — were they recorded + implemented?"). Full generation HELD. Companion/field-source density still mismatches real Q1 by eye.
+
+Nurkyz stopped the full-gen launch to re-verify GEN5→Euclid morphology matching
+(FOV, companion count, arc/deflector sizes and their relations). Audit result:
+
+**A. Review→fix chain that IS recorded + implemented** (physics_spec.json in the
+manifest sidecar + the v2/v3/v4 pilot sbatch headers + the 07-22 GEN5 entry):
+- source arcs dimmed D_L + K-correction from Newton z_ref 0.65 → row z_s (fixed
+  the Nurkyz-caught bug where the low-z apparent-mag prior overwrote cosmological
+  dimming); companions dimmed by mig_sb; arc-Poisson (AR1) at combine.
+- sky recalibrated LF_EUC_SKY_SCALE 2.2 (real Q1 noisier than nominal EWS);
+  arc-VISIBILITY SELECTION step (thresh 0.8) added (v3b) so gates read the
+  selected set; passive-evolution brightening evo_q 1.2 (v4).
+- z-migration geometry (deflector+arc SIZE shrink via D_A ratio at higher z_l);
+  AR3 multipoles m=3,4 anchored to 394/488 galaxies (GEN4 had none → "more
+  multipoles" = TRUE, in the m=3,4 sense).
+Gates that PASS: stage0 (sky/peak/θ_E) + AR0 arc-morphology, both vs real Q1.
+
+**B. What is NOT in the repo:** the itemized eyeball verdicts/notes themselves.
+The g5_c21_pilot_review gallery (like review_lemon) stores per-image verdicts in
+**browser localStorage**, not files — so Nurkyz's specific "things to fix" list
+cannot be recovered from disk. We can confirm the *categories* that were acted on
+(above) but not check them line-by-line against the original notes. **Fix for this
+time: capture the re-review into a TRACKED checklist here, not localStorage.**
+
+**C. Live mismatch I can see myself** (raw/real_vs_sim_q1_v4.png, sim =
+euclid_v4_selected): the real Q1 SLACS fields are CLEAN — one dominant deflector,
+0–2 faint neighbours, a faint arc/ring. The v4 SIM panels are visibly BUSIER —
+~5–10 bright point-like companions/field sources scattered across every cutout.
+So even though "companion dimming" was implemented, the field-source density still
+does NOT match real Euclid Q1 by eye. Likely mechanism to investigate: the hybrid
+REAL backdrop (real_dapool_images.h5) is HST-depth, which injects more/brighter
+field sources than shallow Euclid Q1 shows — dimming the *injected* companions
+does not thin the *backdrop* population. This is the standout un-closed item and
+matches Nurkyz's "different number of companions" concern. FOV/pixel-scale look
+roughly comparable; arc sizes are hard to judge under the clutter.
+
+**D. Prerequisites the record ITSELF flags as required-before-full-gen, still
+OPEN:** (1) C2 q_scatter FIT — physics_spec says "AD-HOC (q_light + N(0,0.08));
+FIT REQUIRED before full generation" (Zenodo 6104823 resolved as the data source,
+fit not done). (2) passive-evo Q=1.2 mag/z — "PENDING CONFIRM (Nurkyz/Brian)".
+
+**DECISION: no full generation until (C) the companion/field-source density is
+brought to Euclid-Q1 realism and re-eyeballed, and (D) C2 + evo are resolved.**
+Next step proposed: re-render/inspect v4 selected vs Q1 together, log the fix-list
+here, then address the backdrop-density mismatch specifically.
+
+---
+
 ## 2026-08-01 (cont.) — Nurkyz directives: reframe LEMON email + draft paper paragraph + queue post-GEN5 Euclid comparison; then pivot to finishing GEN5
 
 - **LEMON email REWRITTEN** (EMAIL_DRAFTS_20260710.md) — dropped the "we cannot
