@@ -5,6 +5,57 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — GEN5 ARC-VISIBILITY: root cause = SOURCE OVER-DIMMED (physics audit; distances are CORRECT). Plan logged (Nurkyz): quick arc-brightness batch → eyeball, then real high-z SOURCE sample. Full gen HELD.
+
+Nurkyz eyeballed the variant-a gallery: "in most of them arcs are not visible at
+all" + "real euclids feel a bit more smooth". Both are RIGHT and share one cause.
+
+**PHYSICS AUDIT (Nurkyz asked to check distances thoroughly) — distances are
+CORRECT, the bug is source LUMINOSITY, not geometry:**
+- θ_E (g5_make_manifest.py:153-155) uses the right distances: Dls =
+  (D_C(zs)-D_C(zl))/(1+zs), Ds = D_A(zs), θ_E = 4π(σ/c)²·Dls/Ds. Lens-source AND
+  observer-source distances both correct. Sizes use D_A, fluxes use D_L. ✓
+- **ROOT CAUSE of faint arcs:** Gen5HighZSource (config_lensfusion_acs_g5.py:25-41)
+  dims the source from z_ref 0.65 to z_s by distance-modulus + K-correction
+  (~2.3 mag / ~8.5× at z_s=2) but with **NO source luminosity-function evolution**.
+  Real z≈2 sources are at COSMIC NOON (SFR peaks) → intrinsically much brighter;
+  pure dimming over-dims them. The config EXPLICITLY disclosed this gap ("no source
+  LF evolution — AR0 arbitrates") and AR0 flagged it: arc contrast 2.8 vs real
+  7.75 [3.3,19.6]. Surface brightness is conserved in lensing, so a faint source →
+  faint arc → NOISE FRAGMENTS IT → also explains real smoother (roughness 0.72) vs
+  GEN5 bumpier (0.95). ONE cause for both invisibility + brokenness.
+- **Metric-vs-eye reconciled:** Phase-0 claimed GEN5 arcs "brighter than real"
+  (arc_contrast 74 vs 33) — that metric was FOOLED by companion/noise clutter in
+  the arc annulus. The coherent-arc measure (AR0) + Nurkyz's eye are correct.
+- **LEMON's data (LITERATURE.md):** fully PARAMETRIC — 80k Euclid VIS sims,
+  SIE+shear mass, single-Sérsic lens light, sources = 1-4 Sérsic clumps
+  (HUDF-anchored). Bright clean arcs by construction. WE use real G1b deflector
+  stamps + real COSMOS source stamps (our differentiator) — the faint-arc issue is
+  a brightness bug in our dimming, NOT a reason real sources are wrong.
+
+**TARGETS (from real Q1 CSVs):** AR0 arc_contrast → ~7.75; arc/deflector flux →
+~0.25 (q25/75 0.13/0.46); roughness → ~0.72.
+
+**PLAN (Nurkyz-approved sequence):**
+1. **QUICK arc-brightness batch (do now):** hybrid_combine's `sim` is the NOISELESS
+   arc-only render (line 431-433) → add `--arc_flux_scale` that multiplies it before
+   Poisson+combine = physically brightening the source, via RE-COMBINE (no GPU
+   re-render). Test a few scales on the variant-a renders → measure AR0 arc_contrast
+   + roughness vs real → **EYEBALL**. If it lands, bake as source LF brightening in
+   the config for real gen.
+2. **LARGER — real high-z SOURCE sample (Nurkyz preference):** replace migrated
+   low-z COSMOS with a real high-z source population. Options:
+   (a) **Nurkyz's trick — real Euclid Q1 field galaxies from the SAME observations
+       the lenses were found in**: domain-matched (same instrument/PSF/depth), real
+       high-z, brightness-selected by detection. Strong candidate.
+   (b) HUDF/CANDELS deep high-z fields (genuine z~2 star-forming morphologies).
+   (c) **GREAT3 NOTE:** GREAT3's real-galaxy branch is COSMOS-DERIVED (same catalog
+       paltas already uses) → NOT a new high-z sample; limited added value here.
+   **DRAW candidate sources → EYEBALL them (are they usable?) BEFORE wiring in.**
+   Resolution caveat to weigh: COSMOS/HST sources are high-res (crisp arcs, wrong
+   depth); Q1 field galaxies are depth/PSF-matched but coarser (0.1"/px).
+3. Multiband (Roman clear win; Euclid experiment) — AFTER the arc fix, separate.
+
 ## 2026-08-02 (cont.) — GEN5 PHASE 1 started: companion cut LANDS (C30 firm fix #1), smoothness metric BUILT (arc-tuning NOT needed), deflector Re fixed as a bonus; one new item (deflector peak/sky low). Full gen still HELD.
 
 Nurkyz: "start GEN5 Phase 1." Did the two firm fixes + built the missing metric.
