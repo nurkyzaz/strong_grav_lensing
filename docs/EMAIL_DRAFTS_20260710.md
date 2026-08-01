@@ -110,9 +110,16 @@ real difference, may we ask:
    able — could you share the exact per-lens GT values you used? For SLACS in
    particular, is it the Bolton b_SIE, and is the ~14% offset expected (e.g. a
    different definition/aperture for θ_E)?
-2. Are the Table 3 metrics computed on θ_E or on log θ_E, over which lenses (do
-   they include the 13 ACS/Pawase systems, for which we find only an arc radius
-   and no θ_E?), and is any σ-based filtering applied before the aggregate?
+2. The ACS/Pawase subsample: your Section 6.1 notes that the Einstein radius is
+   not reported for these and that you "compared with the radius of the arc … as
+   a substitute", and Table 3 appears to combine all four subsamples. Since the
+   arc radius is generally not equal to θ_E, could you confirm (a) that the 13
+   ACS lenses are included in the Table 3 aggregate, and (b) how the arc-radius
+   vs θ_E difference is accounted for there? We ask because we can only
+   reproduce Table 3 on the 46 lenses that have a published θ_E (SLACS/EELs/
+   COSMOS) — so the ACS inclusion may be one reason our reproduction differs.
+   Relatedly: are the Table 3 metrics computed on θ_E or on log θ_E, and is any
+   σ-based filtering applied before the aggregate?
 3. Would you be comfortable with us including a same-lens comparison (your method
    vs. ours, on your exact lenses, in your conventions) in our paper? We would
    cite Busillo et al. (2026) as the source of the predictions and would gladly

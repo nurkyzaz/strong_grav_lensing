@@ -5,6 +5,29 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-01 (cont.) — LEMON QC + ACS handling confirmed from their paper (feeds the email)
+
+- **Unusable-lens record found** (Nurkyz's eyeball review, review_lemon tool):
+  exactly ONE lens auto-flagged + excluded — **ACS 221501.12-135822.9**
+  ("62%% zero-pixel field, chip gap"; id ACS_221501p12M135822p9). This is why
+  usable ACS = 12 not 13. No other lens was flagged unusable in the 30-lens
+  non-SLACS review. (Records in _local/reviews/review_lemon + lemon_headtohead.)
+- **Why we exclude ACS from the theta_E comparison:** the 13 ACS/Pawase lenses
+  have NO published Einstein radius — only an arc radius (Pawase 2014 T3).
+- **CONFIRMED from LEMON's paper (arXiv:2503.15329 v2, Sect. 6.1):** they too
+  lack theta_E for ACS and *"compared with the radius of the arc … as a
+  substitute"*, AND the 13 ACS are **included in the Table 3 aggregate** (all
+  four subsamples combined), with **no caution** that arc radius != theta_E. So
+  13/60 = 22%% of their headline GT is an arc radius, not theta_E. This is a real
+  reason our reproduction (only the 46 with published theta_E) can't match their
+  60-lens Table 3 — added as a pointed question in the Busillo email.
+- Count reconciliation: paper says 60 (29 SLACS + 13 EEL + 5 COSMOS + 13 ACS);
+  their released predictions have 12 EEL (J0913 absent) -> 59; usable after our
+  chip-gap exclusion -> 58; with real theta_E GT -> 46.
+
+---
+
+
 ## 2026-08-01 (cont.) — LEMON ground truth VERIFIED against primary sources; one correction (EEL J1446 0.41->0.43)
 
 Nurkyz asked to verify the GT in the LEMON comparison package. Checked all 3
