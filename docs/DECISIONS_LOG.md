@@ -335,6 +335,1126 @@ Lenstool). Combined with the SLACS-29 recompute (2026-07-22), the full domain-A 
   paper-2) — this is a real external submission and belongs in
   MODELS_AND_RESULTS once the details are in.
 
+## 2026-07-22 (cont.) — PHASE 0: real Euclid Q1 CHARACTERIZED (322 lenses) vs GEN5 v4, same estimator (analysis/phase0_characterize.py, tables/*_characterization.csv); Nurkyz's review turned into measured targets — 2 firm, 1 needs a better metric, eval-set auto-audit RULED unreliable
+
+Motivated by Nurkyz's side-by-side eye-check (too many companions; arcs not
+visible / too ellipse-like; deflector a compact blob; several suspect real
+lenses). Measured, honest read:
+
+**FIRM target — COMPANIONS (Nurkyz right):** real field companions q10/50/90
+= 0/2/4, frac>4 = 8%; GEN5 v4 = 0/3/8, frac>4 = 33%. GEN5 injects ~4x too
+many in the tail. FIX justified: cut the companion rate ~3-4x to match.
+
+**ROOT CAUSE of "arcs not visible" = DYNAMIC RANGE, not faint arcs.** Metrics
+say GEN5 arcs are BRIGHTER than real: arc_contrast med 74 vs 33, arc/deflector
+flux 0.37 vs 0.25. So the arc is present and bright — but too many bright
+companions + the evo-brightened deflector blob dominate the per-image stretch
+and bury it. => the companion cut is ALSO the primary arc-visibility fix; also
+check the deflector isn't over-dominating (Re 0.63" vs real 0.56", evo_q).
+
+**"Too perfect ellipse" — NOT CONFIRMED by the coverage metric** (needs a
+better one): azimuthal arc coverage real med 0.67 (full-ring>0.8 only 9%,
+partial 31%) vs GEN5 0.54 (partial 63%). GEN5 is if anything MORE azimuthally
+broken than real — so the complaint is about arc SMOOTHNESS/beadiness WITHIN
+the arc (smooth band vs 3-4 dots), which coverage cannot see. Phase 1 needs a
+smoothness/gap metric + visual confirm before tuning source offset/knots.
+
+**EVAL-SET AUTO-AUDIT RULED UNRELIABLE (do NOT auto-prune the frozen 322).**
+Cross-checked Nurkyz's flagged lenses: the estimator OVER-reads arcs from
+deflector ellipticity (#86 read cov 0.67 but is genuinely no-arc by eye+RGB)
+and from bright companions (#155 read strong-arc; RGB confirms a real
+lens+ring but Nurkyz's "two lights" read is fair on grayscale). Only DEFENSIBLE
+auto-flag = tiny_theta (θ_E_pub < 0.1"): 2 lenses incl. #161 (θ=0.011, the
+misplaced-cutout Nurkyz caught = a FAILED PyAutoLens model). Everything else →
+her eye + the official RGB. Real gallery UPGRADED
+(q1_real_review/index.html): per-lens cov/companions/contrast + sort-by
+(partial-first / companion-heavy / faint-first) + tiny-theta filter + badges,
+so she adjudicates the eval set visually.
+
+Deliverables: tables/real_q1_characterization.csv (322),
+tables/gen5_v4_characterization.csv (200), analysis/phase0_characterize.py,
+upgraded real gallery. NEXT (Phase 1, pending her go): companion cut to the
+measured rate; deflector-dominance check; a smoothness metric + source-offset/
+AR4-knot tuning for arc beadiness; re-pilot -> re-show.
+
+## 2026-07-22 (cont.) — GEN5 v2→v4 GATE PROGRESSION COMPLETE: every gate on every arm PASSES (one soft FLAG); v4 recipe FROZEN pending Nurkyz eye-check + evo_q physics confirm; eye-check gallery delivered (g5_c21_pilot_review)
+
+Progression (each step one change, gates re-read; jobs 48482/48483/48484/
+48485 + a scalar Roman re-center):
+- **v2 (dimming fixes)**: arcs dimmed DL+K from Newton z_ref 0.65 →
+  arc_contrast 14.0 → 7.23 vs real 7.75 (DEAD-ON — the Gen5HighZSource
+  mechanism validated); companions dimmed by mig_sb. Euclid sky-RMS 0.673
+  CHECK; Roman peak/sky 0.53 (overshoot after dimming, expected per
+  Nurkyz #4).
+- **v3 (sky recal)**: LF_EUC_SKY_SCALE=2.2 (real Q1 measures noisier than
+  the nominal EWS depth spec — new disclosed env knob in euclidise.py) →
+  sky-RMS 0.946 PASS; deflector peak/sky 78.9 vs [103,727] CHECK.
+- **v3b (production selection in the pilot)**: arc_visibility_select
+  (thresh 0.8/150px, the g4 recipe step the pilot had skipped) keeps
+  89/200; peak/sky barely moves (81.8) → the residual is DEFLECTOR
+  brightness, not arc selection.
+- **v4 (deflector passive evolution)**: mig_sb × 10^(0.4·Q·Δz), Q=1.2
+  mag/z (Faber+2007 red sequence) — **PHYSICS PENDING NURKYZ/BRIAN
+  CONFIRM**, flagged in the sidecar. Determinism guard PASS (1400 rows
+  identical except mig_sb → v2 renders reused legitimately). RESULT:
+  **peak/sky 141 in [103,727] PASS, sky-RMS 0.955 PASS, theta range PASS,
+  FJ −0.48 PASS, AR0 arc_contrast 7.82 vs 7.75 + asym + width PASS;
+  n_knots med 7 vs real [2,6] soft FLAG** (sim arcs knottier than real —
+  AR4 source-morphology tier is the designated remedy if it persists at
+  scale). Selection keeps 72/200 (36%).
+- **Roman arm re-centered at LF_ROM_FLUX=0.11**: sky 1.03 / skyRMS 1.02 /
+  peak/sky 1.05 ALL PASS; quantiles PILOT 32/57/119 vs RUNG0 12/54/243.
+
+**FROZEN v4 PILOT RECIPE** (for the full generation, when authorized):
+g5_make_manifest --evo_q 1.2 [+ standard args] → config_lensfusion_acs_g5
+(Gen5HighZSource banner-gated) → hybrid_combine (migration+companion dim)
+→ euclidise LF_EUC_SKY_SCALE=2.2 + arc_visibility_select 0.8/150 →
+romanise LF_ROM_FLUX=0.11.
+
+**STILL BLOCKING FULL GENERATION: (1) Nurkyz eye-check (gallery:
+g5_c21_pilot_review/index.html — 200 systems, ✓/✗ selection badges,
+3-domain × 3-stretch details); (2) her/Brian confirm on evo_q=1.2;
+(3) C2 q_mass–q_light fit (Zenodo 6104823); (4) her >1k scale ruling.**
+
+## 2026-07-22 (cont.) — NURKYZ PILOT REVIEW RULING: GEN4 = low-z native (SLACS/S4TM), **GEN5 = the high-z build (Euclid-Q1 + Roman)**; her 6-item bug list ADJUDICATED item-by-item against the code (3 refuted with evidence, 2 confirmed and FIXED, 1 adopted as process); v2 pilot resubmitted — NO full generation until her next eye-check
+
+Verification (diagnose-before-fix; every claim tested against the v1 pilot
+artifacts before touching code):
+- **#1 "theta_E not recomputed at target z" — REFUTED.** Manual SIS
+  recomputation from each assignment row's (z_l_new, z_source, sigma_v):
+  0/50 mismatches >0.02". The manifest theta IS the target-z theta; paltas
+  renders it via the per-row override.
+- **#6 "training label = old theta" — REFUTED.** h5 theta_E == assignment
+  theta_E to machine precision (max |diff| = 0.0); the 1:1 join assert had
+  already verified render<->row identity. The "huge ring, small label" look
+  is the TEMPERED FLAT-THETA TRAINING PRIOR (P(theta>1.5") ~ 0.23-0.48 by
+  design) on a now-compact deflector population — visual, not a label bug.
+- **#5 "verify AR3 amplitude scaling" — VERIFIED CORRECT.** Row example:
+  mult4_a/theta = 0.014561 vs the stamp's measured iso_m4 = 0.01457 —
+  amplitudes are the isophote FRACTION x the NEW theta_E (shape property
+  preserved, absolute amplitude scales with theta, as she required).
+- **#2 "arcs not dimmed" — CONFIRMED, mechanism identified (subtle):**
+  paltas's COSMOSCatalog DOES shrink (D_A ratio) and dim sources — but
+  only by (1+z)^1 (its get_k_correction uses np.log, natural log, in a
+  magnitude formula) — AND it doesn't matter anyway, because
+  HighSBCOSMOSCatalog.normalize_to_mag then OVERWRITES the flux with a
+  Newton apparent-mag draw (mean 24.3) that was MEASURED on the z_s~0.65
+  SLACS source population. At GEN5's z_s~2.0 that prior is ~2.4 mag too
+  bright. **FIX: Gen5HighZSource (config_lensfusion_acs_g5.py) dims each
+  Newton draw by dm = 5log10(D_L(z_s)/D_L(0.65)) - 2.5log10((1+z_s)/1.65)
+  (distance modulus + flat-f_nu K-correction; LF evolution disclosed as
+  not modeled — AR0 vs real Q1 arbitrates).** Consistent with v1 AR0
+  reading (sim arc contrast 14.0 vs real 7.75 — bright but in-band).
+- **#3 "companions not dimmed" — CONFIRMED.** inject_companions pasted
+  native-brightness COSMOS stamps. **FIX: per-image dim = the row's mig_sb**
+  (companions migrate with the scene; equivalent to her z_comp~0.3 since
+  library z_orig med 0.35).
+- **#4 sky recalibration — ADOPTED as process: gates re-read AFTER the
+  dimming fixes; v1 FLUX/exposure numbers treated as contaminated.**
+- Deflector shrink/dim (her #1a/1b): verified correct and kept.
+
+Renames (naming ruling): g4b_* -> g5_* (g5_make_manifest.py,
+config_lensfusion_acs_g5.py, g5_c21_pilot.sbatch; pilot dir
+~/paltas_g5_c21_pilot). Sidecar spec C10v3-gen5 adds source_dimming +
+companion_dimming axes; the sbatch HARD-FAILS if the "GEN5 SOURCE DIMMING
+ACTIVE" banner is missing from the render log (set -o pipefail added so a
+render crash can't hide behind tee). Mac-side gallery tool delivered:
+g4b_c21_pilot_review/index.html (200 thumbs + click-through 3-domain x
+3-stretch details) — v2 gallery will be rebuilt on the same tool for her
+eye-check. v2 pilot = job 48482.
+
+## 2026-07-22 — C21 z-MIGRATION + AR3 PILOT PASSES EVERY GATE (job 48480; one 200-render chain, 488-stamp G1b library STANDALONE per Nurkyz ruling): the population gap that sank ⛔ #24 and blocked G5c Path B is CLOSED at pilot scale
+
+- **The chain** (all new code in pipeline/, C10-hard-gated): g4b_make_manifest
+  (z_l -> Rung-0-anchored lognormal med 0.79, sln 0.36; z_s ~ N(2.0,0.6)
+  trunc, disclosed; stamp shrink = D_A ratio, dim = (1+z)^4 Tolman — total
+  flux exactly the D_L^2 ratio; AR3 multipoles anchored per stamp:
+  a_m = iso_amp x theta_E from the C5 measurements, phases from atan2(b,a)/m
+  with dihedral chirality; theta [0.15,3.7]) -> PEMDShearFourMultipole
+  paltas config (paltas 0.2.0 ships it — no env change) -> migration-aware
+  hybrid_combine paste (zoom+dim per row; one crop-clamp bug found and fixed,
+  job 48479) -> FJ/stage0/AR0/Roman gates.
+- **C10 sidecar: 6 axes PASS** (multipoles ON 1112/1400 rows anchored,
+  z-migration ON, FJ, C15a/b, AR2 coupling). Render 200/200, 1:1 assignment
+  verified (the multipole config draws correctly through paltas).
+- **FJ gate PASS (new C21 mode): rho(MIGRATED apparent mag, theta_E) = -0.53
+  vs real SLACS -0.32.** Key lesson logged: the ORIGINAL stamp mag shows
+  rho +0.12 — bookkeeping, not physics; after migration the rendered
+  brightness is what carries FJ, and it is STRONGER than any previous
+  generation (g2 ~ -0.3).
+- **vs REAL Q1 (frozen f2p85_zoom, the #25 board): peak/sky PASS — sim
+  median 117 inside real 16-84 [103, 727].** This is THE number that failed
+  4.75x in the pre-migration G5c pilot and drove #24's miss. theta range
+  PASS both ends (0.25-3.64). AR0 arc gate vs real Q1: ALL 4 METRICS PASS
+  (first AR0 pass against the Q1 population). Sky-RMS ratio 0.682 [CHECK]:
+  sim slightly cleaner than Q1 — single knob (euclidise exposure 675s ->
+  suggested ~314s), tune at the next pilot or fold into the full-gen config.
+- **Roman arm (romanise FLUX 0.09): sky 1.03 PASS, skyRMS 1.02 PASS,
+  peak/sky ratio 1.40 PASS (was 4.75 pre-migration); gate suggests
+  LF_ROM_FLUX ~ 0.064 to center it.** Previews inspected (Q1 side-by-side +
+  Roman three-stretch): compact deflectors, credible arcs/rings, no
+  artifacts; sim backgrounds slightly smoother (the sky-RMS knob, visible).
+- **REMAINING BEFORE FULL GENERATION (in order): (1) C2 q_mass-q_light fit
+  from Zenodo 6104823 (Etherington+2022 per-lens results) — the one physics
+  axis still AD-HOC in the sidecar; (2) sky-RMS + Roman-FLUX knob tune (one
+  cheap re-pilot); (3) Nurkyz >1k confirm + scale decision (100k, both
+  arms).** Pilot artifacts in ~/paltas_g4b_c21_pilot/; scripts pushed
+  (commits 211af6b..HEAD on claude/session-3127e1).
+
+## 2026-07-21 (cont.) — C5 MEASUREMENT PASS COMPLETE (jobs 48446 pilot / 48447 full): 488-stamp G1b library MEASURED incl. isophote a3/a4 — AR3 and the C21 z-migration build are UNBLOCKED
+
+- Chain (cluster-resident, survives logout): build_deflector_from_lrg.py
+  gained --keep_csv (C29: consumes keep_final from g1b_prune_final.csv) ->
+  514 pass the prune, 488 survive the standing auto-screens (13 faint,
+  10 q<0.5, 3 chip-edge). New g1b_measure_stamps.py = g1c base schema
+  (drop-in for g2_merge_libs) + isophote Fourier analysis: per-annulus
+  ellipse fitted by NULLING 1st+2nd harmonics (Jedrzejewski fixpoint via
+  Nelder-Mead; no photutils dependency — not installed, env pinned), then
+  A3/B3/A4/B4 -> RELATIVE amplitudes a_k = A_k/(|dI/da| a) (Bender
+  convention; a4>0 disky), median over gradient-significant annuli in
+  [0.35,1.6] Re; diagnostics: harm12 residual (blend), centre drift
+  (close pair), annulus count.
+- Pilot gate PASSED (20 stamps, previews inspected): ellipses track the
+  light; the two known pathologies (neighbour-pulled outer annuli) were
+  auto-flagged by exactly the intended diagnostics. flag_arcy fired 17/20
+  — verified HISTORICAL-NORMAL (old library: 40/41, 87/90) — the circular-
+  median prominence flag is a vestige superseded by the SIMBAD crossmatch +
+  visual prune; g2 never filtered on it.
+- FULL RESULT (g1b_kinematics_v1.csv, mirrored to tables/): 488 stamps,
+  sigma_v joined 488/488, isophote fits OK 487/488, pair-flagged 94,
+  **AR3-usable clean subset 394**. Distributions: sigma_v med 248
+  [120,444]; z_l med 0.346 [0.05,0.55]; Re med 1.27"; q med 0.86;
+  a4 med +0.17% (16/84: -0.61/+1.21%) — matches published elliptical
+  isophote statistics; m3 med 0.79%.
+- vs the GEN4 library: 131 -> 488 measured deflectors (3.7x), now WITH
+  per-stamp multipole anchors. NEXT (per §1R): C21 z-migration pilot
+  consuming this catalogue (carries C2 fit + C15a/b verify + C10 sidecar
+  gate + C14 arc gate + AR3 multipoles from iso_a3/a4); the g2_merge_libs
+  variant must carry the iso_* columns (fixed field list drops them today)
+  and DECIDE old-131-vs-pure-488 at pilot time.
+
+## 2026-07-21 — G1b VISUAL PRUNE RULED (Nurkyz review + adjudication of every commented stamp + FULL-library SIMBAD crossmatch): 514 clean deflectors; 44 KNOWN-LENS fields caught (incl. THREE EELs sitting in our library — Q1 contamination averted); 6 new lens candidates; LEMON-31 quality review ruled (ACS-13 excluded); docs/ mirrors resynced (were stale at 07-13)
+
+**G1b PRUNE (779 stamps; Nurkyz keep=646/reject=133 via the 07-15 reviewer
+tool; every commented stamp re-inspected + full SIMBAD crossmatch, 10″):**
+- **The C4 precheck (BELLS+SL2S+SLACS only) was too narrow.** SIMBAD
+  crossmatch of ALL 779 fetched stamps found lens-type objects
+  (gLS/gLe/LeI/LeG) within 10″ of **44 kept stamps** — a σ_v≥250 SDSS
+  selection lands exactly on the galaxies that lens. Caught: CSWA 11 /
+  CSWA 14 (= Nurkyz's "very clear arc", G4B_00082) / CSWA 38,
+  SDSS J1640+1932 (= G4B_00395, textbook Einstein ring),
+  AGEL J133145+513431, SDSS J1113+2356, SDSS J1152+0930, SA98, six
+  Faure+2008 COSMOS lenses (incl. 0056+1226 from LEMON's own candidate
+  table), the SLACS J0903+4116 field, and BCGs/members of lensing clusters
+  A1689, A370, A611, A383, A1835, RXJ2129, ZwCl1358, MACS J1311,
+  MCS J0150/J0940.
+- **INTEGRITY CATCH: EEL J1218 (G4B_00327), EEL J0913 (G4B_00333) and EEL
+  J1248 (G4B_00331) were sitting in the deflector library — J1218/J0913 are
+  in the LEMON comparison sample; training on them would have contaminated
+  the Q1 head-to-head.** All removed. Bonus: J0913 (the EEL whose cutout was
+  missing from the lemon-31 review set) has its ACS imaging in hand as
+  G4B_00333.
+- Morphology rulings (every commented stamp eyeballed): ALL "swirling arms"
+  AND all plain-"galaxy" flags are late-type disks/spirals → REJECTED (77 —
+  Nurkyz's instinct confirmed; arms on a "deflector" are either a spiral
+  contaminant or a real lensed arc, never LRG structure). Mergers/artifacts
+  (00405 pair, 00863 pair, 00986 two overlapping disks, 00040 double
+  nuclei, 00123 empty stamp, 00034 dust-lane disk) → REJECTED (6).
+  Uncatalogued visual arc-suspects → REJECTED from the library, kept for
+  follow-up (5).
+- **NEW LENS CANDIDATES (arcs visible, NOT catalogued as lenses):
+  G4B_00266 (clear arclet, no SIMBAD counterpart at all — HIGH),
+  G4B_00777 (bright ~1″ arc around radio galaxy Cul 2335+000 — HIGH),
+  G4B_00558 (MED), G4B_00149/00165/00822 (LOW)** →
+  tables/g1b_lens_candidates.csv (coords, σ_v, z, priority, incl. the
+  known systems for the audit trail).
+- **Final: keep_final = 514 clean LRG deflectors** (from Nurkyz's 646).
+  tables/g1b_prune_final.csv = keep_nurkyz vs keep_final + reason + flags
+  (close_pair_check_isophote_fit / neighbors_mask / low_snr / bcg — these
+  resolve mechanically at the C5 measurement pass, which must consume
+  keep_final, NOT the raw review CSV: C29). Copies on the cluster at
+  ~/cosmos_acs/tiles/g1b_prune/. Process fix: full-SIMBAD crossmatch is a
+  STANDING precheck for every future library fetch (C28).
+
+**LEMON-31 QUALITY REVIEW RULED (lemon_review_results.csv, Nurkyz):**
+EEL 12/12 good; COSMOS 3/5 good (0047+5023 arc half-out-of-frame,
+0211+1139 θ_E=3.14″ — both dropped); **ACS 13: 12/13 bad and ALL show
+GT=0.00 (Pawase θ_E does not exist; images mostly poor too). RULING: the
+PRIMARY LEMON head-to-head table = real-θ_E lenses only — SLACS-29 +
+EEL-12(13) + COSMOS-3 ≈ 44 — a pure ROW-FILTER on the already-banked
+per-lens CSVs (no new eval, count stays 25). ACS-13 goes to a disclosed
+secondary row (or is dropped) with the honesty note that 13/60 of LEMON's
+published Table 3 aggregate rests on arc-radius/absent GT.** This
+supersedes the "SLACS-only" framing option: same evidence, wider coverage,
+and it keeps the already-logged 07-15 nuance (our Euclid arm is weaker on
+EELs/COSMOS small-θ_E systems) visible instead of hiding it.
+
+**Process/integrity note:** the git docs/ mirrors had been stale since
+07-13 (root live files carried 07-13→07-15 history: evals #23–#25, LEMON
+reply, Roman G5a–G5c, endgame ladder). An interim commit today (a1a0646)
+was built on that stale mirror and wrongly logged "eval #22 harvested
+2026-07-21" — RETRACTED here (it was harvested 07-14, per the root log);
+this commit resyncs docs/ from root. Also: C8's "nudge Busillo ~07-20" is
+MOOT — LEMON replied 07-14.
+
+---
+
+## 2026-07-14 (late) — G5a v2 CHAIN COMPLETE: v2 improves every scored metric (P 0.0963 → 0.0814, A → +0.0009, R² +0.97, χ² 1.000); WINNER = 3band_all6_v2, delivered as CUHK_rung0_submission1.csv; email draft rewritten in their grading language
+
+- v2 harvest (fresh calib-500; selection touched it — hidden test is the
+  clean readout): **3band_all6_v2 RMSE 0.083 / NMAD 0.040 / R² +0.97 /
+  χ² 1.000 / P 0.0814 / A +0.0009** (mixed12: RMSE 0.081 but P 0.0824 —
+  the f106 members' wider σ costs Precision; 3band wins the scored
+  metric). +500 training lenses + recalibration did the work.
+- Delivered to Mac roman_dc/: **CUHK_rung0_submission1.csv** (grader
+  naming; N=11,067, no NaNs, θ med 0.632, σ med 0.043) +
+  ALTERNATE_mixed12_v2.csv + EMAIL_DRAFT_rung0_submission.md (draft
+  corrections: held-out framing, their three Ding+21 metrics, filename
+  convention, method + σ-calibration statements, 2-submission ask citing
+  their own numbering, Rung 1 timeline question). v1 CSVs superseded.
+- Banked: results/g5a2/ (2 CSVs). C20 updated: v2 file is THE submission.
+
+---
+
+## 2026-07-14 (evening, cont.) — Nurkyz submission-prep round: exact TDLMC numbers computed for the email; G5a v2 retrain chain LAUNCHED (10,660 train / fresh 500 calib holdout + MIXED-12 ensemble); G1B FETCH DONE (779 stamps) and the prune package is on the Mac
+
+- **Email numbers (challenge-val 1000, submission σ config):** 3band all6
+  Goodness χ² = 1.000 / Precision P = 0.0963 / Accuracy A = +0.0037;
+  f106 all6 1.000 / 0.1147 / +0.0113.
+- **v2 retrain (Nurkyz: use the held-out 1000 for training too).** Design
+  note logged: a ZERO-holdout run cannot calibrate σ, and TDLMC Goodness
+  punishes miscalibration quadratically — so v2 trains on 10,660 (fresh
+  500-lens calib holdout, split_seed 20260716) = +500 lenses vs v1, and
+  adds the certainty lever: a MIXED-12 ensemble (all members across both
+  variants; decorrelation shrinks honest σ → better P at χ²=1). Chain
+  (run_g5a2_chain.sh, nohup): convert v2 → 6 f106 → 6 3band → harvest on
+  the 500 → submission2 CSVs (3band_all6_v2 + mixed12_v2).
+- **G1b phase-1 fetch COMPLETE** (06:25 HKT): 779 cutouts in
+  real_lrgdefl2b_images_256.h5. Prune package delivered to the Mac
+  (g1b_prune/): 13 asinh pages + g1b_prune_template.csv (all keep=1;
+  Nurkyz sets keep=0 for rejects) → unlocks C5 (measurement pass incl.
+  a3/a4) → AR3/z-migration library.
+
+---
+
+## 2026-07-15 (cont.) — Two visual-review HTML tools built + tested (Nurkyz: "review without editing CSVs by hand"): LEMON 30-lens per-item 3-stretch reviewer + G1b 779-stamp grid reviewer, both self-contained, no manual CSV editing, tested end-to-end in a live browser before delivery
+
+- **review_lemon/** (Mac, 4.3 MB): per-lens card view, all 30 fetched
+  lenses (12 EEL + 5 COSMOS + 13 ACS incl. the auto-flagged bad one, for
+  independent confirmation), each with 3-stretch panels (linear/pct/asinh
+  — standing rule: a blob under one stretch can be a lens under another).
+  Good/No-good toggle + free-text comment per lens, subsample + verdict
+  filters, localStorage autosave (survives closing the browser),
+  "Download CSV" button (id, subsample, gt_or_arc_radius, verdict,
+  comment).
+- **review_g1b/** (Mac, 11 MB): grid view, all 779 deflector stamps,
+  default "keep" (matches the existing prune-CSV convention), click a
+  thumbnail to reject (red X), flag icon opens a comment prompt, paged
+  200/page, filter by kept/rejected, same autosave + CSV export
+  (stamp_id, keep, comment — drop-in compatible with the existing
+  g1b_prune_template.csv schema).
+- **Design note (caught before delivery): both tools originally used
+  fetch() to load a manifest.json, which most browsers BLOCK under
+  file:// (the CORS-on-local-files restriction) — exactly how these would
+  normally be opened (double-click, no server).** Fixed by embedding the
+  manifest as a plain `<script src="imgs/manifest.js">` (a JS literal, not
+  a fetch target) — works with zero setup, no local server needed.
+  Verified by actually testing in a live browser (not just code review):
+  loaded both tools via preview_start, confirmed images render, clicked
+  through good/bad + reject/comment interactions, inspected localStorage
+  state directly to confirm persistence, and checked the CSV-export data
+  construction — all before declaring done, per the "test the feature in
+  a browser" standing rule.
+- **779-image transfer**: initial per-file scp was too slow (~0.4 files/s,
+  would have taken ~30 min for 779 tiny PNGs); switched to tar on the
+  cluster + single-file transfer (9 MB, seconds) — worth remembering for
+  any future bulk-thumbnail delivery.
+- Generator scripts + HTML templates banked: pipeline/review_tools/
+  (gen_lemon_review_imgs.py, gen_g1b_review_imgs.py, both *_template.html).
+  **Unlocks C5** (Nurkyz's G1b visual prune, previously blocked on "where
+  do I even look at these") — she can now do it via review_g1b/index.html
+  directly, export the CSV, hand it back for the measurement pass.
+
+---
+
+## 2026-07-15 (cont.) — ⛔ Q1b EVAL HARVESTED: COMBINED LEMON HEAD-TO-HEAD complete (N=58, all 4 subsamples); the picture is MORE NUANCED than the SLACS-only report — we win clearly on real-θ_E targets, but our own Euclid-domain arm has a real weakness on EELs/COSMOS specifically, and the SLACS-only "clear sweep" framing needs qualifying
+
+**Combined table (N=58, our eval vs LEMON's own predictions, same GT for
+both, per-subsample and pooled):**
+| domain | N | bias | RMSE | NMAD | R² | fail>15% |
+|---|---|---|---|---|---|---|
+| LEMON (all 4 subsamples, pooled like their own Table 3) | 58 | +0.181 | 0.535 | 0.303 | +0.26 | 59% |
+| OURS native HST | 58 | −0.158 | 0.539 | 0.062 | +0.25 | 28% |
+| OURS Euclid-domain | 58 | −0.250 | 0.669 | 0.086 | **−0.15** | 29% |
+
+**Pooled across all 4 exactly as LEMON pools them: native is a near-tie
+(0.25 vs 0.26) and Euclid-domain LOSES to LEMON's pooled number (−0.15 vs
++0.26).** This is a materially different picture than yesterday's
+SLACS-only framing and needs to replace it, not sit alongside it uncritically.
+
+**But pooling ACS (arc-RADIUS, not real θ_E — LEMON's own disclosed
+substitute) into an R² against a real-θ_E target is questionable
+methodology even though LEMON's own paper does it. The cleaner cut —
+real-θ_E only (SLACS+EEL+COSMOS, N=46):**
+| config | N | bias | RMSE | NMAD | R² | fail>15% |
+|---|---|---|---|---|---|---|
+| LEMON | 46 | +0.241 | 0.480 | 0.226 | −0.02 | 52% |
+| **OURS native** | 46 | −0.048 | **0.307** | **0.047** | **+0.58** | **13%** |
+| **OURS Euclid** | 46 | −0.092 | 0.440 | 0.056 | **+0.14** | 15% |
+On real θ_E, we win clearly in BOTH domains — but the Euclid-domain
+margin (+0.14 vs −0.02) is far smaller than SLACS alone suggested
+(+0.57), because of a real, specific weakness below.
+
+**Per-subsample (the finding worth flagging honestly): our Euclid-domain
+model underperforms notably on EELs (R²=−1.15, N=12) and COSMOS
+(R²=−0.76, N=5) specifically** — small, noisy samples, but the SAME
+population-transfer signature as eval #24: the Euclid operator doesn't
+generalize uniformly across every real population, only cleanly
+demonstrated on SLACS so far. Native stays strong everywhere (SLACS +0.29,
+EEL +0.84, COSMOS +0.24). **COSMOS N=5 is too small for any R² here to be
+trustworthy on its own — flagged, not load-bearing.**
+ACS (N=12, arc-radius GT): all three configs (LEMON, ours native, ours
+Euclid) show high fail rates (83% each) against this crude proxy — not
+informative about θ_E accuracy for anyone; reported separately, not
+folded into the headline claim.
+
+**Retraction/qualification of yesterday's framing**: "we beat LEMON
+decisively in both domains" was accurate for SLACS-29 alone but
+overgeneralized once EEL/COSMOS join the picture — native remains a clean
+win everywhere measured; Euclid-domain is a real win on real-θ_E targets
+but with a smaller margin and a genuine specific weakness (EEL/COSMOS)
+that deserves the same honest treatment as eval #24's population finding,
+not a victory-lap headline.
+Files: analysis/lemon_combined_headtohead.py (repo);
+lemon_headtohead/lemon_combined_headtohead.csv +
+_report.md (Mac + tables/lemon_headtohead/).
+
+---
+
+## 2026-07-15 (cont.) — Q1b FETCH LANDED CLEAN (30/30, zero download failures), ONE LENS EXCLUDED on data-quality diagnosis (ACS_221501p12M135822p9: chip-gap cutout), FROZEN (C18), euclidised, ⛔ eval SUBMITTED (native + Euclid, 29 lenses, same G4n/G4 ensembles as SLACS-29)
+
+- Full 30-lens MAST fetch completed with 0 failures (12 EEL + 5 COSMOS +
+  13 ACS). Gallery previews built for all 30 (standing rule) — EELs show
+  clean Einstein rings/arcs, COSMOS and most ACS show real, reasonably
+  centered galaxies.
+- **One confirmed bad cutout, diagnosed before trusting it**:
+  `ACS_221501p12M135822p9` looked wrong in the quick preview (flat field,
+  bright streak, no visible source at the crosshair). Three-stretch
+  diagnostic confirmed it: **62% of pixels are exactly zero** — a
+  chip-gap/detector-edge cutout, with what little signal exists crammed
+  into one corner, far from the target position. The other three
+  visually-suspect cutouts (001426, 140339, 122332) were checked the same
+  way and are FINE — real galaxies, just poorly rendered by the quick
+  preview stretch.
+- **Excluded 221501, froze the remaining 29** (real_LEMON{EEL,COSMOS,ACS}
+  _frozen.h5, C18) — 12 EEL + 5 COSMOS + 12 ACS. Euclidised all three
+  (euclid_LEMON*_frozen.h5, same operator as the SLACS benchmark).
+- **⛔ Q1b eval SUBMITTED (job 48049)**: G4n cnv2_3 native + G4 cnv2_3
+  Euclid-domain, TTA, all 29 — the same ensembles/recipe used for the
+  verified SLACS-29 row, so the combined SLACS+EEL+COSMOS+ACS table will
+  be apples-to-apples. Harvest + combined table next.
+
+---
+
+## 2026-07-15 (cont.) — LEMON's SENT PREDICTIONS DO NOT REPRODUCE THEIR OWN PUBLISHED TABLE 3 (Nurkyz request: check all 4 subsamples against GT from the exact papers/tables their methods cite) — this is now a 4/4 pattern, not an SLACS-specific anomaly
+
+- **GT sourced directly from each cited table, matched by name, zero
+  ambiguity:** EELs (12/12) from Oldham & Auger 2017 (MNRAS 465 3185)
+  Table 2 R_Ein — values match our existing skeleton exactly, now
+  confirmed straight from the paper table. COSMOS (5/5) from Faure et al.
+  2008 (ApJS 176 19) **Table 4** Erad (the "erratum" table LEMON's email
+  cites — fetched the raw table4.dat at the exact byte columns from the
+  paper's own ReadMe; values match our skeleton exactly). ACS/Pawase
+  (13/13, already verified 2026-07-14) arc-radius substitute, LEMON's own
+  disclosed convention.
+- **Recomputed LEMON's own predictions vs this GT, per subsample:**
+  | subsample | N | bias | RMSE | NMAD | R² | fail>15% |
+  |---|---|---|---|---|---|---|
+  | SLACS | 29 | +0.288 | 0.473 | 0.307 | **−4.26** | 55% |
+  | EEL | 12 | +0.081 | 0.126 | 0.110 | **+0.21** | 42% |
+  | COSMOS | 5 | +0.359 | 0.886 | 0.483 | **+0.12** | 60% |
+  | ACS/Pawase (arc-radius) | 13 | +0.009 | 0.707 | 0.598 | +0.35 | 85% |
+  | **ALL COMBINED** | 59 | **+0.190** | **0.538** | **0.305** | **+0.25** | 59% |
+  **vs their published Table 3 (N~60): bias −0.03, RMSE 0.14, NMAD 0.11,
+  R²=0.53.** Every subsample underperforms the published aggregate;
+  combined RMSE is ~3.8× and NMAD ~2.8× worse than published, with a
+  consistent positive bias (over-prediction) in 3 of 4 subsamples.
+- **Reading (hedged, no accusation): the sent CSVs likely do NOT
+  correspond to whatever produced their Table 3 number** — plausible
+  mundane causes: a different/uncalibrated model checkpoint used for this
+  ad-hoc export, a processing difference in how the "Euclid_VIS" cutouts
+  were regenerated for our request vs. their paper pipeline, or a
+  units/scale slip specific to this file. The GT side is now
+  triple-verified (exact tables, exact columns, exact byte offsets, 100%
+  name-match, values matching our pre-existing skeleton) — the
+  discrepancy is not a GT-sourcing artifact on our end.
+  **Not sending anything to Busillo without Nurkyz's explicit sign-off**
+  (standing rule from the SLACS-only finding, now reinforced).
+- Files: analysis/lemon_full_accuracy_check.py (repo);
+  lemon_headtohead/lemon_full60_accuracy_check.csv +
+  lemon_full60_accuracy_report.md (Mac + tables/lemon_headtohead/).
+
+---
+
+## 2026-07-15 — SLACS-29 RESULT INDEPENDENTLY VERIFIED against fresh-fetched primary sources (Nurkyz request): ZERO discrepancies, identical numbers — the beat-LEMON finding is confirmed, not an artifact of our cached table
+
+- Re-fetched Bolton et al. 2008 Table 5 directly from VizieR (J/ApJ/682/964/
+  table5, 63 grade-A rows) and Auger et al. 2009 Table 3 directly from CDS
+  (raw table3.dat, exact byte-column spec per the paper's own ReadMe:
+  Imag bytes 90–94, Re(I) bytes 96–99) — matching LEMON's own stated
+  method verbatim ("first three columns of Table 5... re,I and mI of
+  Table 3"). Parsed independently of any of our prior files.
+- **All 29 LEMON SLACS names matched the fresh Bolton fetch (0 misses);
+  Auger Re(I)/Imag matched for 29/29 too. Cross-check against our cached
+  tables/bolton08_table5.csv: 0 discrepancies across all 29 rows** — the
+  file we'd been using was already a faithful transcription.
+- **Recomputed metrics from the fresh, independent sources are IDENTICAL
+  to the earlier result** (to 3 decimal places): LEMON N=29 bias +0.288
+  RMSE 0.473 NMAD 0.307 **R² −4.26** fail 55%; OURS native N=29 −0.017/
+  0.174/0.038/**R² +0.29**/10%; OURS Euclid N=29 −0.044/0.136/0.045/
+  **R² +0.57**/7%. The beat-LEMON-on-their-own-lenses finding is now
+  verified from primary literature, not just our internal cache.
+  Files: analysis/lemon_slacs29_verify.py (repo);
+  lemon_headtohead/slacs29_verified_fresh_sources.csv +
+  slacs29_verification_report.md (Mac + tables/lemon_headtohead/).
+
+---
+
+## 2026-07-14 (near midnight) — Q1b COORDINATES FULLY RESOLVED for all 30 non-SLACS lenses (12 EEL + 5 COSMOS + 13 ACS/Pawase); ONE VERIFIED CORRECTION caught mid-flight (a WebFetch table-extraction error on J2228, self-corrected via SIMBAD before use); MAST pilot-3 fetch launched (1/subsample, standing gate)
+
+- **Delegation failure, noted for future reference**: the background
+  Explore agent (research task) could not complete — its tools lacked
+  working web access and it returned only "cannot resolve without
+  external access," recommending exactly the work it was asked to do.
+  Redone directly in-thread with WebSearch/WebFetch, which worked.
+- **EELs (12): SIMBAD's own `[OAF2017] EEL Jxxxx system` catalog entries**
+  (Oldham/Auger/Fassnacht 2017, our exact source) gave authoritative
+  RA/Dec for all 12 in one query. **Caught and corrected an error along
+  the way**: an early WebFetch of a DIFFERENT Oldham paper's table
+  reported J2228 at dec +20°24′ (matching a plausible SDSS-name-truncation
+  read); a second WebFetch of the actual companion paper (MNRAS 465 3185)
+  said dec −00°18′ instead — a stark conflict. Resolved via a SIMBAD cone
+  search at both candidates: only the second position has a cataloged
+  `[OAF2017] EEL J2228 system` (type gLS). The first extraction was
+  WRONG; using it uncorrected would have pointed the fetch at empty sky.
+  Lesson: WebFetch table extraction from paywalled HTML is not reliable
+  enough to act on without a cross-check when precision matters.
+- **COSMOS (5): VizieR J/ApJS/176/19/lens (Faure+2008) table**, direct
+  RA/Dec, all 5 matched by name exactly.
+- **ACS/Pawase (13): all 13 matched EXACTLY** (down to the coordinate
+  string) against Pawase et al. 2014 (MNRAS 439 3392) Table 3 — full
+  arc-radius GT recovered for every one (their substitute for θ_E,
+  no mass model fit; disclosed per LEMON's own caveat).
+- Files banked: tables/lemon_headtohead/{eel,cosmos,acs}_coords.csv,
+  pawase_arc_radius.csv; pipeline/build_lemon30_labels.py builds the
+  fetch-ready 30-row label CSV (name/ra/dec/theta_E_pub or arc-radius
+  tag/survey) in fetch_real_lens_images.py's exact input format.
+- **MAST pilot fetch RAN AND PASSED** (1 lens/subsample: EEL_J0837,
+  COSMOS_0012+2015, ACS_001423p02M302109p8) — reused fetch_real_lens_images.py
+  unmodified (same 6.4″/128px/0.05″-px convention as the SLACS benchmark,
+  zero downstream format conversion). All 3 previews show real galaxies at
+  the resolved coordinates, correctly centered/near-centered, not blank
+  sky (previews banked, Mac: lemon_headtohead/pilot_previews/). Pilot
+  passed → **FULL 30-lens fetch LAUNCHED disconnected-safe**
+  (lemon30_fetch_driver.sh, nohup, login node) — EEL(12) → COSMOS(5) →
+  ACS(13) sequentially, writing real_LEMONEEL/COSMOS/ACS_images.h5.
+  Next on completion: previews on all 30 (standing rule), euclidise,
+  native + Euclid predictions, freeze files (C18), combined table with
+  the SLACS-29 result already in hand.
+
+---
+
+## 2026-07-14 (late night) — LEMON REPLIED WITH DATA (Busillo, V.B.): 4 CSVs, 59 lenses total (29 SLACS + 12 EELs + 5 COSMOS + 13 ACS/Pawase — their own predictions + sigma, no aggregate metrics). SLACS-29 EXACT LIST RESOLVES C16/Q1a — zero-cost head-to-head computed from ALREADY-BANKED CSVs: we win decisively in BOTH domains; a striking (hedged) finding on LEMON's own SLACS numbers
+
+- **Q1a (SLACS-29) DONE — resolves the long-open exact-29 ambiguity.**
+  All 29 J-names matched Bolton 2008 Table 5 (0 misses) and are a subset
+  of our frozen 62-lens benchmark (0 misses) — pure row-filter on eval
+  #19 (Euclid) and #21 (native) predictions, NO new model passes.
+  | config | N | bias | RMSE | NMAD | R² | fail>15% |
+  |---|---|---|---|---|---|---|
+  | LEMON (their Euclid-domain preds) | 29 | +0.288 | 0.473 | 0.307 | **−4.26** | 55% |
+  | OURS native HST | 29 | −0.017 | **0.174** | 0.038 | **+0.29** | 10% |
+  | OURS Euclid-domain | 29 | −0.044 | **0.136** | 0.045 | **+0.57** | 7% |
+  We beat LEMON on their own exact 29 lenses in BOTH domains, native most
+  dramatically. Files: lemon_headtohead/slacs29_head_to_head.csv +
+  slacs29_summary.md (Mac).
+- **Flag (hedged, not yet explained): LEMON's own SLACS-29 predictions are
+  far worse than their published 60-lens aggregate (R² 0.53) — R² −4.26,
+  systematic OVER-prediction (mean +0.29″), several severe outliers
+  (up to +0.95″).** Diagnosed what we could without their pipeline: (a)
+  ruled out a parsing/matching bug (per-lens residuals are physically
+  smooth, sign-consistent, not scrambled); (b) ruled out the SIE-vs-shear
+  mass-model convention (Bolton's b_LTM ≈ b_SIE for these lenses, mean
+  diff −0.013″, shear tiny). Root cause UNKNOWN — could be a genuine
+  SLACS-domain weak point for their pipeline (their own Sect. 7 admits
+  real < sim), a units/definition mismatch we can't see without their
+  code, or something else. NOT claiming causation; report the number,
+  flag the puzzle, do not send it to Busillo without Nurkyz's sign-off.
+- **Q1b (30 non-SLACS) scoped, not yet fetched.** EELs: LEMON used 12 of
+  our original 13 (dropped J0913) — confirmed via Oldham et al. 2017
+  (MNRAS 470, 3497) Table 1, full J-names identified but only
+  ARCMIN-precision coords (4-digit truncation) — needs full-precision
+  resolve. COSMOS (5: 0012+2015/0038+4133/0047+5023/0211+1139/5921+0638):
+  no local tiles cached (checked), coords not yet resolved. ACS/Pawase
+  (13): **coordinates FULLY EXTRACTED already** — their filenames encode
+  exact sexagesimal RA/Dec directly (acs_coords.csv, Mac); still need
+  Pawase Table 3 for the (no-θ_E, arc-radius) GT and cross-ID.
+  Delegated the EEL/COSMOS coordinate finish + Pawase Table 3 extraction
+  to a research agent (background); MAST fetch (g1b driver pattern,
+  pilot-3-first per the standing plan) follows once coords land.
+
+---
+
+## 2026-07-14 (evening) — ⛔ EVAL #25 (count → 25): the texture bug WAS the dominant cause — **#24's negative headline is RETRACTED per the pre-registered rule; #25 is the official Q2e number**: R² 0.00 → +0.57, fail 64% → 29%. Path A submission CSVs DELIVERED (exactly-once run done); LEMON bar still not met — the honest residual is a real but modest population effect
+
+**⛔ #25 (N=322, zoom convention, calibration-identical ×2.85; job 48007):**
+- **Primary cnv2_3: bias −0.075 / RMSE 0.282 / NMAD 0.088 / R² +0.57 /
+  fail 29%** (vs #24: −0.244/0.428/0.166/0.00/64%); med frac −6.3%;
+  in-support R² +0.61. ens2 +0.57; r50_3 +0.49 (the r50 faint-arc edge
+  seen on Euclidised S4TM does NOT carry to native Q1).
+- **RETRACTION (formal, rule pre-registered at the #24 forensics):
+  eval #24's "decisive miss" headline is retracted as a preprocessing
+  artifact** (repeat/4 texture vs the zoom training convention). The
+  population finding SURVIVES at reduced amplitude: residual slope
+  −5% → −11% (θ 0.45→3.0) + small-θ +21% (N=8) + deflector-contrast gap —
+  real, but no longer the story #24 told. Both evals stay logged.
+- vs LEMON Fig 12a (0.01/0.17/0.07/+0.71): still not met — P(beat)=0.00–
+  0.01 everywhere. Honest frame: zero-shot cross-population transfer at
+  R² +0.57 vs their in-domain-trained 0.71 on their-referee GT and their
+  success-filtered sample. **C22 DA baseline = THIS number.**
+- σ still overconfident on real Q1 (cov 32/56 RECAL) — C11/C23 unchanged.
+- Files: results/preds_l25_*.csv (7); frozen zoom h5 evaluated once (C18).
+
+**Path A submission (job 48008, exactly-once):** both CSVs delivered to
+the Mac (roman_dc/): 3band all6 (θ med 0.632, σ med 0.051, frozen ×0.98)
+PRIMARY; f106 all6 (×1.11) secondary. N=11,067. **Nurkyz sends the email**
+(roman_data_challenge_submissions@stonybrook.edu; grader strips the
+strong_lens_ prefix — bare uids used). C20 → delivery done.
+
+---
+
+## 2026-07-14 (strategy session, cont.) — ⛔ #25 + Path A submission run LAUNCHED (jobs 48007/48008); COMMITMENTS.md fully REWRITTEN (all streams swept, C19–C27 added); PROFESSOR COMMENTS EVALUATED (act on all four, but three are analysis-only)
+
+- **P1 (arch-insensitivity on real data)**: evaluated as a FINDING, not a
+  deficiency — on real lenses all four archs land within noise while
+  sim-val separates them → the binding constraint is the training
+  DISTRIBUTION, not model capacity (this is the GEN4 thesis, now with an
+  arch/seed spread table from saved CSVs). The "better model" bar Chan
+  asks for is DEFINED: (i) same arch ± DA scored on real GT (C22), (ii)
+  σ quality under TDLMC-style grading (C23). → C25, analysis-only.
+- **P2 (retry DA)**: agreed and scheduled — C22, target = native real Q1
+  (only domain with a measured gap AND a real unlabeled pool); baseline =
+  ⛔ #25. Aligns the professor's ask with I9's trigger, already fired.
+- **P3 (UQ / error bars, arXiv:1912.02757)**: we already run deep
+  ensembles + TTA + NLL heads + recal + conformal; what's missing is the
+  PAPER treatment — per-domain coverage tables, ensemble-vs-single
+  ablation from saved CSVs, the #24 OOD σ-collapse as the honest exhibit.
+  → C23, analysis-only, high value.
+- **P4 (compare to the ORIGINAL LEMON, MNRAS 522 5442, 2023)**: accepted —
+  C24, LITERATURE entry + comparison row alongside the 2026 A&A paper.
+- Jobs: ⛔ #25 (q2e --conv zoom, job 48007, pre-registered interpretation
+  rule) and the Path A EXACTLY-ONCE unlabeled submission run (job 48008;
+  frozen σ scales ×0.98/×1.11; grader-format CSVs; Nurkyz emails).
+- COMMITMENTS.md rewritten as the single execution ledger: closed rows
+  archived, live rows C2–C27 with next actions, I-item sweep, AR sweep;
+  key consolidation: **ONE z-migration regen (C21) carries AR3 + C2 +
+  C15-verify + C10-check + C14 wiring** — no physics item rides alone.
+
+---
+
+## 2026-07-14 (strategy session) — NURKYZ RULINGS after reviewing the Roman/Q1 imagery: Path B v1 CANCELLED (big low-z deflectors cannot mimic the compact high-z population by flux scaling); ENDGAME LADDER written (MASTER_PLAN §1R); Path B v2 = REDSHIFT MIGRATION of the real-stamp library
+
+- **Her observation, confirmed by the pilot numbers**: Roman/Q1 deflectors
+  are compact and faint (z_l ≈ 0.8) vs our big bright z ≈ 0.14 SDSS
+  stamps — the GEN4 renders cannot look like the target domains at any
+  global flux factor (peak/sky 4.75× at the sky-matched FLUX 0.09).
+- **The remedy adopted: z-migration** — shrink each stamp by the D_A
+  ratio, dim by the D_L ratio, render at target z. σ_v is intrinsic →
+  FJ/self-consistency intact; rest-frame band proxy improves. ONE module
+  fixes BOTH Roman Path B and the Euclid-Q1 population gap (#24 remedy).
+  Pilot-gated build; C2 + C15 verification ride the same regen.
+- Roman decoupled: Path A submission proceeds (their-train result stands
+  on its own for the challenge); 8-band ruled OUT for Rung 0 (only 3
+  image bands shipped — our 3-band arm is the rung maximum).
+- DA (I9) target fixed: native real Q1 (only domain with gap + real
+  unlabeled pool); after ⛔ #25 (texture-fixed baseline).
+- Four-workstream endgame: LEMON finale (email-gated) / Roman (submit A,
+  build B-v2) / DA on Q1 / consolidation (AR3, C2, C15, professor
+  comments — list requested from Nurkyz).
+- Housekeeping: the Rung 0 labeled h5 copy on the Mac is TRUNCATED
+  (775 MB of 1225 MB, interrupted transfer — unusable; resume or delete;
+  gallery + val h5 + notebook on the Mac are complete and fine).
+
+---
+
+## 2026-07-14 (night, final) — G5c PILOT LANDED: chain mechanically CLEAN (200 renders, 93.5% acceptance, previews credible); sky gates PASS at FLUX 0.09; the remaining peak/sky FAIL is PHYSICS (z-shift brightness), not units — FLUX RULING PENDING before the full generation
+
+- Pilot job 48002 end-to-end: extended manifest (θ med 1.66 — note the
+  tempered prior sits FLATTER than Rung 0's small-θ-heavy population,
+  flagged), render 200 (acc 0.935), combine (companions ~15/img), romanise,
+  gate. First gate run at FLUX=1 failed everywhere (native signal+noise
+  swamped Roman sky — the euclidise ZP-shrink analogue was missing);
+  re-romanised at the gate-suggested **FLUX 0.09: sky level PASS (1.07),
+  skyRMS PASS (1.14)**; peak/sky 258 vs their 54 (4.75×) persists.
+- **Why peak/sky can't be "fixed" by flux alone: it's the population.**
+  Our SDSS deflectors (z med 0.14) are intrinsically brighter/bigger than
+  Rung 0's (z med 0.79). Dimming to match (FLUX→0.019) would corrupt the
+  photometric mass-light relation (FJ channel) AND starve arc SNR.
+  Options for the ruling: (A) stat-matched 0.019 — NOT recommended;
+  **(B) freeze FLUX 0.09 for v1 — sky-matched, deflector brightness
+  overlaps their upper range, skew DISCLOSED — recommended**; (C)
+  photometric ZP conversion (~1.3) — faithful photometry, poor population
+  overlap; (D) v2 = redshift-migration of stamps (dim+shrink by D_A/D_L
+  ratios + K-corr) — the physically right fix, real build, pairs with
+  G1b; staged as G5c-v2 regardless.
+- Previews banked (14 july/images/g5rom_pilot_preview.png): deflectors
+  centered, companions present, Roman noise texture right; deflectors
+  visibly more diffuse than Rung 0's compact population — the z-shift
+  made visible.
+- **HOLD: full 100k generation + 6-member training awaits the FLUX ruling
+  + Nurkyz's >1k-images confirm.** Chain driver ready to write against
+  whichever FLUX is frozen.
+
+---
+
+## 2026-07-14 (late night) — G5c PATH B LAUNCHED TO PILOT (Nurkyz go; no installs needed): mejiro ships Roman PSFs in-repo; romanise.py operator built (euclidise pattern); extended-support manifest; 200-render pilot chain submitted (job 48002)
+
+- **PSF solved without STPSF**: mejiro's GitHub carries per-band Roman
+  PSFs (F106/F129/F158, detector-1 center, 41px @ 0.11″, native
+  oversample) — pulled, banked in tiles/ + repo. F106 kernel sum 1.22 →
+  renormalized before use. Their full Rung 0 generation YAML is also
+  public (ahuang314/Roman_Data_Challenge): GalSim + full detector chain,
+  COSMOS sources, slhammocks halos, 642 s, SNR≥20 selection — banked
+  knowledge for the disclosure section.
+- **Recon numbers driving the design**: our library σ_v 154/207/281
+  matches Rung 0's 137/196/272 WELL; **z_l 0.06/0.14/0.54 vs their
+  0.39/0.79/1.38 is the disclosed population shift Path B measures.**
+  Rung 0 F106 raw-grid targets: sky 0.454 DN/s, skyRMS 0.0205 (implies
+  T_eff ≈ 1080 s — dither-averaged L2), peak/sky q10/50/90 = 7/32/149.
+- **Build (all compiled, shipped): build_acs2roman_kernel.py** (photutils
+  matching kernel, mean psf_bank_v2 ACS ePSF → F106 on the 0.05″ grid,
+  Tukey 0.3 — acs2vis recipe, provenance json); **romanise.py**
+  (convolve → global flux factor [band proxy F814W→F106, DISCLOSED] →
+  exact 0.05→0.11 rational rebin (×5 up, 11-block) → +sky, Poisson at
+  T_eff → 58px→128 zoom, the Path-A grid convention); **g5rom_pilot_gate**
+  (stats vs Rung-0-on-the-same-grid + suggested flux multiplier +
+  previews).
+- **Pilot chain (job 48002)**: kernel build → manifest --tmin 0.15
+  --tmax 3.70 --couple_shear (C10 sidecar prints; per-bin fill = the
+  honest support readout) → 200 renders (same GEN4/g4ar recipe incl.
+  arc_poisson) → romanise → gate. Arc-visibility selection SKIPPED in
+  Path B v1 (disclosed; Rung 0's own SNR≥20 selection differs anyway).
+  Full 100k generation only after pilot gates + Nurkyz confirm (>1k rule).
+
+---
+
+## 2026-07-14 (later) — G5 PATH A COMPLETE (12/12 members trained, chain clean) and the challenge-val harvest is a NEAR-IDEAL result: 3-band all6 RMSE 0.127″ / NMAD 0.038″ / R² +0.94 / fail 6% with native χ² 0.96 (TDLMC ideal ≈ 1); "14 july" results pack delivered
+
+- Chain G5A_CHAIN_ALL_DONE 12:12 (quick-train gate passed; ~10 min/member
+  on these GPUs). Harvest (job 48001, TTA ×8, ensembles per variant):
+  **f106 all6 0.130/0.042/+0.94/7% (χ² raw 1.23); 3band all6
+  0.127/0.038/+0.94/6% (χ² raw 0.96, σ scale ×0.98 ≈ none needed);
+  3band r50_3 NMAD 0.037/fail 6%.** Multiband is worth NMAD 0.042→0.038
+  and fail 7→6%. vs the zero-shot baseline (R² +0.11, χ² 60): the
+  domain-matched training closes the whole gap — three-way table banked.
+- **Submission candidate: 3band all6** (σ pre-scaled ×0.98 rmsz in the
+  CSV; format ID/theta_E/theta_E_sigma already matches their grader).
+  HONESTY: best-epoch selection touched this val split — mildly
+  optimistic; the hidden test is the clean readout. The unlabeled-set
+  prediction run happens once, on Nurkyz's submission go; she sends the
+  email. CSVs banked results/g5a/ (6).
+- **"14 july" pack delivered to the Mac** (Nurkyz request): headline
+  vs-LEMON table, per-eval per-lens CSVs + scatters for evals 19 (the
+  beat-LEMON board, REPRO-OK), 21 (native best, REPRO-OK ×2), 22
+  (REPRO-OK), 23, 24 (negative finding), G5b, G5a; 17 gallery images;
+  README with the standing caveats. Every published row reproduced to
+  the digit from banked CSVs before inclusion.
+
+---
+
+## 2026-07-14 (night, cont.) — G5b ZERO-SHOT BASELINE LANDED (challenge-val 1000, logged): cross-instrument transfer fails as expected — and the TRAINING-SUPPORT WALL is visible in the raw predictions (pred min pinned at 0.43–0.44″ = the old floor); their-grading numbers quantify how lethal overconfident σ is under TDLMC scoring
+
+- Numbers (ours | theirs=Ding+21): g4_cnv2_3 −0.156/0.489/0.202/R² +0.11/
+  fail 59% | χ² RAW 60.2 → conf-scaled (×3.14) 6.11, P 0.14→0.45, A +0.045.
+  g4ar_r50_3 0.518/R² 0.00 | χ² raw 261(!). ens2 0.500/+0.07 | χ² 63.9→6.45.
+- **Two structural findings:** (1) predictions are FLOOR-PINNED at
+  0.43–0.44″ — the models cannot answer below their 0.45″ training
+  support, and 24% of Rung 0 lives there (same wall as #24, now seen in a
+  fully-controlled sim domain); (2) raw σ is catastrophically overconfident
+  out-of-domain (χ² 60–261 vs ideal 1) — quantile-conformal (×3–5) pulls
+  it to ~6, still far from 1 because the residual tails are heavy. Under
+  TDLMC grading, σ honesty is worth more than θ_E sharpness — a
+  submission-side σ inflation to mean-z²=1 is mandatory for any row.
+- Preprocessing factor measured + logged in slurm_g5b_zeroshot_47974.out;
+  preds banked results/g5b/ (6 CSVs). This row completes the three-way
+  table's first column; Path-A trained columns land with the chain.
+
+---
+
+## 2026-07-14 (night) — NURKYZ RULING: OPTION C (both paths, 3-band in scope); PATH A LAUNCHED disconnected-safe (12 members, 2 waves); trainer gains --in_chans (3-band); Path B staged with challenge-matched conventions
+
+- **Path A chain LIVE** (`run_g5a_chain.sh`, nohup login node; converter
+  job 47973): rung0_to_train.py → train/val h5s (f106 + 3band, 128px
+  bilinear zoom from 91px, seeded 1000-lens challenge-val split; previews
+  + gate stats in the converter log) → quick-train gate (cnv2 f106 10 ep,
+  val_MAE<0.25) → wave 1 six f106 members → wave 2 six 3-band members
+  (cnv2_3 @3e-4, r50_3 @1e-3, --nll, asinh, augment; **θ filter opened to
+  [0.10, 3.70]** — 24% of Rung 0 sits below the old 0.45 floor).
+- **train_cnn_paltas.py patched (.bak_g5, compiles):** --in_chans arg;
+  timm archs accept 3-band stacks; Dataset passes (C,H,W) through;
+  augment already channel-safe; non-timm archs refuse in_chans>1.
+- **Discipline:** model selection on the challenge-val split ONLY; the
+  unlabeled scored set gets model contact exactly once per approved
+  submission; submission email is Nurkyz's (outward-facing). θ_E_sigma
+  will come from ensemble+TTA + conformal on challenge-val (C11).
+- **Path B staged (not started):** InstrumentConfig must match the
+  CHALLENGE data convention (0.11″/px, DN/s, 610 s romanisim L2), PSF
+  source = mejiro Zenodo products if present else STPSF (install needs
+  approval); manifests = GEN4 + extended support + C15 + C10 spec block.
+
+---
+
+## 2026-07-14 (evening) — G5a DONE: Roman Data Challenge Rung 0 format + rules decoded; BOTH datasets on the cluster; the submission mechanics are exactly as Nurkyz read them
+
+- **Mechanics confirmed:** labeled set = training (theta_e + rich truth in
+  per-lens attrs); unlabeled set = the SCORED test set ("Rung 0 submissions
+  will be scored for this dataset"); submit CSV with header ID, theta_E,
+  theta_E_sigma to roman_data_challenge_submissions@stonybrook.edu;
+  organizers hold the hidden labels. Timeline: Rung 0 = Oct 2025 (tutorial
+  rung, θ_E regression); Rung 1 = May 2026 (LIVE — substructure era
+  begins); Rung 2 = Summer 2026.
+- **Labeled set (Zenodo 21200584 v2.1, 1.22 GB, banked
+  ~/cosmos_acs/roman_dc/): 11,160 lenses × 3 bands (F106/F129/F158) =
+  33,480 images, 91×91 px @ 0.11″ (10.01″), units DN/s (romanisim L2),
+  610 s.** Per-lens attrs: theta_e, sigma_v, z_lens, z_source,
+  main_halo_mass, mu, substructure flag, detector position, pyHalo params.
+  Unlabeled set (21200550) downloaded alongside + both viewer notebooks.
+- **Population (G5-relevant, echoes the #24 lesson):** θ_E q10/50/90 =
+  0.32/0.65/1.50″ (min 0.16, max 3.59) — **24% below our 0.45″ training
+  floor**; σ_v 137/196/272; z_l 0.39/0.79/1.38. Any G5 training arm must
+  extend support down to ~0.15″ and to lower σ_v / higher z_l than the
+  SLACS-anchored manifests — the population prior is the known failure
+  mode now.
+- **Their ask includes θ_E_sigma → our calibration story (ensemble + TTA +
+  conformal, C11) is a first-class differentiator here, not an accessory.**
+- Submission-path options staged for Nurkyz: (a) fast — train members on
+  their 11,160 labeled multiband set (F106-only first, 3-channel second);
+  (b) pure-us — G5c our-population Roman render, eval on their test set;
+  (c) BOTH as the paper's two-row story (their-train vs our-population
+  transfer). No training launched yet.
+
+---
+
+## 2026-07-14 (late afternoon) — NURKYZ REORIENTATION RULING: Q program PARKED (LEMON replied — will provide their lists/numbers); two-scoreboard confusion resolved (Sect 2.2 60-lens vs Sect 6.3/Fig 12 Q1-354, both real); SLACS inspection pack + LEMON-60 status delivered; NEXT PHASE = G5 ROMAN (Rung 0 Data Challenge set downloading)
+
+- **Where "354" came from (Nurkyz challenge, re-verified in the paper
+  HTML)**: LEMON has TWO real-data boards. (A) Sect. 2.2 + Table 3: 60
+  Euclidised HST lenses (29 SLACS + 13 EELs + 5 COSMOS + 13 Pawase) — the
+  passage Nurkyz quoted. (B) Sect. 6.3 + Fig. 12: real Euclid Q1, N=354 of
+  578 candidates (Walmsley 500 + Rojas 78), "filtered such that the
+  classical modelling is successful", PyAutoLens GT — the board eval #24
+  played. NOTE for #24 framing: their 354 is a SUCCESS-FILTERED subset;
+  our 322 was not filtered that way (and contained 2 collapsed GTs) —
+  additional disclosed asymmetry.
+- **"Did we beat LEMON on SLACS?" — YES on the 62-superset, both domains:**
+  Euclidised (eval #19) −0.010/0.137/0.056/+0.71/15% vs their Table 3
+  −0.03/0.14/0.11/+0.53 — every aggregate; native (eval #21) NMAD 0.048.
+  Standing caveats: their exact 29 unresolved (superset row defensible);
+  13/60 of their GT is arc radius, not θ_E.
+- **Model-run status on their 60**: SLACS-29 ⊂ our frozen 62 → RUN (exact-29
+  row = row-filter on saved CSVs when their list arrives, no new eval).
+  EELs-13 / COSMOS-5 / Pawase-13: images never fetched, NEVER RUN — Q1b
+  fetch PARKED by ruling until the LEMON reply (their lists supersede our
+  reconstruction; Pawase Table 3 undigitized was the blocker anyway).
+- **C8/Busillo: LEMON REPLIED to Nurkyz — they will provide the requested
+  info.** Nudge unnecessary; await their lists/per-lens numbers.
+- Deliverables to Mac: lemon60_inspection/ (4-page SLACS native|euclidised
+  gallery, both h5s, lemon60_targets.csv skeleton); q2e_inspection/ holds
+  the #24 forensics set.
+- **NEXT PHASE (Nurkyz): G5 ROMAN.** Kickoff executed: discovered the
+  **Roman Strong Lens Data Challenge** (roman-data-challenge.readthedocs.io,
+  built on mejiro/Wedig — a FORMAL external benchmark, stronger than
+  scoring their raw release; entering it = the visibility play);
+  Rung 0 v2.1 dataset (1.22 GB h5 + viewer notebook, Zenodo 21200584)
+  downloading to ~/cosmos_acs/roman_dc/. G1b stamp fetch continues in
+  background (feeds AR3, which addresses the #24 population finding).
+
+---
+
+## 2026-07-14 (afternoon) — BENCHMARK AUDIT (Nurkyz challenge: "are the bench images fetched right + GT working right?"): VERIFIED CLEAN — GT 63/63 exact vs Bolton, natives healthy and centered, euclidised faithful; J1403+0006 mystery = bright COMPANION dominating the light centroid (lens IS centered); bench arcs faint-under-halo is REAL SLACS physics, not a bug; my azimuthal-median "arc reveal" panel RETRACTED (quadrupole butterfly = ellipticity residual, not arcs)
+
+- **GT join: 63/63 h5 theta_E_pub == Bolton b_SIE (0 mismatches); native
+  and euclidised name orders identical.** Ground truth is working right.
+- **Triptych native | euclidised | subtracted (bench_audit_triptych.png):**
+  all 8 audited natives are healthy centered SLACS cutouts; euclidised
+  versions are faithful degraded renders. **J1403+0006 "looks off" solved:
+  a bright elongated companion galaxy lower-right dominates the LIGHT
+  centroid (−15.5,+18.9 px) and the display normalization — the deflector
+  itself is at center (native panel proves it).** Companions are real and
+  kept (benchmark realism).
+- **"Most bench have no visible arcs" (Nurkyz) — TRUE and EXPECTED:**
+  SLACS I-band arcs sit faint under the LRG halo (discovery papers needed
+  B-spline deflector subtraction). J1627−0053 and J1630+4520 show
+  rings/arcs directly; others need subtraction. Corollary honestly noted:
+  part of the bench R² likely rides on the light–mass correlation (the FJ
+  channel by design) — consistent with the Q1 failure mode where that
+  correlation breaks.
+- **RETRACTION: the "eucl − azimuthal med (arc reveal)" panel is junk** —
+  subtracting an azimuthal median from an elliptical galaxy leaves a
+  quadrupole butterfly that swamps arcs. Proper isophote (B-spline) fit
+  needed for a real arc-reveal figure; do NOT cite that row.
+- **STATUS: all three image sets now independently verified** (Q1 cutouts:
+  WCS/centering, round 3; native SLACS: this audit; euclidised bench: this
+  audit + GT join). Remaining live explanations for the #24 miss are
+  unchanged: texture bug (⛔ #25 staged, awaiting go) + population prior +
+  minor grade/GT-collapse contamination.
+
+---
+
+## 2026-07-14 (midday) — FORENSICS ROUND 2+3 (Nurkyz image review; no model passes): cutouts VERIFIED correct (WCS 0.1000″/px, centered); 2 GT-COLLAPSED systems found (θ_E 0.004″/0.011″); eval set is 185 A + 129 B + 8 C — grade-A-only re-slice improves but the miss STANDS; LEMON's own 0.71 on this GT proves the gap is OURS (domain), not the referee's
+
+- **Cutout integrity (Nurkyz "cutout is wrong?"): VERIFIED FINE** — WCS
+  exactly 0.1000″/px, 300×300, lens centered; the "empty" outsupport panel
+  is a GT-collapsed candidate, not a bad crop.
+- **GT failures found: 102020065 (θ_E=0.004″), 102042915_NEG5285
+  (θ_E=0.011″)** — PyAutoLens collapsed fits inside the released GT
+  (gt001_system_102042915.png). Disclose; they sit in the below-support 8.
+- **Grade audit: our 322 = 185 A + 129 B + 8 C.** Re-slice of the SAVED #24
+  preds (row filter, no passes): A-only cnv2_3 −0.251/0.380/R² +0.16/64%;
+  A-only r50_3 −0.213/0.346/R² **+0.31**/53% (vs +0.25 all). Contamination
+  is real but SECONDARY — the −0.21″ bias persists in every slice.
+- **Arc-radius metric attempts (2) FAILED honestly**: annulus p95−median
+  measures deflector ellipticity, not arcs (control with pred=GT=1.89″
+  returned 0.45″) — no quantitative GT-vs-pred arc verdict from it; do NOT
+  cite the "closer to pred" tables. Visual evidence stands: worst-12 have
+  real wide arcs; the CTRL system with a bright complete ring at 1.89″ is
+  HIT exactly → the model CAN read wide arcs on Q1 when they are strong.
+- **Display bug in the first side-by-side fixed** (percentile stretch
+  saturated bench halos): side_by_side_asinh_FIXED.png shows bench arcs
+  faint under halos — the training domain is halo-dominated, Q1 is
+  compact-deflector — the population gap in one figure.
+- **Zoom question (Nurkyz): NO** — input FOV is fixed by training (128 px
+  @ 0.05″); zooming at eval would break the learned px→arcsec calibration.
+  Arcs "look small" because Q1 θ_E median is 0.88″ on a 6.4″ frame.
+- **Sharpened conclusion: LEMON scored R² 0.71 against this same GT** (CNN,
+  Euclid-matched sim training) — so "GT is garbage" cannot explain OUR
+  miss; the gap is model-side domain mismatch: (a) the texture bug (⛔ #25
+  staged), (b) the deflector-population prior (FJ), (c) minor: grade-B/C +
+  2 collapsed-GT rows (report A-only rows at #25 too).
+
+---
+
+## 2026-07-14 (morning) — POST-#24 FORENSICS (no model passes; Nurkyz bug-hunt request): a REAL preprocessing bug FOUND (upsample-texture convention), population story CONFIRMED visually, corrected re-eval STAGED as ⛔ #25 pending go-ahead
+
+- **BUG (code, mine): eval #24's Q1 preprocessing upsampled 0.1″→0.05″ with
+  blocky np.repeat(...)/4; euclidise.py's output side — i.e. THE TRAINING
+  CONVENTION — is zoom(order=1) bilinear with per-0.1″-pixel values.**
+  Global flux conventions (/4, ZP) are absorbed by the frozen ×11.4, but
+  the pixel TEXTURE is not: the model saw blockier, sharper-noise images
+  than anything it trained on, and faint wide arcs are exactly what that
+  degrades. Visual proof: q2e_inspection/texture_repeat_vs_zoom.png.
+  Fix staged in q2e_eval.py (--conv zoom; factor translated 11.4/4 = 2.85,
+  identical absolute calibration — NOT a new normalization decision).
+- **Failure-mode visual (worst-12 gallery): the wide arcs ARE in the
+  images** (radii 1.3–3.5″, clear at pct/asinh) around bright COMPACT
+  deflectors; the model reads the compact deflector and answers ~0.5″.
+  Training FJ pairing (big θ_E ⇔ big diffuse LRG) is broken by this
+  population — the compression is the FJ/light prior transferring wrongly.
+  Side-by-side gallery: bench deflectors fill the frame, Q1 deflectors are
+  points (q2e_inspection/side_by_side_bench_vs_q1.png).
+- PSF check: per-lens VIS_PSF FWHM q10/50/90 = 0.113/0.113/0.195″ —
+  quantization-limited at 0.1″ sampling (0.113 = 1 px above half-max);
+  bench kernel targeted the GRID-PSF-VIS MEAN, so per-lens spread (q90
+  0.195″) means some cutouts are blurrier than training. Inconclusive as a
+  primary cause; secondary contributor at most. FOV note: θ_E ≳ 2.5″ arcs
+  sit at/beyond the 6.4″ crop edge (3 systems).
+- Galleries + previews delivered to Nurkyz: q2e_inspection/ (root folder).
+- **PENDING ⛔ #25 (needs explicit go): re-run the SAME frozen lens set
+  with the zoom-convention h5 (q1_slde_eval_f2p85_zoom.h5), 6 members,
+  same pre-registered rows. Interpretation rule set BEFORE running: if
+  #25 ≈ #24, the texture bug was immaterial and the population finding
+  stands as headline; if #25 improves materially, #24's negative headline
+  is RETRACTED as a preprocessing artifact and #25 becomes the Q2e number
+  (both logged, nothing hidden).**
+
+---
+
+## 2026-07-13 (night, cont.) — ⛔ EVAL #24 (count → 24): Q2e OFFICIAL on native real Q1 (N=322, frozen ×11.4) — a DECISIVE MISS of the LEMON bar and the project's most important NEGATIVE FINDING: zero-shot transfer to the real-Q1 deflector population fails in a way the Euclidised benchmark did not predict
+
+**Numbers (LEMON Fig 12a bar: +0.01 / 0.17 / 0.07 / R² +0.71):**
+- **Primary G4 cnv2_3: bias −0.244 / RMSE 0.428 / NMAD 0.166 / R² +0.00 /
+  fail 64%** (in-support N=311: −0.249/0.385/−0.04/64%).
+- r50_3 (derived): −0.207/0.371/0.158/**+0.25**/56% — the faint-arc pick
+  transfers best, but still nowhere near the bar.
+- ens2 (derived): −0.225/0.392/0.148/+0.16/60%.
+- Bootstrap P(beat LEMON) = 0.00 on every metric, every row. Tuning-subset
+  exclusion changes nothing (rows identical to 0.001) — the sweep did not
+  contaminate. σ badly overconfident out-of-domain: cov RECAL 20–23/43–50
+  (C11 made worse); conf-half fail 33–47%.
+- **The failure is a SLOPE, not an offset:** median frac −15% at
+  θ_E<0.9″ worsening monotonically to −34% at >1.5″ — predictions
+  compress toward small θ_E.
+
+**Q2d audit (same chain):** N=322 of LEMON's 354 (13 GT rows empty, 14
+dirs lack GT — disclosed); GT q10/50/90 = 0.53/0.88/1.47″; 97%
+in-support (support is NOT the story: in-support rows are no better).
+**C17 on the full set: skyRMS 0.0074 ≈ bench 0.008 ✓ but peak/sky 218 vs
+bench 480** — the broad Q1 population is HALF the contrast of our
+SLACS-derived benchmark (the 10-lens pilot, at 349, was unrepresentative).
+Previews (banked, inspected): preprocessing clean, lenses centered, arcs
+visible — NOT a pipeline bug.
+
+**Reading (hypotheses, ranked; none yet proven):** the euclidise benchmark
+shares PSF+noise op with this eval, so what changed is the DEFLECTOR
+POPULATION: real Q1 deflectors are fainter (peak/sky ½), not all LRGs,
+higher z_l — and our model's core feature, the FJ deflector-light channel,
+maps faint deflector → small σ_v → small θ_E, exactly the compression
+observed (worst on big lenses, where Q1 deflectors are dimmest relative to
+training). H2: their PyAutoLens GT on ~146 s VIS data (own Sect. 7 admits
+real<sim; their mass-ϵ R²<0) inflates scatter and could carry its own
+slope — cuts both ways, disclosed, not claimable without evidence. THE
+FINDING FOR THE PAPER: "Euclidising the benchmark ≠ Euclid-ready — the
+instrument operator transfers, the population prior does not." This FIRES
+the I9 trigger ("DA retry only if a real gap remains" — it remains) and
+motivates mixed-population training (G1b breadth) as the physical fix.
+- Files: results/preds_l24_*.csv (7), tables/q2d_audit.csv,
+  paper_figures/q2e_preview_{insample,outsupport}.png; frozen eval file
+  q1_slde_eval_f11p4.h5 (C18; evaluated ONCE).
+
+---
+
+## 2026-07-13 (night) — NURKYZ RULING: Q2 normalization FROZEN at ×11.4, no pedestal (gate-aligned option (a)); Q2d audit + ⛔ Q2e (eval #24) authorized to run disconnected (single cluster-resident sbatch chain)
+
+- Frozen: rescale ×11.4 (skyRMS-matched, C17-gate-passing), no pedestal
+  (measured zero effect). Written into q2e_eval.py as a constant.
+- Q2e composition (one logged eval, pre-registered rows): primary G4
+  cnv2_3 ens; derived same-passes rows g4ar r50_3 (the faint-arc pick —
+  Q1 skews small-θ_E) and #23-style ens2. Rows reported: full sample,
+  excluding the 9 burned tuning lenses, in-support (θ_E_GT ∈ [0.45,2.3]),
+  and in-support-excl-tuning. Bar: LEMON Fig 12a (0.01/0.17/0.07/+0.71).
+- Q2d audit (analysis-only, same chain, before predictions): GT-support
+  flags, distribution summary, C17 stats on the full set, three-stretch
+  previews of ALL out-of-support systems + a 20-lens in-support sample
+  (banked for inspection; standing preview rule).
+- Eval file frozen at creation per C18: q1_slde_eval_f11p4.h5.
+
+---
+
+## 2026-07-13 (late evening) — Q2c2 NORMALIZATION SWEEP EXECUTED (Nurkyz go-ahead): factor response nearly FLAT — normalization is NOT the binding constraint; C17 gate PASSES at the physically-anchored ×11.4; nominal lowest-RMSE winner f14 is edge-of-grid noise; RECOMMEND FREEZE f11.4 × no-pedestal (ruling pending); benchmark eval count UNCHANGED at 23
+
+- Job 47907 (first submit 47902 crashed on empty-GT rows in
+  modeling_lens_mass.csv — guarded, resubmitted). **36 model passes on the
+  9-lens BURNED tuning subset logged per C18** (10th pilot lens 102019125
+  has no converged GT row). This is the pre-registered tuning stage, NOT an
+  eval; ⛔ Q2e stays eval #24. Preds banked: results/q2tune/ (36 CSVs).
+- **Grid (G4 cnv2_3 ens + frozen recal, TTA; N=9 vs PyAutoLens
+  einstein_radius_median_pdf):** RMSE 0.414→0.385 monotone over factor
+  1.9→14×; R² −0.09→+0.06; fail 44% EVERYWHERE; **pedestal has ZERO effect**
+  (model insensitive to the sky constant). Nominal winner by the
+  pre-registered lowest-RMSE rule: f14.0_none (0.385/+0.06) — but it is the
+  GRID EDGE, Δ vs f11.4 = 0.016 (noise at N=9), and its gain comes almost
+  entirely from ONE lens whose prediction rises with brightness (the FJ
+  dial — tuning the prior, not matching domains).
+- **Per-lens (f11.4): 5/9 within ±12%** (−6.2/−11.7/+1.5/−4.8/+8.6%);
+  tail: three at ~−27%; one catastrophic −67% (102018666: their GT 1.582″
+  with an implausibly tight ±0.005″ 1σ posterior, we say 0.51″ —
+  own-pipeline-referee suspect OR a faint-wide-arc miss at Q1 depth;
+  Q2d-audit case, NOT a normalization issue).
+- **C17 gate re-check (image stats only): f11.4 PASSES — skyRMS 1.05×
+  bench, peak/sky 0.92×; f14.0 overshoots (skyRMS 1.29×).** Pedestal only
+  moves the sky median.
+- **RECOMMENDATION: freeze f11.4 × no-pedestal** (gate-aligned, physically
+  anchored; the empirical Δ to f14 is noise and FJ-contaminated).
+  Options for the ruling: (a) freeze f11.4 [recommended], (b) literal
+  lowest-RMSE f14, (c) extend grid upward to bracket — flagged as
+  prior-exploitation risk. After freeze: Q2d population/support audit +
+  outlier inspection (no model passes), then ⛔ Q2e ONCE, full set.
+
+---
+
+## 2026-07-13 (evening) — ⛔ EVAL #23 (count → 23, DERIVED — no new benchmark passes): two-model ensemble mean(G4 cnv2_3, g4ar r50_3) per Nurkyz ruling — a COMPROMISE row, not a new best; NURKYZ RULINGS: no headline freeze (multi-domain reporting), Q2 = Option A with a normalization-SWEEP stage before the single official eval, C10 now BLOCKS AR3
+
+**EVAL #23 (derived from banked CSVs `results/preds_l19_g4_cnv2_s*` +
+`preds_l22_g4ar_r50_s*`; each side under its own frozen sim-val recal;
+equal weight per MODEL; script `analysis/l23_tables.py`; reproduction
+check: both side rows match the published #19/#22 rows to the digit):**
+- SLACS N=62: **−0.032 / 0.156 / 0.077 / R² +0.62 / fail 16%** — does NOT
+  beat the #19 incumbent (0.137/+0.71/15%), which keeps the SLACS-Euclid row.
+- S4TM N=40: **+0.041 / 0.136 / 0.093 / R² +0.75 / fail 22%** — WORSE than
+  g4ar r50_3 alone (+0.86), dragged by the G4 side (S4TM +0.51).
+- Honest reading: as a SINGLE cross-domain config, ens2 (+0.62/+0.75) is a
+  tie with the all-g4ar cnv2_3 ensemble from #22 (+0.62/+0.76) — the
+  two-model mix adds nothing over per-domain picks. It stands in the tables
+  as the combined row; per-domain picks dominate it in each domain.
+- CSVs: `results/preds_l23_ens2_euclid_{slacs,s4tm}_images_g3.csv`.
+
+**NURKYZ RULINGS (2026-07-13, supersede the #22 pending-confirm items):**
+1. **No "main benchmark" freeze.** The model is multi-domain by design;
+   paper tables report ALL domains; headline chosen at final drafting.
+   Provisional recipe stands: G4 cnv2_3 (SLACS-Euclid), g4ar r50_3
+   (S4TM-Euclid), eval-#23 ens2 as the combined cross-domain row.
+2. **Q2 = Option A** (rescale Q1 cutouts to the training domain; do NOT
+   retrain). But the measured ~11× factor is NOT applied blindly: a
+   **normalization-sweep stage** (MASTER_PLAN §2 Q2c2) tunes factor ×
+   pedestal (≥12 combos) on a held-out tuning subset against PyAutoLens GT,
+   freezes the winner, re-runs the C17 gate, and only then submits the
+   official ⛔ Q2e (eval #24) EXACTLY ONCE on the full set. Tuning-subset
+   contact is disclosed (report with/without those lenses).
+3. **C10 physics spec block now BLOCKS the AR3 pilot** — implement in the
+   generator before any AR3 training set; AR3 pilot script must fail hard
+   if the manifest header lacks the spec block.
+4. G5 Roman scoped as a researched write-up (Wedig et al. 2025 §3 route
+   vs own rendering vs multiband) — see MASTER_PLAN §G5.
+
+---
+
+## 2026-07-13 (afternoon) — ⛔ EVAL #22 (count → 22): g4ar (AR1 arc-Poisson + AR2 coupled shear) is a NULL on the SLACS-Euclid aggregate but a NEW S4TM-EUCLID BEST (r50_3 R² +0.86) and the first zero-confident-half-failure run; C15a/b IMPLEMENTED in the manifest generator; C15c VALIDATED (raw −8.5% → corrected +1.8%); Q2 pilot passes previews; C17 gate MEASURED: flux scale ~11× off (ZP explains only 1.9×) — rescale ruling required before Q2e
+
+**EVAL #22 (Euclidised benchmark, g4ar = g3b recipe + AR1 + AR2; frozen
+recal b=−0.0032 s=1.015 sim-val, TTA ×8; 34 prediction CSVs → results/):**
+- SLACS N=62 ens (cnv2_3): bias −0.028, RMSE 0.157, NMAD 0.061, R² +0.62,
+  fail 15%, med frac −1.1%; **conf-half fail 0% — first ever**; boot
+  P(NMAD<.11)=1.00, P(R²>.53)=0.73. **NULL vs the eval-#19 incumbent**
+  (G4 cnv2_3: 0.137/+0.71/15%), which keeps the SLACS-Euclid headline.
+- S4TM N=40: ens +0.034/0.134/0.080/+0.76/25%; **r50_3 +0.020/0.103/0.071/
+  R² +0.86/fail 22% — new S4TM-Euclid best** (prev: #18 G3 r50_3
+  0.117/+0.81/22%).
+- Bins: SLACS [0,0.9) still 62% fail/+8.7% (N=8) — unchanged target for
+  AR3 + G1b + C15. Reading: the AR pair helps the faint-arc/low-mass regime
+  and confidence gating, NOT the SLACS aggregate.
+- **RECIPE PROPOSAL (needs Nurkyz confirm): keep G4 cnv2_3 as Euclid
+  primary; g4ar r50_3 takes the S4TM-Euclid row.**
+
+**C15a/b IMPLEMENTED** in `g2_make_manifest.py` (σ_SIS = σ_fiber/0.948 +
+7% multiplicative intrinsic scatter; `.bak_c15` kept; compiles). Takes
+effect at the next manifest build; pilot-gated as required.
+
+**C15c VALIDATED (with a logged data bug):** first attempt joined against
+the Auger PHOTOMETRY table by mistake (Imag/Re/z only → N=0) — retracted,
+refetched VizieR J/ApJ/682/964/table4 (Bolton 08: Name, zFG, zBG, σ, e_σ;
+131 rows). On the benchmark (N=57; 5 systems lack SDSS σ):
+θ_SIS(raw σ_fiber) median **−8.5%** vs b_SIE; with C15a (σ/0.948)
+median **+1.8%** (NMAD scatter 15.7→17.4%, consistent with the ~14% honest
+label noise C15b encodes). Normalization is literature, never fitted here.
+Figure `paper_figures/c15c_validation.png`; per-lens table
+`tables/c15c_theta_sis_vs_bsie.csv`.
+
+**Q2 pilot (10 lenses) PASSES previews:** center-crop 64px@0.1″ → 2×
+flux-conserving upsample to 128@0.05″; three-stretch gallery clean (arcs/
+rings visible, deflectors centered) — `paper_figures/q2_pilot_preview.png`.
+Aperture-vs-catalog flux offset uniform to ±0.09 mag across lenses (the
+−2.05 constant is aperture definitions; tightness is what matters).
+
+**C17 gate MEASURED (q2_c17_gate.py, vs euclid_slacs_images_g3.h5):**
+peak/sky Q1 med 349 vs bench 480 (0.73×, distributions overlap — contrast
+compatible); **absolute skyRMS 0.09× (≈2.6 mag)** — the MAGZERO 24.6 vs
+euclidise-assumed 23.9 explains only 1.9×, the rest is a flux-unit
+convention difference; Q1 cutouts are background-subtracted (sky ≈0.3×RMS)
+vs the bench pedestal (≈2×RMS). **RULING REQUIRED before ⛔ Q2e: single
+multiplicative rescale (skyRMS-matched ×~11 vs ZP-derived) + sky-pedestal
+handling. No Q1 eval until ruled** — this is exactly what C17 existed to
+catch (LEMON needed −0.22 mag ad hoc; ours is a unit issue, measured).
+
 ---
 
 ## 2026-07-13 (PM, cont.) — DOC CONSOLIDATION (Nurkyz directive: "one plan"): MASTER_PLAN.md rewritten as the SINGLE live plan; five plan docs + the superseded LensFusion instructions ARCHIVED to docs/archive/ with banners; root folder synced

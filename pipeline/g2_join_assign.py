@@ -26,11 +26,17 @@ for i, (th, e1) in enumerate(zip(
     c = cand[0]
     used.add(c)
     r = man.iloc[c]
-    rows.append(dict(file_row=i, manifest_row=int(c), stamp_id=int(r["stamp_id"]),
-                     dihedral_k=int(r["dihedral_k"]), theta_E=th,
-                     stamp_mag=float(r["stamp_mag"]),
-                     sigma_v_used=float(r["sigma_v_used"]), z_l=float(r["z_l"]),
-                     z_source=float(r["z_source"])))
+    row = dict(file_row=i, manifest_row=int(c), stamp_id=int(r["stamp_id"]),
+               dihedral_k=int(r["dihedral_k"]), theta_E=th,
+               stamp_mag=float(r["stamp_mag"]),
+               sigma_v_used=float(r["sigma_v_used"]), z_l=float(r["z_l"]),
+               z_source=float(r["z_source"]))
+    # C21/AR3: carry migration + multipole columns when the manifest has them
+    for col in ("z_l_new", "mig_scale", "mig_sb", "stamp_mag_mig",
+                "mult3_a", "mult3_phi", "mult4_a", "mult4_phi"):
+        if col in man.columns:
+            row[col] = float(r[col])
+    rows.append(row)
 
 with open(out, "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))

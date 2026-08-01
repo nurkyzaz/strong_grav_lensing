@@ -54,10 +54,29 @@ def main():
                     help="fraction of n where pixels are fully the smoothed version")
     ap.add_argument("--drop", type=int, nargs="*", default=[],
                     help="input indices to drop after visual inspection")
+    ap.add_argument("--keep_csv", default=None,
+                    help="prune-decision CSV: only input names with "
+                         "<keep_col>=1 pass (C29: g1b consumes keep_final)")
+    ap.add_argument("--keep_col", default="keep_final")
+    ap.add_argument("--keep_id_col", default="stamp_id")
     a = ap.parse_args()
 
     with h5py.File(a.inp, "r") as f:
         imgs = f["images"][:].astype("float32")
+        names = None
+        if "names" in f:
+            names = [x.decode() if hasattr(x, "decode") else str(x)
+                     for x in f["names"][:]]
+
+    keep_names = None
+    if a.keep_csv:
+        import csv as _csv
+        if names is None:
+            raise SystemExit("--keep_csv needs a 'names' dataset in --inp")
+        keep_names = {r[a.keep_id_col] for r in _csv.DictReader(open(a.keep_csv))
+                      if r[a.keep_col].strip() == "1"}
+        print(f"keep_csv {a.keep_csv}: {len(keep_names)} names with "
+              f"{a.keep_col}=1 (input h5 has {len(names)})")
     if imgs.ndim == 4:
         imgs = imgs[:, 0]
     n = imgs.shape[1]
@@ -66,10 +85,14 @@ def main():
     r = np.hypot(yy - c, xx - c)
 
     kept, kept_src = [], []
-    reasons = {"faint": 0, "q": 0, "blank_edge": 0, "trail": 0, "dropped": 0, "empty": 0}
+    reasons = {"faint": 0, "q": 0, "blank_edge": 0, "trail": 0, "dropped": 0,
+               "empty": 0, "pruned": 0}
     for idx, im in enumerate(imgs):
         if idx in a.drop:
             reasons["dropped"] += 1
+            continue
+        if keep_names is not None and names[idx] not in keep_names:
+            reasons["pruned"] += 1
             continue
         bad = ~np.isfinite(im) | (im == 0.0)
         if bad.mean() > a.max_blank_frac:
