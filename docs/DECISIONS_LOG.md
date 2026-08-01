@@ -5,6 +5,32 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — C36 arc-brightness batch RESULT: brightening WORKS by eye (×5 reveals big arcs) but the AUTOMATED METRICS ARE BACKDROP-BLIND; small-θ arcs + crispness still need the real source (C37).
+
+Ran hybrid_combine --arc_flux_scale {2,3,5} on the variant-a renders (re-combine,
+no re-render; patch verified in cluster copy lines 136/436-437).
+- **AR0 arc_contrast was FLAT (3.16/2.68/3.23) and my annulus-residual metric was
+  flat too — I first misread this as "scaling did nothing". WRONG.** The metrics
+  are dominated by the injected REAL backdrop (real_dapool galaxies → annulus
+  residual ~0.146, LARGER than the arc for most lenses), so they cannot see the
+  arc brightening. **The EYE shows it clearly:** at ×5 the medium/large-θ lenses
+  (#29 θ1.46, #150 θ2.25, #0 θ2.01) show real rings/arcs that are faint at ×2 and
+  absent at ×1. Side-by-sides: raw/real_vs_sim_ab{2,5}.png.
+- **IMPORTANT corollary:** our arc-visibility SELECTION (arc_visibility_select
+  thresh 0.8) likely shares this backdrop blind spot — it can't cleanly rank arcs
+  when the injected backdrop dominates. Needs an arc metric that isolates the arc
+  from the backdrop (measure on the arc-only render, not the combined image).
+- **Raw arc render diagnosis:** total flux OK (~mag 22.6) but peak only 0.02 e-/s,
+  spread over 91% of the frame → LOW SURFACE BRIGHTNESS / diffuse. So the source
+  is not just faint, it's over-extended (a low-z COSMOS galaxy used at z~2 without
+  shrinking its angular size). Brightening (×5 ≈ +1.75 mag) makes big arcs visible,
+  but small-θ arcs stay faint and all arcs look SOFT/diffuse vs real crisp arcs.
+- **READ:** brightness is a real, working lever (confirms the over-dimming
+  diagnosis) — a ×5-ish source brightening is a valid stopgap for large arcs. But
+  the diffuse/soft arcs + faint small-θ arcs point squarely at C37 (real COMPACT
+  high-z sources) as the proper fix. Also flag: the injected real backdrop is busy
+  enough to compete with arcs — revisit backdrop brightness alongside C37.
+
 ## 2026-08-02 (cont.) — GEN5 ARC-VISIBILITY: root cause = SOURCE OVER-DIMMED (physics audit; distances are CORRECT). Plan logged (Nurkyz): quick arc-brightness batch → eyeball, then real high-z SOURCE sample. Full gen HELD.
 
 Nurkyz eyeballed the variant-a gallery: "in most of them arcs are not visible at

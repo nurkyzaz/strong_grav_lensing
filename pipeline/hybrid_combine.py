@@ -133,6 +133,12 @@ def main():
                         "(exposure --arc_exptime); default OFF until pilot-gated")
     p.add_argument("--arc_exptime", type=float, default=675.0,
                    help="calibrated e-/s exposure for --arc_poisson")
+    p.add_argument("--arc_flux_scale", type=float, default=1.0,
+                   help="GEN5 C36: multiply the noiseless lensed-source (arc) by "
+                        "this factor BEFORE Poisson+combine = physically brightening "
+                        "the source (arc surface brightness scales linearly with "
+                        "source flux). 1.0 = unchanged. Used to test/calibrate the "
+                        "source luminosity-function evolution the dimming omits.")
     p.add_argument("--no-backdrop", action="store_true",
                    help="ablation A2: skip the real empty-cutout backdrop and "
                         "use pure Gaussian noise at the SAME per-image target "
@@ -427,6 +433,8 @@ def main():
     dmag_all = []
     for i, fn in enumerate(files):
         sim = np.load(fn).astype("float32")
+        if args.arc_flux_scale != 1.0:
+            sim = sim * args.arc_flux_scale  # C36: brighten the lensed source
         if args.arc_poisson:
             # AR1: arc-only shot noise (deflector stamp + backdrop carry their
             # own real noise; render here is the noiseless lensed source)
