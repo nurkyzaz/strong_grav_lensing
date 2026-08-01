@@ -5,6 +5,57 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — GEN5 PHASE 1 started: companion cut LANDS (C30 firm fix #1), smoothness metric BUILT (arc-tuning NOT needed), deflector Re fixed as a bonus; one new item (deflector peak/sky low). Full gen still HELD.
+
+Nurkyz: "start GEN5 Phase 1." Did the two firm fixes + built the missing metric.
+
+**Arc-smoothness metric BUILT (analysis/arc_smoothness.py)** — the beadiness
+measure Phase 0 said was needed before touching "too-perfect ellipse". Per lens,
+on the arc annulus: n_beads (azimuthal peaks), roughness (std/mean of the
+azimuthal profile), duty_cycle (fraction of the arc span above half-max).
+Result (real 322 vs GEN5 v4 200): n_beads med 2 vs 2; roughness 0.72 vs 0.95
+(GEN5 bumpier); duty 0.31 vs 0.19 (GEN5 MORE broken). **VERDICT: the metric does
+NOT confirm "too smooth/elliptical" — both coverage AND smoothness say GEN5 arcs
+are as beaded/rough as real. NO arc-morphology tuning in Phase 1.**
+
+**Companion excess DIAGNOSED then FIXED (C30 #1).** A same-estimator diagnostic
+showed detected field companions scale with the INJECTED rate (corr 0.35;
+injected[0,6)->1.55 detected, [20,40)->4.81) — the excess is injection, not the
+HST backdrop. Re-combined the v4 renders (no GPU re-render, manifest unchanged →
+deflectors/arcs identical) at two rates (pipeline/g5_phase1_companion.sbatch,
+job 49108→re-run after a script-path fix). Measured vs real (analysis/
+measure_pilot.py; euclid_p1{a,b}.h5 banked to the review folder):
+
+| metric | real Q1 | v4 (rate 8-26) | p1a (2-9) | p1b (0-5) |
+|---|---|---|---|---|
+| field comp med / frac>4 | 2 / 8% | 3 / **33%** | **1 / 4%** | 1 / 2% |
+| deflector Re | 0.56" | 0.63" | **0.547"** | 0.528" |
+| arc roughness | 0.72 | 0.95 | 0.65 | 0.47 (too smooth) |
+| arc duty | 0.31 | 0.19 | 0.39 | 0.53 (too solid) |
+
+**WINNER = variant a (companion_rate 2-9, flux_pct 35 unchanged).** Tail fixed
+(33%→4%); companions land slightly UNDER real median (1 vs 2 — could nudge to
+~U[3,11] to hit 2 exactly). Side-by-side (raw/real_vs_sim_p1a.png) shows clean
+fields matching real Q1 — the v4 clutter is gone.
+
+**BONUS: deflector Re fixed by the SAME cut** (0.63"→0.547" ≈ real 0.56") —
+confirms Phase 0's read that the "big blob" was a dynamic-range/clutter artifact,
+not geometry. So evo_q did NOT need touching for size.
+
+**NEW ITEM surfaced:** with clutter gone, the stage0 peak/sky gate reads ~80
+(v4 read 141, inflated by companions mis-counted as the lens peak; real band
+103-727). So the deflector CORE is a touch too faint/diffuse — the next deflector
+item (likely the evo_q brightness knob / mag prior, C31). NOT the "too dominant"
+direction Phase 0 guessed. AR0 arc_contrast also FLAGs low (2.8 vs real 3.3-19.6)
+but Phase 0's own estimator had GEN5 arcs brighter than real — treat as an AR0
+definition/sky-scale quirk, cross-check with the deflector-brightness pass.
+
+**STATUS:** C30 companion fix DONE (rate 2-9); smoothness item CLOSED (no tune);
+deflector-brightness (peak/sky) is the remaining Phase-1 item, then re-pilot +
+Nurkyz eye-check. Full generation still HELD (this + C31 evo_q + C2 fit + scale ruling).
+
+---
+
 ## 2026-08-02 — GEN5 PRE-FULL-GEN AUDIT (Nurkyz: "I have to eyeball first; last time I noted several Euclid-match fixes — were they recorded + implemented?"). Full generation HELD. Companion/field-source density still mismatches real Q1 by eye.
 
 Nurkyz stopped the full-gen launch to re-verify GEN5→Euclid morphology matching
