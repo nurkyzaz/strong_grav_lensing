@@ -1,0 +1,28 @@
+G5a Path-A harvest on challenge-val N=1000 (NOTE: best-epoch used this split -> mildly optimistic; hidden test is the clean readout)
+== VARIANT f106 ==
+  f106/cnv2_3    raw   bias -0.003 RMSE 0.135 NMAD 0.043 R2 +0.93 fail 9% | chi2   1.08  P 0.108  A +0.0120
+  f106/cnv2_3    q68   bias -0.003 RMSE 0.135 NMAD 0.043 R2 +0.93 fail 9% | chi2   1.84  P 0.083  A +0.0120
+  f106/cnv2_3    rmsz  bias -0.003 RMSE 0.135 NMAD 0.043 R2 +0.93 fail 9% | chi2   1.00  P 0.112  A +0.0120
+  wrote /home/user/nurkyz/cosmos_acs/roman_dc/preds_g5a_f106_cnv2_3.csv (sigma pre-scaled x1.04 rmsz)
+  f106/r50_3     raw   bias -0.003 RMSE 0.131 NMAD 0.043 R2 +0.94 fail 8% | chi2   1.83  P 0.092  A +0.0106
+  f106/r50_3     q68   bias -0.003 RMSE 0.131 NMAD 0.043 R2 +0.94 fail 8% | chi2   2.46  P 0.080  A +0.0106
+  f106/r50_3     rmsz  bias -0.003 RMSE 0.131 NMAD 0.043 R2 +0.94 fail 8% | chi2   1.00  P 0.125  A +0.0106
+  wrote /home/user/nurkyz/cosmos_acs/roman_dc/preds_g5a_f106_r50_3.csv (sigma pre-scaled x1.35 rmsz)
+  f106/all6      raw   bias -0.003 RMSE 0.130 NMAD 0.042 R2 +0.94 fail 7% | chi2   1.23  P 0.103  A +0.0113
+  f106/all6      q68   bias -0.003 RMSE 0.130 NMAD 0.042 R2 +0.94 fail 7% | chi2   2.04  P 0.080  A +0.0113
+  f106/all6      rmsz  bias -0.003 RMSE 0.130 NMAD 0.042 R2 +0.94 fail 7% | chi2   1.00  P 0.115  A +0.0113
+  wrote /home/user/nurkyz/cosmos_acs/roman_dc/preds_g5a_f106_all6.csv (sigma pre-scaled x1.11 rmsz)
+== VARIANT 3band ==
+  3band/cnv2_3   raw   bias -0.007 RMSE 0.130 NMAD 0.042 R2 +0.94 fail 8% | chi2   0.80  P 0.112  A +0.0092
+  3band/cnv2_3   q68   bias -0.007 RMSE 0.130 NMAD 0.042 R2 +0.94 fail 8% | chi2   1.76  P 0.076  A +0.0092
+  3band/cnv2_3   rmsz  bias -0.007 RMSE 0.130 NMAD 0.042 R2 +0.94 fail 8% | chi2   1.00  P 0.100  A +0.0092
+  wrote /home/user/nurkyz/cosmos_acs/roman_dc/preds_g5a_3band_cnv2_3.csv (sigma pre-scaled x0.89 rmsz)
+  3band/r50_3    raw   bias -0.010 RMSE 0.129 NMAD 0.037 R2 +0.94 fail 6% | chi2   1.83  P 0.074  A -0.0018
+  3band/r50_3    q68   bias -0.010 RMSE 0.129 NMAD 0.037 R2 +0.94 fail 6% | chi2   1.88  P 0.073  A -0.0018
+  3band/r50_3    rmsz  bias -0.010 RMSE 0.129 NMAD 0.037 R2 +0.94 fail 6% | chi2   1.00  P 0.100  A -0.0018
+  wrote /home/user/nurkyz/cosmos_acs/roman_dc/preds_g5a_3band_r50_3.csv (sigma pre-scaled x1.35 rmsz)
+  3band/all6     raw   bias -0.008 RMSE 0.127 NMAD 0.038 R2 +0.94 fail 6% | chi2   0.96  P 0.098  A +0.0037
+  3band/all6     q68   bias -0.008 RMSE 0.127 NMAD 0.038 R2 +0.94 fail 6% | chi2   1.79  P 0.072  A +0.0037
+  3band/all6     rmsz  bias -0.008 RMSE 0.127 NMAD 0.038 R2 +0.94 fail 6% | chi2   1.00  P 0.096  A +0.0037
+  wrote /home/user/nurkyz/cosmos_acs/roman_dc/preds_g5a_3band_all6.csv (sigma pre-scaled x0.98 rmsz)
+G5A_VAL_EVAL_DONE

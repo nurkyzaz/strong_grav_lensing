@@ -5,6 +5,142 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-01 — RETROACTIVE CONSOLIDATION (Nurkyz directive): pulled ~3 weeks of UNLOGGED cluster work back to the Mac + git. The Mac log had stopped at eval #21 (2026-07-13) while the cluster ran evals #22–#25, all of GEN5 (z-migration + AR3 multipoles), the Roman Data Challenge submission, and the LEMON Q1b eval. Everything below happened 07-13→07-22 and is recorded now from the cluster slurm logs + CSVs (banked to results/cluster_logs_gap/, results/roman_dc/, results/preds_l2[245]_*, tables/g1b_kinematics_v1.csv; generator code mirrored to pipeline/ + training/). **Running eval count corrected to 25.**
+
+- **⛔ EVAL #22 (g4ar = AR1 arc-Poisson + AR2 shear coupling; Euclid real-PSF bench).**
+  SLACS N=62 cnv2_3: bias −0.028 / RMSE 0.157 / NMAD 0.061 / **R² +0.62** / fail 15%;
+  ens(all16) R²+0.58. S4TM: ens bias +0.034/RMSE 0.134/**R²+0.76**/fail 25%,
+  r50_3 derived R²+0.86. **READ: AR1+AR2 do NOT beat plain G4 (#19: R²+0.71) on
+  the Euclid SLACS bench — they are correctness refinements, not headline
+  movers. Incumbent Euclid recipe stays G4 cnv2_3 (#19, 0.137/+0.71/15%).**
+  Small-θ_E bin recovered (#16 62%/+28.7% → 62%/+8.7% here). (slurm_l22_eval_47875.out)
+- **⛔ EVAL #24 (Q2e: native REAL Euclid Q1 SLDE, N=322, vs PyAutoLens SIE GT;
+  preprocessing "f11p4").** Poor: r50_3 full R²+0.25/fail 56%, ens2 R²+0.16/
+  fail 60%, bias ≈ −0.2 (systematic UNDER-prediction), P(R²>0.71)=0.00. First
+  native-Q1 attempt; flux/zoom preprocessing wrong. (slurm_q2e_eval24_47908.out)
+- **⛔ EVAL #25 (Q2e native Euclid Q1, N=322, preprocessing "f2p85_zoom").**
+  Improved a lot: ens2 full R²+0.57/fail 33%, **in-support R²+0.61/fail 32%**,
+  bias −0.10 (med frac −7.7%); r50_3 full R²+0.49. **STILL BELOW LEMON's own
+  Q1 scoreboard (R²+0.71, NMAD 0.07); P(R²>0.71)=0.01.** HONEST STANDING:
+  native real Euclid Q1 (LEMON domain B, their turf + own PyAutoLens GT) is a
+  CURRENT LIMITATION — we are at R²~0.6, under-predicting ~8%. The #24→#25 jump
+  shows most of the gap is preprocessing/flux-scale, not the model — a lever to
+  pursue if this domain enters the paper. (slurm_q2e_eval25_48007.out)
+- **GEN5 LAUNCHED (C21): the z-migrated high-z population for Euclid + Roman.**
+  Nurkyz naming ruling 2026-07-22: GEN4 = low-z native SLACS/S4TM (frozen as
+  the paper's core); GEN5 = the same physics migrated to high z.
+  - **Deflector library expanded**: g1b footprint-crossmatch → 800 phase-1
+    fetch → **488 measured stamps** (tables/g1b_kinematics_v1.csv) with σ_v, z,
+    (mag, Re, q, PA) AND isophote a3/b3/a4/b4 + m3/m4 (g1b_measure_stamps.py).
+    (NB the "322" is the Q1 native-Euclid EVAL sample, a different number.)
+  - **z-migration** (g5_make_manifest.py): each stamp migrated to z_new ~
+    lognormal(med 0.79, σ_ln 0.36, clip [0.30,1.50], measured from Rung-0
+    deflectors); stamp zooms by D_A(z_orig)/D_A(z_new) and dims by Tolman
+    ((1+z_orig)/(1+z_new))⁴ ⇒ total flux ∝ luminosity-distance ratio²; θ_E at
+    (z_new, z_s~N(2.0,0.6)∈[z_new+0.2,3.5]). Optional passive-evolution
+    brighten (evo_q≈1.2 mag/z; PHYSICS PENDING Brian/Nurkyz, gate-arbitrated).
+  - **AR3 isophote-anchored multipoles IMPLEMENTED (the novelty)**:
+    config_lensfusion_acs_g5.py uses paltas `PEMDShearFourMultipole`; per stamp
+    with a clean isophote fit, mass m=3,4 amplitude set so the convergence
+    contour deviation equals the MEASURED light-isophote deviation:
+    mult{m}_a = iso_m{m}·θ_E (capped 0.10·θ_E), mult{m}_phi = light PA + phase.
+    m=2 zeroed (already the PEMD ellipticity). Stamps with bad fits → pure
+    PEMD+shear. Per-observed-galaxy multipole priors = the GEN5 methods novelty.
+  - **Gen5HighZSource**: Newton-mag-renormalized COSMOS source, then dimmed by
+    distance-modulus + flat-ν K-correction from z_ref 0.65 to the row z_source
+    (fixes a Nurkyz-caught bug where the low-z Newton apparent-mag prior
+    overwrote paltas's cosmological dimming — arcs weren't dimming with z).
+  - **euclidise.py G5 change**: LF_EUC_SKY_SCALE ≈ 2.2 for the Q1 arm — real Q1
+    release imaging measures noisier than the nominal EWS depth (stage0 sky-RMS
+    ratio 0.673); gate-tuned, disclosed. (euclidise.py.bak_pre_g5 kept.)
+- **G5 ROMAN — Roman Data Challenge (Rung 0) ENTERED (this is the "Roman
+  competition" Nurkyz referred to).**
+  - **G5a (train ON the Roman challenge sim)**: 6-network ensemble =
+    {f106, 3band} × {cnv2_3, r50_3, all6}. Challenge-VAL: **R² +0.93–0.94,
+    NMAD 0.037–0.043, fail 6–9%** — excellent, BUT this split fed best-epoch
+    selection ⇒ "mildly optimistic; hidden test is the clean readout"
+    (slurm_g5a_valeval_48001.out). Submission files written:
+    results/roman_dc/rung0_submission*.csv (verify_submission.py).
+  - **G5b (ZERO-SHOT: HST/Euclid-trained models → Roman, no retrain)**: FAILS —
+    g4_cnv2_3 bias −0.156/R²+0.11/fail 59%; g4ar_r50 R²+0.00/fail 60%. Honest
+    transfer-limit result: the domain gap to Roman is real; training on the
+    Roman rendering (G5a) is what works. (slurm_g5b_zeroshot_47974.out)
+- **LEMON Q1b eval (domain A, our preds on the Euclidised EEL/COSMOS/ACS
+  lenses).** Ran 2026-07-15: per-lens CSVs written for BOTH native (g4n) and
+  Euclid (g4) arms, EEL(12)/COSMOS(5)/ACS(12), seeds s1/s2/s3
+  (results/preds_lemonq1b_*). The aggregate per-subsample metric TABLE was not
+  computed in that job — OPEN (compute from these CSVs; pairs with the SLACS-29
+  head-to-head from the 2026-07-22 entry to complete domain A).
+- **Process note (the reason this entry exists):** evals #22–#25 + all of GEN5
+  + Roman ran on the cluster but were never logged in this file or pushed to
+  git — a ~3-week doc/eval-count desync (Mac stuck at #21). Fixed by this
+  retroactive pull. Standing rule reaffirmed: bank + log + push at every eval,
+  including cluster-side ones; the Mac session must reconcile after any
+  autonomous cluster campaign.
+
+---
+
+## 2026-07-22 — LEMON PER-LENS PREDICTIONS RECEIVED (Nurkyz): the SLACS-29 identity is RESOLVED; head-to-head recomputed on their EXACT lenses vs Bolton — we beat LEMON on every metric. Also logged: ROMAN competition entry (6-network ensemble submitted)
+
+- **LEMON's per-lens Einstein-radius predictions (Euclidised-HST domain, their
+  CNN) added to the repo** — `tables/lemon_predictions/lemon_{slacs,eel,cosmos,acs}_predictions.csv`
+  (each: Name, Einstein_radius, uncertainty). Counts received: **SLACS 29,
+  EEL 12, COSMOS 5, ACS/Pawase 13 = 59** (their Table 3 says 60; the shortfall
+  is the EEL sample — see below). This closes the C8/C16 open item "we lack
+  their per-lens list": we now HAVE it (supersedes the 2026-07-13 note that
+  only their aggregate was in hand).
+- **SLACS-29 IDENTITY RESOLVED (long-open Q1a blocker).** Their SLACS file
+  names every lens; all 29 match Bolton Table 5 by J-name (100%). Composition
+  check: 22/29 are `ring_subset=Yes`, 28/29 `good_sigma=Yes`, 21/29 both — i.e.
+  NOT a clean "Ring=32" or "Ring∩σ=31" cut (both prior hypotheses, now falsified
+  by the actual list); their selection mixes ring and non-ring, near-all
+  good-σ. The exact 29: J0029-0055, J0216-0813, J0252+0039, J0330-0020,
+  J0728+3835, J0737+3216, J0822+2652, J0841+3824, J0903+4116, J0912+0029,
+  J0946+1006, J0956+5100, J0959+0410, J1023+4230, J1103+5322, J1153+4612,
+  J1205+4910, J1213+6708, J1250+0523, J1416+5136, J1420+6019, J1430+4105,
+  J1525+3327, J1627-0053, J1630+4520, J2238-0754, J2300+0022, J2303+1422,
+  J2341+0000.
+- **EEL = 12, not 13:** J0913 is ABSENT from their prediction file — confirming
+  the standing note (g1b_lens_candidates: "EEL J0913, the 13th EEL missing from
+  the LEMON review"). Their EEL subsample is 12. COSMOS 5 = {0012+2015,
+  0038+4133, 0047+5023, 0211+1139, 5921+0638} (the spec-confirmed Faure subset,
+  now pinned). ACS 13 = Pawase spec subset, arc-radius "GT" only (unchanged).
+- **HEAD-TO-HEAD RECOMPUTED on the exact 29 SLACS, GT = Bolton b_SIE**
+  (`analysis/lemon_headtohead_recompute.py` → `results/lemon_vs_ours_slacs29.csv`;
+  ours = row-filter on saved preds_l19 (g4 Euclid) + preds_l21 (g4n native), NO
+  benchmark re-run — not a new eval, does not increment the count):
+
+  | model | N | bias | RMSE | NMAD | R² | med-frac | fail>15% |
+  |---|---|---|---|---|---|---|---|
+  | LEMON (their CNN, Euclidised) | 29 | +0.288 | 0.473 | 0.307 | **−4.26** | +14.4% | **55%** |
+  | OURS Euclid-domain (g4 cnv2 ens) | 29 | −0.043 | **0.135** | **0.045** | **+0.57** | −1.2% | **7%** |
+  | OURS native-HST (g4n cnv2 ens) | 29 | −0.012 | 0.173 | 0.038 | +0.30 | −0.5% | 10% |
+
+  LEMON systematically **over-predicts SLACS θ_E by ~+14%** (worst: J1153+4612
+  +91%, J2300+0022 +85%, J0822+2652 +81%) with 55% failing >15%; we sit at
+  ~−1% bias / 7% fail on the identical lenses and GT. Consistent with LEMON's
+  own Sect. 7 (real < sim) + the −0.22 mag ZP issue.
+  **Caveats to carry (honest):** (1) LEMON ran on THEIR Euclidisation, we on
+  OURS — same "Euclid-domain θ_E vs Bolton" comparison, different degradation
+  operator (disclose). (2) R² is range-sensitive on the narrow SLACS b_SIE band
+  (~1.0–1.8″) — it hits BOTH rows equally, so the relative gap is fair, but
+  quote bias/NMAD/fail as the primary evidence, not R² alone. (3) Their Fig. 9
+  caption states SLACS GT = Bolton, so Bolton is the correct referee; still
+  worth confirming their SLACS-only internal number in the reply. Next: same
+  recompute for EEL-12 (vs Oldham power-law+shear) and COSMOS-5 (vs Faure
+  Lenstool), ACS dual-report vs arc radius — then the full LEMON-convention
+  per-subsample table for the paper.
+- **ROMAN COMPETITION — ENTRY LOGGED (Nurkyz):** we PARTICIPATED and submitted
+  our **ensemble of 6 networks**. (Corrects the 2026-07-22 session's earlier
+  "no record found" — that was a docs gap, not a non-event.) TODO to fill in
+  with Nurkyz: exact competition name/host, submission date, the 6 members'
+  identities (seed-ensemble vs arch-ensemble), the data domain scored, and any
+  returned score/ranking. Distinct from G5 (the planned Roman *rendering* for
+  paper-2) — this is a real external submission and belongs in
+  MODELS_AND_RESULTS once the details are in.
+
+---
+
 ## 2026-07-13 (PM, cont.) — DOC CONSOLIDATION (Nurkyz directive: "one plan"): MASTER_PLAN.md rewritten as the SINGLE live plan; five plan docs + the superseded LensFusion instructions ARCHIVED to docs/archive/ with banners; root folder synced
 
 - New MASTER_PLAN.md = priority ladder (eval #22 → Q program → G1b → AR3 →

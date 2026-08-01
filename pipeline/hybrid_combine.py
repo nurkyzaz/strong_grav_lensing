@@ -298,7 +298,10 @@ def main():
     fo.attrs["run"] = run
     fo.attrs["seed"] = args.seed
 
-    def inject_companions(img):
+    def inject_companions(img, dim=1.0):
+        """dim: GEN5 z-migration SB factor (Nurkyz fix 2026-07-22) — the
+        companion field must dim with the migrated scene, else native-
+        brightness COSMOS companions outshine the dimmed central deflector."""
         rate = rng.uniform(args.companion_rate_lo, args.companion_rate_hi)
         n = int(rng.poisson(rate))
         sp = companions.shape[1]; h = sp // 2
@@ -312,32 +315,49 @@ def main():
             if y0 < 0 or x0 < 0 or y0 + sp > n_px or x0 + sp > n_px:
                 continue
             st = companions[rng.choice(len(companions), p=comp_p)]
-            img[y0:y0 + sp, x0:x0 + sp] += st
+            img[y0:y0 + sp, x0:x0 + sp] += st * dim
             placed += 1
         return placed
 
     g2_assign = None
     if args.deflector_manifest:
         import csv as _csv
-        g2_assign = {int(r["file_row"]): (int(r["stamp_id"]), int(r["dihedral_k"]))
-                     for r in _csv.DictReader(open(args.deflector_manifest))}
+        g2_assign = {}
+        n_mig = 0
+        for r in _csv.DictReader(open(args.deflector_manifest)):
+            # C21 z-migration: optional per-row (angular shrink, SB dim)
+            sc = float(r.get("mig_scale", 1.0) or 1.0)
+            sb = float(r.get("mig_sb", 1.0) or 1.0)
+            if sc != 1.0 or sb != 1.0:
+                n_mig += 1
+            g2_assign[int(r["file_row"])] = (int(r["stamp_id"]),
+                                             int(r["dihedral_k"]), sc, sb)
         print("G2 manifest mode: %d assignments, native amplitude, no mag draw"
-              % len(g2_assign))
+              % len(g2_assign)
+              + ("; C21 z-migration on %d rows (zoom by D_A ratio, "
+                 "(1+z)^4 SB dimming)" % n_mig if n_mig else ""))
 
     def inject_deflector_g2(sim, i):
-        """GEN4-G2: the assigned real galaxy at its own brightness."""
-        di, k = g2_assign[i]
+        """GEN4-G2: the assigned real galaxy at its own brightness
+        (C21: optionally z-migrated — shrunk and Tolman-dimmed)."""
+        di, k, mig_scale, mig_sb = g2_assign[i]
         st = deflectors[di]
         st = np.rot90(st, k % 4)
         if k >= 4:
             st = np.fliplr(st)
         st = np.ascontiguousarray(st).copy()
+        if mig_scale != 1.0 or mig_sb != 1.0:
+            from scipy.ndimage import zoom as _ndi_zoom
+            st = _ndi_zoom(st, mig_scale, order=1) * mig_sb
         sp = st.shape[0]
         jy = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
         jx = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
         if sp >= n_px:
             c0 = (sp - n_px) // 2
-            y0, x0 = c0 + jy, c0 + jx
+            # clamp: a z-migrated stamp can land at exactly n_px, where the
+            # jitter would push the crop window out of bounds
+            y0 = min(max(c0 + jy, 0), sp - n_px)
+            x0 = min(max(c0 + jx, 0), sp - n_px)
             sim += st[y0:y0 + n_px, x0:x0 + n_px]
         else:
             y0 = (n_px - sp) // 2 + jy
@@ -437,7 +457,10 @@ def main():
                 skipped_topup += 1
             img = sim + cut
             if companions is not None:
-                nc = inject_companions(img)
+                comp_dim = (g2_assign[i][3]
+                            if (g2_assign is not None and i in g2_assign)
+                            else 1.0)
+                nc = inject_companions(img, dim=comp_dim)
             img = img + rng.normal(0.0, top, sim.shape).astype("float32")
         d_img[i] = img
         d_cut[i] = ci

@@ -1,3 +1,7 @@
+> **For the θ_E training generator (how it works, photometry/units/normalization,
+> by-files map, GEN0→GEN5 lineage) see [GENERATOR_AND_CODEBASE_REFERENCE.md](GENERATOR_AND_CODEBASE_REFERENCE.md).**
+> This file covers the older Phase-2 (LensFusion diffusion) tree only.
+
   bare arc. **No `kappa_interp_mode` kwarg** in this installed version.
 - `forward_operator/regularizers.py` — regularizer catalog (Phase 2). `eval.py`,
   `utils/utils.py` — `einstein_radius_hard(kappa_bhw, pixel_scale)` (expects a batch dim, non-diff).

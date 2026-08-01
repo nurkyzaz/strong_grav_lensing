@@ -5,7 +5,24 @@ dated). This file is the SUMMARY VIEW of where the numbers stand. Pre-GEN4
 content (m3/simct/hybrid-v1..v3/Path-B eras) lives in git history of this file
 and in DECISIONS_LOG.
 
-## The frozen benchmark (never trained on; eval count at 21)
+## Update 2026-08-01 (retroactive: evals #22–#25 consolidated from cluster)
+
+Eval count is now **25** (was stale at 21 here; #22–#25 ran on the cluster
+2026-07-13/14 and were logged retroactively — DECISIONS_LOG 2026-08-01).
+- **#22 (g4ar, AR1+AR2, Euclid SLACS):** R²+0.62/fail 15% — flat vs #19 (+0.71);
+  AR1+AR2 are refinements, not headline movers. Euclid primary stays G4 (#19).
+- **#24/#25 (native REAL Euclid Q1, N=322, vs PyAutoLens GT):** best = #25 ens
+  in-support **R²+0.61/fail 32%, bias −8%** — BELOW LEMON's own Q1 (R²+0.71).
+  Current frontier/limitation; most of the #24→#25 gain was preprocessing.
+- **Roman Data Challenge (G5a, 6-net ensemble):** challenge-VAL R²+0.93–0.94/
+  fail 6–9% (optimistic; hidden-test pending). Zero-shot transfer (G5b) fails
+  (R²+0.11) — training on the Roman rendering is what works.
+- **LEMON head-to-head, exact 29 SLACS vs Bolton:** ours R²+0.57 (Euclid)/+0.30
+  (native) vs LEMON R²−4.26 (results/lemon_vs_ours_slacs29.csv). EEL/COSMOS/ACS
+  aggregate table still to compute from results/preds_lemonq1b_*.
+- Full generator/photometry reference: docs/GENERATOR_AND_CODEBASE_REFERENCE.md.
+
+## The frozen benchmark (never trained on; core result = evals #19/#21)
 
 62 SLACS + 40 S4TM real HST/ACS F814W cutouts; ground truth = Bolton et al.
 2008 spectroscopic-lensing b_SIE. Euclid-domain testing = the SAME cutouts

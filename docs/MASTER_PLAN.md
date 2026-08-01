@@ -47,6 +47,10 @@ cutouts downloaded + unzipped (~/cosmos_acs/q1_slde/, 336 lens dirs, 4.7 GB).
    population. No real GT exists → the claim is "cross-domain-validated,
    Roman-ready"; cite Wedig et al. 2025 (arXiv:2506.03390) as the waiting
    application (their sim products are public — the gap will not stay open).
+   **NB — separate from the above: a ROMAN COMPETITION entry was already
+   SUBMITTED (our 6-network ensemble; Nurkyz 2026-07-22). Details TBD (host,
+   date, scored domain, result) — log in MODELS_AND_RESULTS when in hand. The
+   G5 rendering here is the paper-2 sim work, NOT the competition submission.**
 6. **Paper §4 rewrite + release assets** (§5) — continuous, parallel.
 
 ## 2. Q program — beat LEMON on their exact lenses, both domains (C16)
@@ -64,18 +68,20 @@ admits real < sim performance.
 - **Q1a sample identity**: EELs 13/13 IDENTIFIED (Oldham 2017 Table 2 —
   J0837 0.56″, J0901 0.67″, J0913 0.42″, J1125 0.86″, J1144 0.68″, J1218
   0.68″, J1323 0.31″, J1347 0.43″, J1446 0.41″, J1605 0.64″, J1606 0.52″,
-  J1619 0.50″, J2228 0.60″; GT = power-law+shear, disclose). COSMOS 5 = the
-  spectroscopically-confirmed subset of Faure 2008 (VizieR table pulled; pick
-  the spec-z 5). ACS 13 = spec-confirmed subset of Pawase 2014 Table 3 (not
-  on VizieR — extract from paper; NO true θ_E, dual-report vs arc radius or
-  exclude, flagged). SLACS 29: NOT uniquely derivable — Ring=32,
-  Ring∩σ_good=31 (tables/bolton08_table5.csv), Auger-photometry cut RULED OUT
-  (all 31 have I-band). Routes: (i) Busillo reply (email SENT ~07-12/13;
-  nudge ~07-20), (ii) digitize their Fig. 9 (z_lens, log θ_E) 29 points and
-  match against the 63 Bolton pairs. Until resolved: 62-superset row
-  (defensible; already beats their aggregate). Gate: any claimed 29-list must
-  reproduce their Fig. 9 scatter. Deliverable: tables/lemon60_targets.csv
-  (skeleton exists).
+  J1619 0.50″, J2228 0.60″; GT = power-law+shear, disclose). **UPDATE
+  2026-07-22: LEMON's per-lens predictions received (tables/lemon_predictions/)
+  — their EEL file has 12, NOT 13 (J0913 absent).** COSMOS 5 = the
+  spectroscopically-confirmed subset of Faure 2008 — **PINNED from their file:
+  {0012+2015, 0038+4133, 0047+5023, 0211+1139, 5921+0638}.** ACS 13 =
+  spec-confirmed subset of Pawase 2014 Table 3 (NO true θ_E, dual-report vs arc
+  radius or exclude, flagged). **SLACS 29: ✅ RESOLVED 2026-07-22 — their SLACS
+  prediction file names all 29 (100% match to Bolton Table 5). Prior Ring=32 /
+  Ring∩σ=31 hypotheses FALSIFIED (actual: 22/29 ring, 28/29 good-σ, 21/29
+  both). List + head-to-head in DECISIONS_LOG 2026-07-22 and
+  results/lemon_vs_ours_slacs29.csv.** Recomputed on the exact 29 vs Bolton:
+  LEMON R²−4.26/NMAD 0.307/55% fail/+14% bias vs ours (Euclid) R²+0.57/NMAD
+  0.045/7% fail — the 62-superset row is now superseded by the exact-29 row.
+  Deliverable: tables/lemon60_targets.csv (skeleton exists).
 - **Q1b imaging (31 non-SLACS)**: MAST F814W fetch (g1/g1b driver pattern;
   COSMOS 5 may be in local COSMOS tiles — check first) → benchmark-grid
   cutouts → files FROZEN at creation (`real_lemon31_*`, C18) → euclidise

@@ -45,6 +45,18 @@ def _g2_zs():
     return float(_g2_row("zs")["z_source"])
 
 
+def _g2_gamma1():
+    return float(_g2_row("g1")["gamma1"])
+
+
+def _g2_gamma2():
+    return float(_g2_row("g2")["gamma2"])
+
+
 config_dict['main_deflector']['parameters']['theta_E'] = _g2_theta_e
+if _ROWS and "gamma1" in _ROWS[0]:
+    # AR2 manifest: shear coupled to the row's misalignment (C1)
+    config_dict['main_deflector']['parameters']['gamma1'] = _g2_gamma1
+    config_dict['main_deflector']['parameters']['gamma2'] = _g2_gamma2
 config_dict['main_deflector']['parameters']['e1,e2'] = _g2_e12
 config_dict['source']['parameters']['z_source'] = _g2_zs

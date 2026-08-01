@@ -1,0 +1,92 @@
+GT table: 322 usable, 13 skipped (empty theta_E)
+Q2d AUDIT: N=322 with GT (14 dirs lack GT — LEMON had 354; disclose)
+  GT theta_E: q10/50/90 = 0.53 / 0.88 / 1.47 arcsec
+  in-support [0.45,2.30]: 311 (97%)  below: 8  above: 3
+  tuning-burned present: 9 of 9
+  C17 full-set: skyRMS med 0.007357 (bench 0.008)  peak/sky med 218 (bench 480)
+FROZEN eval file written (C18): /home/user/nurkyz/cosmos_acs/q1_slde/q1_slde_eval_f11p4.h5  N=322
+preview written: /home/user/nurkyz/cosmos_acs/q1_slde/q2e_preview_outsupport.png (11 systems)
+preview written: /home/user/nurkyz/cosmos_acs/q1_slde/q2e_preview_insample.png (20 systems)
+loaded arch=convnextv2
+/home/user/nurkyz/cosmos_acs/q1_slde/q1_slde_eval_f11p4.h5: N=322  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0402"
+wrote /home/user/nurkyz/einstein_cnn/brian_run/preds_l24_g4_cnv2_s1_q1_slde_f11p4.csv  (322 lenses)
+theta_E_pred: min 0.46  median 0.55  max 2.23
+theta_E_sigma: median 0.042"  (median sigma/pred = 7.0%)
+loaded arch=convnextv2
+/home/user/nurkyz/cosmos_acs/q1_slde/q1_slde_eval_f11p4.h5: N=322  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0255"
+wrote /home/user/nurkyz/einstein_cnn/brian_run/preds_l24_g4_cnv2_s2_q1_slde_f11p4.csv  (322 lenses)
+theta_E_pred: min 0.45  median 0.64  max 2.24
+theta_E_sigma: median 0.048"  (median sigma/pred = 6.8%)
+loaded arch=convnextv2
+/home/user/nurkyz/cosmos_acs/q1_slde/q1_slde_eval_f11p4.h5: N=322  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0324"
+wrote /home/user/nurkyz/einstein_cnn/brian_run/preds_l24_g4_cnv2_s3_q1_slde_f11p4.csv  (322 lenses)
+theta_E_pred: min 0.48  median 0.63  max 2.29
+theta_E_sigma: median 0.048"  (median sigma/pred = 7.2%)
+loaded arch=resnet50
+/home/user/nurkyz/cosmos_acs/q1_slde/q1_slde_eval_f11p4.h5: N=322  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0423"
+wrote /home/user/nurkyz/einstein_cnn/brian_run/preds_l24_g4ar_r50_s1_q1_slde_f11p4.csv  (322 lenses)
+theta_E_pred: min 0.44  median 0.67  max 2.29
+theta_E_sigma: median 0.042"  (median sigma/pred = 6.5%)
+loaded arch=resnet50
+/home/user/nurkyz/cosmos_acs/q1_slde/q1_slde_eval_f11p4.h5: N=322  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0425"
+wrote /home/user/nurkyz/einstein_cnn/brian_run/preds_l24_g4ar_r50_s2_q1_slde_f11p4.csv  (322 lenses)
+theta_E_pred: min 0.45  median 0.71  max 2.30
+theta_E_sigma: median 0.050"  (median sigma/pred = 7.4%)
+loaded arch=resnet50
+/home/user/nurkyz/cosmos_acs/q1_slde/q1_slde_eval_f11p4.h5: N=322  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0406"
+wrote /home/user/nurkyz/einstein_cnn/brian_run/preds_l24_g4ar_r50_s3_q1_slde_f11p4.csv  (322 lenses)
+theta_E_pred: min 0.44  median 0.66  max 2.20
+theta_E_sigma: median 0.051"  (median sigma/pred = 8.1%)
+
+⛔ EVAL #24 — Q2e OFFICIAL, frozen x11.4, N=322
+LEMON Fig12a ref: bias +0.01  RMSE 0.17  NMAD 0.07  R2 +0.71
+== cnv2_3 (primary) ==
+  full              N=322  bias -0.244  RMSE 0.428  NMAD 0.166  R2 +0.00  fail 64%
+  excl-tuning       N=313  bias -0.244  RMSE 0.428  NMAD 0.165  R2 +0.00  fail 64%
+  in-support        N=311  bias -0.249  RMSE 0.385  NMAD 0.163  R2 -0.04  fail 64%
+  in-supp excl-tun  N=302  bias -0.249  RMSE 0.385  NMAD 0.164  R2 -0.04  fail 65%
+  boot(full): P(RMSE<0.17)=0.00  P(NMAD<0.07)=0.00  P(R2>0.71)=0.00  P(|bias|<0.03)=0.00
+  med frac -19.5% | conf-half fail 47% | cov RECAL 20/43%
+    [0.00,0.45): N=  8   50%  +17.0%
+    [0.45,0.90): N=162   54%  -15.2%
+    [0.90,1.20): N= 82   74%  -26.8%
+    [1.20,1.50): N= 39   82%  -29.1%
+    [1.50,3.00): N= 30   67%  -34.2%
+== r50_3 (derived) ==
+  full              N=322  bias -0.207  RMSE 0.371  NMAD 0.158  R2 +0.25  fail 56%
+  excl-tuning       N=313  bias -0.208  RMSE 0.371  NMAD 0.159  R2 +0.25  fail 56%
+  in-support        N=311  bias -0.213  RMSE 0.347  NMAD 0.152  R2 +0.16  fail 55%
+  in-supp excl-tun  N=302  bias -0.215  RMSE 0.346  NMAD 0.153  R2 +0.16  fail 56%
+  boot(full): P(RMSE<0.17)=0.00  P(NMAD<0.07)=0.00  P(R2>0.71)=0.00  P(|bias|<0.03)=0.00
+  med frac -15.4% | conf-half fail 33% | cov RECAL 20/44%
+    [0.00,0.45): N=  8   50%  +13.9%
+    [0.45,0.90): N=162   43%  -11.6%
+    [0.90,1.20): N= 82   68%  -23.3%
+    [1.20,1.50): N= 39   69%  -33.7%
+    [1.50,3.00): N= 30   70%  -33.6%
+== ens2 (derived) ==
+  full              N=322  bias -0.225  RMSE 0.392  NMAD 0.148  R2 +0.16  fail 60%
+  excl-tuning       N=313  bias -0.226  RMSE 0.392  NMAD 0.148  R2 +0.17  fail 60%
+  in-support        N=311  bias -0.231  RMSE 0.360  NMAD 0.145  R2 +0.09  fail 60%
+  in-supp excl-tun  N=302  bias -0.232  RMSE 0.359  NMAD 0.145  R2 +0.09  fail 61%
+  boot(full): P(RMSE<0.17)=0.00  P(NMAD<0.07)=0.00  P(R2>0.71)=0.00  P(|bias|<0.03)=0.00
+  med frac -17.0% | conf-half fail 40% | cov RECAL 23/50%
+    [0.00,0.45): N=  8   50%  +15.4%
+    [0.45,0.90): N=162   50%  -14.0%
+    [0.90,1.20): N= 82   73%  -23.8%
+    [1.20,1.50): N= 39   72%  -27.3%
+    [1.50,3.00): N= 30   67%  -36.3%
+wrote /home/user/nurkyz/einstein_cnn/brian_run/preds_l24_ens_q1_slde_f11p4.csv
+EVAL24_DONE

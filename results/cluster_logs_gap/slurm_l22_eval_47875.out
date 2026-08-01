@@ -1,0 +1,286 @@
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0470"
+wrote brian_run/preds_l22_g4ar_resnet_s1_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.51  median 1.19  max 1.79
+theta_E_sigma: median 0.069"  (median sigma/pred = 6.2%)
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0309"
+wrote brian_run/preds_l22_g4ar_resnet_s1_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.53  median 1.01  max 1.57
+theta_E_sigma: median 0.061"  (median sigma/pred = 6.2%)
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0465"
+wrote brian_run/preds_l22_g4ar_resnet_s2_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.51  median 1.17  max 1.74
+theta_E_sigma: median 0.064"  (median sigma/pred = 6.6%)
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0394"
+wrote brian_run/preds_l22_g4ar_resnet_s2_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.53  median 1.01  max 1.54
+theta_E_sigma: median 0.067"  (median sigma/pred = 7.2%)
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0537"
+wrote brian_run/preds_l22_g4ar_resnet_s3_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.55  median 1.17  max 1.77
+theta_E_sigma: median 0.074"  (median sigma/pred = 6.5%)
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0435"
+wrote brian_run/preds_l22_g4ar_resnet_s3_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.52  median 1.01  max 1.55
+theta_E_sigma: median 0.071"  (median sigma/pred = 5.6%)
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0428"
+wrote brian_run/preds_l22_g4ar_resnet_s4_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.53  median 1.21  max 1.81
+theta_E_sigma: median 0.067"  (median sigma/pred = 6.4%)
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0356"
+wrote brian_run/preds_l22_g4ar_resnet_s4_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.53  median 1.02  max 1.57
+theta_E_sigma: median 0.063"  (median sigma/pred = 5.9%)
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0492"
+wrote brian_run/preds_l22_g4ar_resnet_s5_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.59  median 1.21  max 2.00
+theta_E_sigma: median 0.085"  (median sigma/pred = 7.3%)
+/home/user/nurkyz/miniconda3/envs/Stronglensing/lib/python3.8/site-packages/torch/nn/modules/conv.py:456: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:919.)
+  return F.conv2d(input, weight, bias, self.stride,
+loaded arch=resnet
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0400"
+wrote brian_run/preds_l22_g4ar_resnet_s5_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.54  median 0.99  max 1.56
+theta_E_sigma: median 0.070"  (median sigma/pred = 7.5%)
+loaded arch=inceptionnext
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0578"
+wrote brian_run/preds_l22_g4ar_incnext_s1_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.59  median 1.16  max 2.00
+theta_E_sigma: median 0.066"  (median sigma/pred = 5.2%)
+loaded arch=inceptionnext
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0441"
+wrote brian_run/preds_l22_g4ar_incnext_s1_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.54  median 1.04  max 1.58
+theta_E_sigma: median 0.059"  (median sigma/pred = 6.4%)
+loaded arch=inceptionnext
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0535"
+wrote brian_run/preds_l22_g4ar_incnext_s2_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.60  median 1.16  max 2.00
+theta_E_sigma: median 0.054"  (median sigma/pred = 4.8%)
+loaded arch=inceptionnext
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0485"
+wrote brian_run/preds_l22_g4ar_incnext_s2_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.55  median 1.08  max 1.61
+theta_E_sigma: median 0.066"  (median sigma/pred = 6.5%)
+loaded arch=inceptionnext
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0601"
+wrote brian_run/preds_l22_g4ar_incnext_s3_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.59  median 1.17  max 2.04
+theta_E_sigma: median 0.058"  (median sigma/pred = 5.0%)
+loaded arch=inceptionnext
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0513"
+wrote brian_run/preds_l22_g4ar_incnext_s3_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.53  median 1.09  max 1.63
+theta_E_sigma: median 0.064"  (median sigma/pred = 5.4%)
+loaded arch=inceptionnext
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0590"
+wrote brian_run/preds_l22_g4ar_incnext_s4_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.57  median 1.18  max 2.07
+theta_E_sigma: median 0.064"  (median sigma/pred = 5.6%)
+loaded arch=inceptionnext
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0455"
+wrote brian_run/preds_l22_g4ar_incnext_s4_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.55  median 1.04  max 1.59
+theta_E_sigma: median 0.061"  (median sigma/pred = 6.7%)
+loaded arch=inceptionnext
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0547"
+wrote brian_run/preds_l22_g4ar_incnext_s5_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.60  median 1.15  max 2.00
+theta_E_sigma: median 0.068"  (median sigma/pred = 5.5%)
+loaded arch=inceptionnext
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0444"
+wrote brian_run/preds_l22_g4ar_incnext_s5_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.55  median 1.02  max 1.57
+theta_E_sigma: median 0.070"  (median sigma/pred = 7.1%)
+loaded arch=convnextv2
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0480"
+wrote brian_run/preds_l22_g4ar_cnv2_s1_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.70  median 1.15  max 1.85
+theta_E_sigma: median 0.050"  (median sigma/pred = 4.1%)
+loaded arch=convnextv2
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0340"
+wrote brian_run/preds_l22_g4ar_cnv2_s1_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.53  median 1.00  max 1.54
+theta_E_sigma: median 0.047"  (median sigma/pred = 5.0%)
+loaded arch=convnextv2
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0373"
+wrote brian_run/preds_l22_g4ar_cnv2_s2_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.57  median 1.18  max 1.71
+theta_E_sigma: median 0.043"  (median sigma/pred = 3.4%)
+loaded arch=convnextv2
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0275"
+wrote brian_run/preds_l22_g4ar_cnv2_s2_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.55  median 1.01  max 1.59
+theta_E_sigma: median 0.038"  (median sigma/pred = 3.7%)
+loaded arch=convnextv2
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0449"
+wrote brian_run/preds_l22_g4ar_cnv2_s3_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.58  median 1.17  max 1.96
+theta_E_sigma: median 0.048"  (median sigma/pred = 3.9%)
+loaded arch=convnextv2
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0368"
+wrote brian_run/preds_l22_g4ar_cnv2_s3_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.52  median 1.01  max 1.60
+theta_E_sigma: median 0.047"  (median sigma/pred = 5.2%)
+loaded arch=resnet50
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0656"
+wrote brian_run/preds_l22_g4ar_r50_s1_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.54  median 1.14  max 1.65
+theta_E_sigma: median 0.058"  (median sigma/pred = 4.9%)
+loaded arch=resnet50
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0301"
+wrote brian_run/preds_l22_g4ar_r50_s1_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.53  median 1.03  max 1.56
+theta_E_sigma: median 0.040"  (median sigma/pred = 4.0%)
+loaded arch=resnet50
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0518"
+wrote brian_run/preds_l22_g4ar_r50_s2_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.53  median 1.17  max 1.84
+theta_E_sigma: median 0.061"  (median sigma/pred = 5.4%)
+loaded arch=resnet50
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0312"
+wrote brian_run/preds_l22_g4ar_r50_s2_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.52  median 1.01  max 1.56
+theta_E_sigma: median 0.042"  (median sigma/pred = 4.0%)
+loaded arch=resnet50
+euclid_slacs_images_g3.h5: N=63  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0508"
+wrote brian_run/preds_l22_g4ar_r50_s3_euclid_slacs_images_g3.csv  (63 lenses)
+theta_E_pred: min 0.62  median 1.14  max 1.81
+theta_E_sigma: median 0.062"  (median sigma/pred = 5.5%)
+loaded arch=resnet50
+euclid_s4tm_images_g3.h5: N=40  box_arcsec=6.400000095367432  pixscale=0.05000000074505806  (training used image_fov=6.4, pixels=128 -> pix_scale=0.050394)
+no flux rescale (--peak 0): training data is real-unit-calibrated, verified by gate_stage0.py peak/sky comparison on the full 100k set
+TTA over 8 dihedral views: mean per-lens view-spread 0.0357"
+wrote brian_run/preds_l22_g4ar_r50_s3_euclid_s4tm_images_g3.csv  (40 lenses)
+theta_E_pred: min 0.52  median 1.02  max 1.56
+theta_E_sigma: median 0.041"  (median sigma/pred = 4.8%)
+EVAL #22 — cnv2_3 (3 members), frozen b=-0.0032 s=1.015 (sim-val, TTA)
+LEMON ref: bias -0.03  RMSE 0.14  NMAD 0.11  R2 0.53
+
+=== SLACS (primary) N=62 ===
+  eval #16 resnet5 bias +0.063 RMSE 0.220 NMAD 0.131 R2 +0.25 fail 31%
+  eval #17 cnv2_3  bias -0.005 RMSE 0.145 NMAD 0.047 R2 +0.67 fail 11%
+  eval #18 r50_3   bias -0.059 RMSE 0.201 NMAD 0.083 R2 +0.37 fail 23%
+  eval #19 G4cnv2/realb bias -0.010 RMSE 0.137 NMAD 0.056 R2 +0.71 fail 15%
+  eval #22 ens     bias -0.028 RMSE 0.157 NMAD 0.061 R2 +0.62 fail 15%
+  boot: P(|bias|<.03)=0.57 P(RMSE<.14)=0.33 P(NMAD<.11)=1.00 P(R2>.53)=0.73
+  med frac -1.1% | conf-half fail 0% | cov RAW 61/84 RECAL 61/85
+  DERIVED (same passes):
+    custom10   bias -0.016 RMSE 0.173 NMAD 0.071 R2 +0.54 fail 18%
+    cnv2_3     bias -0.028 RMSE 0.157 NMAD 0.061 R2 +0.62 fail 15%
+    r50_3      bias -0.054 RMSE 0.202 NMAD 0.087 R2 +0.37 fail 24%
+    all16      bias -0.025 RMSE 0.165 NMAD 0.084 R2 +0.58 fail 16%
+  per-theta bins [#16 baseline at <0.9: 62%%/+28.7%%]:
+    [0.0,0.9): N= 8  62%  +8.7%
+    [0.9,1.2): N=23   4%  -0.7%
+    [1.2,1.5): N=22   9%  -1.4%
+    [1.5,3.0): N= 9  11%  -4.6%
+  wrote /home/user/nurkyz/einstein_cnn/brian_run/preds_l22_ens_euclid_slacs_images_g3.csv
+
+=== S4TM (secondary) N=40 ===
+  eval #16 resnet5 bias +0.116 RMSE 0.245 NMAD 0.095 R2 +0.19 fail 32%
+  eval #17 cnv2_3  bias +0.050 RMSE 0.163 NMAD 0.081 R2 +0.64 fail 30%
+  eval #18 r50_3   bias +0.027 RMSE 0.117 NMAD 0.082 R2 +0.81 fail 22%
+  eval #22 ens     bias +0.034 RMSE 0.134 NMAD 0.080 R2 +0.76 fail 25%
+  boot: P(|bias|<.03)=0.44 P(RMSE<.14)=0.65 P(NMAD<.11)=0.94 P(R2>.53)=0.97
+  med frac +0.3% | conf-half fail 5% | cov RAW 48/78 RECAL 48/80
+  DERIVED (same passes):
+    custom10   bias +0.055 RMSE 0.149 NMAD 0.127 R2 +0.70 fail 30%
+    cnv2_3     bias +0.034 RMSE 0.134 NMAD 0.080 R2 +0.76 fail 25%
+    r50_3      bias +0.020 RMSE 0.103 NMAD 0.071 R2 +0.86 fail 22%
+    all16      bias +0.045 RMSE 0.133 NMAD 0.099 R2 +0.76 fail 25%
+  per-theta bins [#16 baseline at <0.9: 62%%/+28.7%%]:
+    [0.0,0.9): N=15  33%  +5.8%
+    [0.9,1.2): N=17  24%  +0.0%
+    [1.2,1.5): N= 6  17%  -1.3%
+    [1.5,3.0): N= 2   0%  -6.1%
+  wrote /home/user/nurkyz/einstein_cnn/brian_run/preds_l22_ens_euclid_s4tm_images_g3.csv
+EVAL22_DONE
