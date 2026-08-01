@@ -29,6 +29,12 @@ diag_*.png
 diagnose_*.png
 preview_*.png
 
+# Local, untracked housekeeping buckets (reorg 2026-08-01): all local-only
+# clutter lives here — reference PDFs, diagnostic PNGs, review/pilot dirs,
+# superseded scripts, and big local data copies. Never tracked.
+/_local/
+/data_local/
+
 # Flat ROOT working files (live copies; the repo tracks their mirrors in
 # docs/, results/, training/, pipeline/ — see docs/CLAUDE.md "Code repository")
 /*.md
