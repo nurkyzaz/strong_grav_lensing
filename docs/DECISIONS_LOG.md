@@ -5,6 +5,21 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-01 (cont.) — LEMON ground truth VERIFIED against primary sources; one correction (EEL J1446 0.41->0.43)
+
+Nurkyz asked to verify the GT in the LEMON comparison package. Checked all 3
+subsamples that have theta_E GT: SLACS(29) vs Bolton b_SIE (bolton08_table5.csv)
+= all exact; COSMOS(5) vs Faure 2008 VizieR J/ApJS/176/19 table4 = all exact
+(incl 0012+2015=0.67, confirming LEMON's 2.50 is a real +273% miss, not our
+error); EEL(12) vs Oldham 2017 Table 2 (arXiv:1611.00008) = 11/12 exact, **J1446
+was wrong (0.41) -> corrected to 0.43** in tables/lemon60_targets.csv + the EEL
+pred theta_E_pub columns. ACS(13) has no theta_E GT (arc radius only). Package +
+all derived tables regenerated (analysis/build_lemon_package.py). Impact of the
+fix is tiny (J1446 our %err 12->6.5, LEMON 22->17); aggregates unchanged to 2 sig.
+
+---
+
+
 ## 2026-08-01 (cont.) — LEMON DOMAIN-A HEAD-TO-HEAD COMPLETE: EEL + COSMOS tabled (ACS has no θ_E GT). We lead on SLACS + EEL; COSMOS is a small-N wash with a disclosed out-of-support caveat.
 
 `analysis/lemon_eel_cosmos_acs_table.py` → `results/lemon_vs_ours_eel_cosmos_acs.csv`.

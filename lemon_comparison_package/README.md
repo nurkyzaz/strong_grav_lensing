@@ -21,7 +21,7 @@ All tables share one lens list (LEMON's four prediction files):
 |---|---|---|
 | **SLACS (29)** | Bolton et al. 2008 b_SIE | ✅ **verified** — all 29 match `bolton08_table5.csv` exactly |
 | **COSMOS (5)** | Faure et al. 2008 Table 4 (Lenstool Einstein radius) | ✅ **verified** — all 5 match VizieR `J/ApJS/176/19/table4` exactly (incl. 0012+2015 = 0.67) |
-| **EEL (12)** | Oldham et al. 2017 Table 2 (power-law + external shear) | documented source (matches their Fig. 9 range 0.31–0.86"); not independently re-fetched |
+| **EEL (12)** | Oldham et al. 2017 Table 2 (arXiv:1611.00008) | ✅ **verified** — all 12 checked vs the paper's Table 2; **J1446 was corrected 0.41″ → 0.43″** to match the paper |
 | **ACS (13)** | Pawase et al. 2014 | ❌ **NO θ_E ground truth** — arc radius only; excluded from the θ_E comparison |
 
 ## Headline numbers (from `combined_comparison.csv`, predictions vs the GT column)

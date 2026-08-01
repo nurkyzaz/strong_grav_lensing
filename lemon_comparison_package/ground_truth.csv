@@ -28,33 +28,33 @@ SLACS,J1205+4910,1.22,Bolton et al. 2008 b_SIE,verified vs bolton08_table5.csv
 SLACS,J1420+6019,1.04,Bolton et al. 2008 b_SIE,verified vs bolton08_table5.csv
 SLACS,J2303+1422,1.62,Bolton et al. 2008 b_SIE,verified vs bolton08_table5.csv
 SLACS,J2300+0022,1.24,Bolton et al. 2008 b_SIE,verified vs bolton08_table5.csv
-EEL,J0837,0.56,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J0901,0.67,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J1125,0.86,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J1144,0.68,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J1218,0.68,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J1323,0.31,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J1347,0.43,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J1446,0.41,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J1605,0.64,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J1606,0.52,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J1619,0.5,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
-EEL,J2228,0.6,Oldham et al. 2017 Table 2 (power-law+shear),source-documented
+EEL,J0837,0.56,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J0901,0.67,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J1125,0.86,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J1144,0.68,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J1218,0.68,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J1323,0.31,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J1347,0.43,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J1446,0.43,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J1605,0.64,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J1606,0.52,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J1619,0.5,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
+EEL,J2228,0.6,Oldham et al. 2017 Table 2 (power-law+shear),verified vs Oldham 2017 Table 2 (arXiv:1611.00008)
 COSMOS,0012+2015,0.67,Faure et al. 2008 Table 4 (Lenstool Erad),verified vs VizieR J/ApJS/176/19
 COSMOS,0038+4133,0.73,Faure et al. 2008 Table 4 (Lenstool Erad),verified vs VizieR J/ApJS/176/19
 COSMOS,0047+5023,1.41,Faure et al. 2008 Table 4 (Lenstool Erad),verified vs VizieR J/ApJS/176/19
 COSMOS,0211+1139,3.14,Faure et al. 2008 Table 4 (Lenstool Erad),verified vs VizieR J/ApJS/176/19
 COSMOS,5921+0638,0.7,Faure et al. 2008 Table 4 (Lenstool Erad),verified vs VizieR J/ApJS/176/19
-ACS,001423.02-302109.8,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,001426.26-302255.9,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,011018.22+193819.5,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,084710.65+344826.4,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,095139.44+684731.2,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,103751.40-124327.5,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,122332.64-123940.3,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,130042.73+280523.3,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,140237.11+542716.4,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,140339.94+541633.3,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,171817.43+593146.4,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,221501.12-135822.9,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
-ACS,235130.60-261459.7,,Pawase et al. 2014 — ARC RADIUS ONLY,NO theta_E GT
+ACS,001423.02-302109.8,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,001426.26-302255.9,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,011018.22+193819.5,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,084710.65+344826.4,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,095139.44+684731.2,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,103751.40-124327.5,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,122332.64-123940.3,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,130042.73+280523.3,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,140237.11+542716.4,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,140339.94+541633.3,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,171817.43+593146.4,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,221501.12-135822.9,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
+ACS,235130.60-261459.7,,Pawase et al. 2014 - ARC RADIUS ONLY,NO theta_E GT
