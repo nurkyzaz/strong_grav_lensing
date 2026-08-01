@@ -6,52 +6,70 @@ It is project memory. **`DECISIONS_LOG.md` in this folder is the single most
 authoritative file — if anything here conflicts with it, DECISIONS_LOG.md wins,
 and say so out loud rather than silently picking one.**
 
-## CONTINUATION PROMPT (state as of 2026-07-13; delete this block when superseded)
+## CONTINUATION PROMPT (state as of 2026-08-01; delete this block when superseded)
 
-You are mid-campaign. Read the top ~8 entries of DECISIONS_LOG.md, then
-COMMITMENTS.md (reconcile every OPEN row at every ⛔ and before any full
-generation — that rule caught two silently-dropped physics items already),
-then MODELS_AND_RESULTS.md for the current numbers.
+REPO LOCATION: this repo now lives at **~/code/LensFusion** — MOVED off the
+iCloud-synced ~/Desktop on 2026-08-01 because iCloud was corrupting .git
+(duplicated `refs/heads/main` → `main 2`, broke the repo). Never put it back
+under ~/Desktop or ~/Documents (both iCloud-synced). The old ~/Desktop/LensFusion
+copy may still exist as an untouched backup until Nurkyz deletes it; the big
+dirs `_local/` (archive), `epsf_library/`, `roman_dc/`, `.venv_epsf/`,
+`data_local/` were NOT copied (offloaded to iCloud / regenerable / on cluster) —
+recreate `.venv_epsf` here if you need local Python (astroquery/ePSF) work.
 
-WHERE WE ARE: the GEN4 self-consistent population (real HST galaxies as
-deflectors, measured SDSS σ_v → θ_E, FJ channel in training) delivered the
-paper's central result on the frozen benchmark (62 SLACS + 40 S4TM, Bolton
-b_SIE, eval count 21): native SLACS R² +0.64 / fail 15% (S4TM r50 R² +0.90 /
-8%), Euclid-domain (real-Q1-PSF operator) R² +0.71 / RMSE 0.137″. Both
-match/beat Cao 2025's conventional pipeline and lead LEMON on NMAD/R²/bias.
+Read the top DECISIONS_LOG.md entries (2026-08-01 first), then COMMITMENTS.md
+(reconcile every OPEN row at every ⛔), then MODELS_AND_RESULTS.md for numbers,
+and docs/GENERATOR_AND_CODEBASE_REFERENCE.md for how the generator works
+(photometry/units/normalization, by-files map, GEN0→GEN5 lineage).
 
-LIKELY IN FLIGHT OR JUST LANDED (check first):
-- run_night_resume.sh on the cluster: g4ar (AR1 arc-Poisson + AR2 coupled
-  shear) regen → grid → ⛔ EVAL #22 (authorized; count → 22; report
-  immediately; log + push CSVs to results/).
-- g1b_fetch.log: 800-target phase-1 stamp fetch (of a 1,982-candidate
-  footprint-crossmatch list; 526 at σ_v≥250).
+WHERE WE ARE (eval count 25): the GEN4 self-consistent population is the paper's
+CORE, MEASURED result on the frozen benchmark (62 SLACS + 40 S4TM, Bolton b_SIE):
+native SLACS R² +0.64 / fail 15%, S4TM r50 R² +0.90 / 8%, Euclid-domain
+(real-Q1-PSF operator) R² +0.71 / RMSE 0.137″ — matches/beats Cao 2025 and leads
+LEMON. Everything past eval #21 is done but is Paper-2 material or a frontier:
+- eval #22 (g4ar = AR1 arc-Poisson + AR2 shear coupling): Euclid SLACS R² +0.62,
+  FLAT vs #19 — refinements, not headline movers; incumbent recipe unchanged.
+- evals #24/#25 (native REAL Euclid Q1, N=322, vs PyAutoLens GT): best R² ~0.61,
+  fail 32%, bias −8% — BELOW LEMON's own 0.71 on their turf; an OPEN frontier
+  (most of the #24→#25 gain was preprocessing/flux-scale, so more is possible).
+- GEN5 (z-migrated high-z population + AR3 isophote-anchored m=3,4 multipoles,
+  the novelty; PEMDShearFourMultipole): implemented; 488-stamp library
+  (tables/g1b_kinematics_v1.csv).
+- ROMAN Data Challenge (Stony Brook/WashU): Rung-0 SUBMITTED as a 6-net G5a
+  ensemble; official metrics Goodness 0.947 / Precision 0.082 / Accuracy 0.006
+  (≈ R² 0.97), i.e. excellent but UNRANKED (no leaderboard shared). Organizers
+  welcome a 2nd, independent submission trained on our own Roman-matched sims —
+  a clean domain-transfer paper angle, not yet done.
+- LEMON head-to-head, domain A (Euclidised HST), on their EXACT lenses vs
+  literature GT: WE LEAD SLACS (29) and EEL (12) decisively; COSMOS (5) is a
+  small-N wash (we under-predict θ_E>2.3″ out-of-support); ACS (13) has NO θ_E
+  GT (arc radius only). Tables: results/lemon_vs_ours_slacs29.csv,
+  lemon_vs_ours_eel_cosmos_acs.csv, lemon_perlens_comparison.csv. We also CANNOT
+  reproduce their published Table 3 from their preds + literature GT (email
+  drafted, EMAIL_DRAFTS_20260710.md, asking them to confirm GT/metric).
 
-THE SET DIRECTION (Nurkyz-ruled, in order):
-1. Harvest/report eval #22; decide the production Euclid recipe (current
-   holder: G4-trained cnv2_3 on the real-PSF bench, 0.137/+0.71/15%).
-2. G1b library build: Nurkyz's visual prune (preview pages), measurement pass
-   INCLUDING isophote a3/a4 (C5, feeds AR3) and the C15a/b σ_v corrections
-   (f_SIS = σ_fiber/0.948; +7% intrinsic scatter) baked into the next
-   manifests; C15c validation figure (θ_SIS(σ_fiber) vs b_SIE, analysis-only)
-   can be made immediately.
-3. AR3 isophote-anchored multipoles (one pilot, gates incl. AR0 arc gate) →
-   regen with the BIG G1b library + C15 corrections → the next eval pair
-   (native + Euclid) — expect less tempering (stronger training FJ ρ).
-4. THEN G5 ROMAN, full focus: Roman InstrumentConfig (WFI 0.11″/px, STPSF
-   PSF models, survey depths) as the third rendering of the same population
-   — no real GT exists, so the claim is "cross-domain-validated, Roman-ready".
-5. Q program (MASTER_PLAN §2): LEMON head-to-head on their exact lenses —
-   Q1 SLDE cutouts + PyAutoLens GT are downloaded (~/cosmos_acs/q1_slde/);
-   Busillo email SENT by Nurkyz 2026-07-12/13 (nudge ~07-20 if silent).
-6. Paper §4 rewrite in parallel (skeleton + tables already in PAPER_DRAFT.md
-   §4.0).
+THE BIGGEST GAP: the PAPER ITSELF is still a SKELETON (PAPER_DRAFT.md — bullets +
+tables, written around the OLD pre-GEN4 results, citations all [confirm]). The
+research for a strong Paper 1 is done; the work now is WRITING + a scope decision.
 
-STANDING OPERATIONAL PATTERN: chain stages with explicit nohup driver scripts
-on the CLUSTER (sbatch --wait waves, ≤8 jobs, gate-check between hops, abort
-markers, bank results before any deletion); session monitors are convenience
-only. Benchmark evals count and get reported immediately. One config change →
-one pilot → gates. Push to git at every milestone.
+PENDING DECISIONS / TO-DOs (Nurkyz):
+1. **Paper-1 scope** (the unblocker): recommended = freeze at the two-domain
+   HST + Euclidised-HST result + LEMON head-to-head + ablations + uncertainty +
+   DA-negative; defer GEN5 / Roman / multipoles / native-Q1 to Paper 2. Then WRITE.
+2. Send the LEMON email (draft ready; fix the provenance line first).
+3. Roman 2nd submission (GEN5-Roman-trained) as the independent-methodology entry.
+4. Recreate ~/code/LensFusion/.venv_epsf; delete the old ~/Desktop copy once happy.
+5. Get Brian/advisor in the loop on authorship + scope (long overdue).
+6. Confirmation-set eval (never-touched real lenses, once) for referee defense —
+   the benchmark has 25 logged evals.
+
+STANDING OPERATIONAL PATTERN: cluster compute via `ssh nurkyz@gpus` (csh login →
+wrap in `bash -lc`); chain stages with nohup driver scripts (sbatch --wait waves,
+≤8 jobs, gate-check between hops, bank results before deletion); benchmark evals
+counted + reported immediately; one config change → one pilot → gates; push to git
+at every milestone. After any autonomous cluster campaign, RECONCILE the cluster
+work back to the Mac + git (a 3-week desync happened once — evals #22–#25 + GEN5 +
+Roman ran unlogged; caught and consolidated 2026-08-01).
 
 ## Superseded document warning
 
