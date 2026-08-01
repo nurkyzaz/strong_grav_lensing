@@ -5,6 +5,29 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — C37 sources DRAWN (Nurkyz chose Q1-field trick): found PyAutoLens delensed SOURCE-PLANE reconstructions from the same Q1 obs — 322 real compact high-z sources. Usable, need artifact cleaning. Eyeball delivered.
+
+Nurkyz's "draw sources from the same observations the lenses were found in" pays
+off better than field galaxies: each Q1 lens modeling dir
+(~/cosmos_acs/q1_slde/lens/lens/<id>/result/) has **source_reconstruction.fits**
+(201×201, SOURCE-PLANE delensed background galaxy) — populated for **322/328**.
+Montage: _local/reviews/q1_sources/q1_source_montage.png (probe: q1_source_probe.py).
+- **These are compact, bright, realistically CLUMPY high-z sources** (multi-knot
+  star-forming morphology) — exactly what makes visible arcs; far better than the
+  diffuse COSMOS renders (the C36 low-SB/diffuse problem).
+- **Need cleaning:** PyAutoLens leaves Delaunay/regularization TRIANGULATION
+  artifacts across the source plane. Plan: SNR-threshold via the paired
+  source_reconstruction_noise_map.fits + crop to the central source.
+- **Only the 322 EVAL lenses have modeling downloaded** (lens.zip); the catalog
+  (~/q1_discovery_engine_lens_catalog.csv) has 2585. **Leakage note: the SOURCE is
+  decoupled from the θ_E label (θ_E = our G1b deflector + mass model), so using
+  these as training SOURCES is NOT θ_E leakage.** Can fetch non-eval source
+  reconstructions later for extra rigor; 322 + paltas augmentation prototypes it.
+- Also available per lens: mge_lens_light.fits, sersic/mge model results, the
+  SIE fit — a rich real-Q1 modeling set for later.
+- NEXT (on Nurkyz go): clean+crop → build source-stamp library (h5) → cleaned
+  gallery eyeball → test re-lensing pilot vs real Q1 arcs.
+
 ## 2026-08-02 (cont.) — C36 arc-brightness batch RESULT: brightening WORKS by eye (×5 reveals big arcs) but the AUTOMATED METRICS ARE BACKDROP-BLIND; small-θ arcs + crispness still need the real source (C37).
 
 Ran hybrid_combine --arc_flux_scale {2,3,5} on the variant-a renders (re-combine,
