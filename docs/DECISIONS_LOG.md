@@ -5,6 +5,35 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-01 (cont.) — LEMON DOMAIN-A HEAD-TO-HEAD COMPLETE: EEL + COSMOS tabled (ACS has no θ_E GT). We lead on SLACS + EEL; COSMOS is a small-N wash with a disclosed out-of-support caveat.
+
+`analysis/lemon_eel_cosmos_acs_table.py` → `results/lemon_vs_ours_eel_cosmos_acs.csv`.
+Ours = seed-ensemble of the g4/g4n cnv2 preds banked at eval (results/preds_lemonq1b_*);
+GT = the per-lens theta_E_pub in those files (EEL = Oldham PL+shear; COSMOS = Faure
+Lenstool). Combined with the SLACS-29 recompute (2026-07-22), the full domain-A board:
+
+| subsample | GT | N | LEMON (R²/NMAD/fail) | OURS best arm (R²/NMAD/fail) |
+|---|---|---|---|---|
+| SLACS | Bolton b_SIE | 29 | −4.26 / 0.307 / 55% | Euclid +0.57 / 0.045 / 7% |
+| EEL | Oldham PL+shear | 12 | +0.21 / 0.110 / 42% | **native +0.83 / 0.023 / 8%** |
+| COSMOS | Faure Lenstool | 5 | +0.12 / 0.483 / 60% | native +0.24 / 0.200 / 40% |
+| ACS | arc radius only | 13 | — no θ_E GT — | — excluded — |
+
+- **SLACS + EEL: we win decisively** (NMAD 4–7× tighter, fail 5–7× lower). On EEL
+  our native arm R²+0.83 vs LEMON +0.21.
+- **COSMOS (N=5): a wash, neither strong.** LEMON OVER-predicts (bias +0.36, the
+  COSMOS0012+2015 +273% outlier); WE UNDER-predict (native bias −0.39) because 2/5
+  COSMOS lenses (0211+1139 θ_E 3.14″, and the ~1.7–2.1″ tail) are ABOVE our
+  training θ_E prior ceiling (2.3″) → out-of-support. DISCLOSE this; our NMAD
+  (0.200) still beats LEMON's (0.483) but N=5 is tiny.
+- **ACS 13 excluded: θ_E_pub = 0 in our files confirms LEMON's GT there is arc
+  radius, not θ_E** — the 13/60 = 22% "GT-that-isn't-θ_E" honesty point stands.
+- **Caveat carried:** on these small, narrow-range subsamples R² is unstable (our
+  Euclid-arm EEL R² goes −1.16 on NMAD 0.025 — one outlier dominates SS_res). Lead
+  with NMAD / median-frac / fail; R² only pooled. C16 domain-A now COMPLETE.
+
+---
+
 ## 2026-08-01 — RETROACTIVE CONSOLIDATION (Nurkyz directive): pulled ~3 weeks of UNLOGGED cluster work back to the Mac + git. The Mac log had stopped at eval #21 (2026-07-13) while the cluster ran evals #22–#25, all of GEN5 (z-migration + AR3 multipoles), the Roman Data Challenge submission, and the LEMON Q1b eval. Everything below happened 07-13→07-22 and is recorded now from the cluster slurm logs + CSVs (banked to results/cluster_logs_gap/, results/roman_dc/, results/preds_l2[245]_*, tables/g1b_kinematics_v1.csv; generator code mirrored to pipeline/ + training/). **Running eval count corrected to 25.**
 
 - **⛔ EVAL #22 (g4ar = AR1 arc-Poisson + AR2 shear coupling; Euclid real-PSF bench).**
