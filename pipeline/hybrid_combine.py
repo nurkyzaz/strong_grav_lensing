@@ -139,6 +139,15 @@ def main():
                         "the source (arc surface brightness scales linearly with "
                         "source flux). 1.0 = unchanged. Used to test/calibrate the "
                         "source luminosity-function evolution the dimming omits.")
+    p.add_argument("--deflector_sharpen", type=float, default=0.0,
+                   help="GEN5 C37: unsharp-mask strength on the deflector stamp to "
+                        "raise the central peak/concentration (real HST stamps carry "
+                        "the HST PSF; euclidise adds the Euclid PSF -> soft core vs "
+                        "real Q1 single-PSF). 0=off; ~1 typical. Roughly flux-"
+                        "preserving (high-pass has ~zero sum). Calibrate to real "
+                        "deflector peak/sky ~172.")
+    p.add_argument("--deflector_sharpen_sigma", type=float, default=1.5,
+                   help="unsharp gaussian sigma [px] for --deflector_sharpen")
     p.add_argument("--no-backdrop", action="store_true",
                    help="ablation A2: skip the real empty-cutout backdrop and "
                         "use pure Gaussian noise at the SAME per-image target "
@@ -355,6 +364,10 @@ def main():
         if mig_scale != 1.0 or mig_sb != 1.0:
             from scipy.ndimage import zoom as _ndi_zoom
             st = _ndi_zoom(st, mig_scale, order=1) * mig_sb
+        if args.deflector_sharpen > 0:  # C37: raise the central peak (double-PSF fix)
+            from scipy.ndimage import gaussian_filter as _gf
+            st = np.clip(st + args.deflector_sharpen
+                         * (st - _gf(st, args.deflector_sharpen_sigma)), 0, None)
         sp = st.shape[0]
         jy = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
         jx = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))

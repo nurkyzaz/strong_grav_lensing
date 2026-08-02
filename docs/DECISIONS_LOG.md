@@ -5,6 +5,32 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — BOTH fixes landed (Nurkyz "both in parallel"): deflector-sharpen closes the faint-core; COSMOS + Euclid-tuned SB cut 22.5 matches real arcs. Best look yet.
+
+TRACK B (deflector, C37): added hybrid_combine --deflector_sharpen (unsharp mask on
+the stamp; roughly flux-preserving) to raise the too-soft core. Sweep 0.6/1.2/2.0
+(re-combine of g5q1 renders): stage0 peak/sky 98/107/118 (baseline 89; real band
+103-727) -> sharpen >=1.2 PASSES. (My peak-within-3px estimator: 60->94 vs real 172
+-- helps a lot, not fully closed; unsharp is partial. Visually the cores are more
+present.) Deflector fix = sharpen ~1.5-2.0.
+
+TRACK A (source, Nurkyz idea): config_lensfusion_acs_g5cosmos = HighSBCOSMOSCatalog
+with a EUCLID-tuned SB cut (21 was SLACS), no high-z over-dim, src_mag ~real Q1
+22.7. Swept LF_SB_CUT 20.5/21.5/22.5 (+ deflector_sharpen 1.5). AR0 arc_contrast
+12.3 / 10.9 / **7.73** vs real 7.75; width 6/6/6.5; knots 3/3.5/4. **SB cut 22.5
+matches real arc morphology** -> Nurkyz's idea CONFIRMED. COSMOS sources = clean
+(no PyAutoLens mesh artifacts), thousands, no eval-set provenance.
+
+BEST COMBO by eye (sbs_cos_c225.png): COSMOS SB cut 22.5 + deflector_sharpen 1.5 --
+thin realistic arcs, VISIBLE deflectors, balanced brightness, comparable to real.
+Beats the Q1-source overshoot. Q1-delensed proved real high-z sources fix arc
+visibility; COSMOS-Euclid-cut is the cleaner production source.
+- Residual: my estimator still has deflector peak/sky ~94 vs 172 (sharpen partial);
+  largest-theta still bright rings (real config). 
+- NEXT (Nurkyz eyeball): lock COSMOS SB cut 22.5 vs Q1 sources; sharpen level; then
+  full pilot. Code: hybrid_combine --deflector_sharpen, config_lensfusion_acs_g5cosmos,
+  g5q1_deflsharpen.sbatch, g5cosmos_sweep.sbatch.
+
 ## 2026-08-02 (cont.) — Nurkyz eyeball: arcs look thick/bright. DIAGNOSED = the DEFLECTOR (peak/sky 3x low), NOT the source or tracing. Zoom-smoothing hypothesis REJECTED; leading cause = double-PSF (HST stamps + euclidise).
 
 Nurkyz: "arcs look thick and very bright, real ones thinner; small dot of light +
