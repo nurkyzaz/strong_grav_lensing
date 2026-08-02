@@ -72,6 +72,11 @@ ap.add_argument("--evo_q", type=float, default=1.2,
                      "PENDING CONFIRMATION (Nurkyz/Brian), gate-arbitrated")
 ap.add_argument("--couple_shear", action="store_true",
                 help="AR2: gamma_ext coupled to |dPA| (C1); default OFF")
+ap.add_argument("--match_theta", default="",
+                help="path to a .npy of TARGET theta_E values (e.g. real Q1 "
+                     "theta_E_pub). Reweight the theta_E distribution to MATCH the "
+                     "observed one instead of tempering toward flat (Nurkyz "
+                     "2026-08-02: our upper tail was too heavy vs real Q1).")
 a = ap.parse_args()
 rng = np.random.default_rng(a.seed)
 
@@ -168,21 +173,39 @@ hist, _ = np.histogram(th0, bins=edges)
 dens = np.maximum(hist / hist.sum(), 1e-5)
 
 from scipy.stats import spearmanr as _sp
-alpha_pick = 0.0
-for alpha in (0.8, 0.7, 0.6, 0.5, 0.4, 0.3):
-    w = (1.0 / dens) ** alpha
+if a.match_theta:
+    # Nurkyz 2026-08-02: match the OBSERVED theta_E distribution (real Q1) rather
+    # than tempering toward flat. Reweight the physical density to the target hist.
+    tgt = np.load(a.match_theta)
+    tgt = tgt[np.isfinite(tgt) & (tgt >= a.tmin) & (tgt < a.tmax)]
+    th_hist, _ = np.histogram(tgt, bins=edges)
+    th_hist = th_hist / max(th_hist.sum(), 1)
+    wbin = th_hist / dens                          # physical -> observed
+    wbin = wbin / wbin.max()
     b0 = np.clip(((th0 - a.tmin) / (a.tmax - a.tmin) * a.nbin).astype(int),
                  0, a.nbin - 1)
-    keep = rng.random(len(th0)) < (w[b0] / w.max())
+    keep = rng.random(len(th0)) < wbin[b0]
     rho_a, _ = _sp(mag_all[gi0[keep][:20000]], th0[keep][:20000])
-    print("alpha %.1f: rho %+0.2f  P(theta>1.5)=%.3f  P(theta<0.8)=%.3f"
-          % (alpha, rho_a, (th0[keep] > 1.5).mean(), (th0[keep] < 0.8).mean()))
-    if rho_a <= RHO_REQ and alpha_pick == 0.0:
-        alpha_pick = alpha
-alpha = alpha_pick if alpha_pick > 0 else 0.3
-print("ALPHA CHOSEN: %.1f" % alpha)
-wbin = (1.0 / dens) ** alpha
-wbin = wbin / wbin.max()
+    alpha = 0.0
+    print("MATCH_THETA: reweighting theta_E to %s (target N=%d); "
+          "rho(mag,theta)=%+.2f  P(theta>1.5)=%.3f"
+          % (a.match_theta, len(tgt), rho_a, (th0[keep] > 1.5).mean()))
+else:
+    alpha_pick = 0.0
+    for alpha in (0.8, 0.7, 0.6, 0.5, 0.4, 0.3):
+        w = (1.0 / dens) ** alpha
+        b0 = np.clip(((th0 - a.tmin) / (a.tmax - a.tmin) * a.nbin).astype(int),
+                     0, a.nbin - 1)
+        keep = rng.random(len(th0)) < (w[b0] / w.max())
+        rho_a, _ = _sp(mag_all[gi0[keep][:20000]], th0[keep][:20000])
+        print("alpha %.1f: rho %+0.2f  P(theta>1.5)=%.3f  P(theta<0.8)=%.3f"
+              % (alpha, rho_a, (th0[keep] > 1.5).mean(), (th0[keep] < 0.8).mean()))
+        if rho_a <= RHO_REQ and alpha_pick == 0.0:
+            alpha_pick = alpha
+    alpha = alpha_pick if alpha_pick > 0 else 0.3
+    print("ALPHA CHOSEN: %.1f" % alpha)
+    wbin = (1.0 / dens) ** alpha
+    wbin = wbin / wbin.max()
 
 B = 200000
 while len(rows) < a.n and attempts < a.n * 2000:

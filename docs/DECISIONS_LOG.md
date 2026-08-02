@@ -5,6 +5,26 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — theta_E DISTRIBUTION matched to observed (Nurkyz: ours had too many 3+, real maxes ~2.9). g5_make_manifest --match_theta reweights to real Q1; verified.
+
+Measured: our manifest theta_E upper tail was way too heavy (90th 2.14 vs real 1.48,
+99th 3.32 vs 2.29, frac>2.9 2% vs 0%) -- caused by the flat-tempering (uniform
+training coverage). Nurkyz: match the OBSERVED distribution. Added g5_make_manifest
+--match_theta <npy> (reweight the physical theta_E density to a target histogram of
+real Q1 theta_E_pub, instead of tempering flat). Regenerated (manifest_match.csv):
+  MATCHED q05/50/90/95/99/max = 0.47/0.87/1.46/1.67/2.30/3.48  frac>2.9=0%
+  REAL    q05/50/90/95/99/max = 0.48/0.88/1.48/1.86/2.29/3.50  frac>2.9=0%
+Excellent match (median, 90th, 99th, max all ~real; rare tail preserved).
+TRADEOFF flagged: reweighting to the theta marginal dropped rho(mag,theta_E) from
+~-0.2 (tempered, FJ-preserving) to +0.06 (real SLACS ~-0.3). theta_E LABEL still
+physical (from sigma_v); the deflector-brightness<->theta_E correlation weakened.
+Could restore via a JOINT (theta x mag) reweight if wanted; may even be BENIGN/good
+(removes a deflector-brightness shortcut, forces the CNN onto the arc).
+RECIPE: full-gen manifest = g5_make_manifest ... --match_theta real_q1_theta.npy.
+(GEN5-only file; --match_theta default off -> prior GEN5 behavior unchanged.)
+NEXT: re-render a matched pilot (matched manifest + all final fixes) for Nurkyz to
+review; then gates C2 + evo_q + >1k.
+
 ## 2026-08-02 (cont.) — ARC-VISIBILITY FLOOR was the bug (Nurkyz right): selection thresh 0.8 is a NATIVE-domain value; Euclid eye-calibration is ~4 (visible SNR 7-8). Raised to 4.0 -> selected set = ALL visible arcs.
 
 Nurkyz: still some invisible arcs in the selected set. ROOT: arc_visibility_select
