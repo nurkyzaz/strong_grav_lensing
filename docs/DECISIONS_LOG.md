@@ -5,6 +5,23 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — ARC-VISIBILITY FLOOR was the bug (Nurkyz right): selection thresh 0.8 is a NATIVE-domain value; Euclid eye-calibration is ~4 (visible SNR 7-8). Raised to 4.0 -> selected set = ALL visible arcs.
+
+Nurkyz: still some invisible arcs in the selected set. ROOT: arc_visibility_select
+--thresh 0.8 (inherited from the native-domain g5 pilot) is FAR below the script's
+own EUCLID eye-calibration (docstring: visible 7-8, invisible <=1.3, borderline ~2;
+default 2.5). So 0.8 passed invisible/borderline arcs. Re-select on df2.5:
+  thresh 0.8 -> 93/120 (half invisible)   thresh 2.5 -> 44/120 med SNR 6.5
+  thresh 4.0 -> 38/120 med SNR 7.2 (=eye "visible")   thresh 6.0 -> 25/120 med 10.
+**FIX: arc-select thresh 0.8->4.0, min_extent 150->300.** thresh-4 side-by-side
+(sbs_thresh4.png): visible arcs in ALL (double arcs, rings, arc+counter), diverse
+deflectors, few companions, smooth bg -- matches real Q1. Yield ~32% -> render ~3x
+target for the full gen (fine; = real discovery selection).
+FINAL GEN5-COSMOS RECIPE: COSMOS SB21.5 + min1.0/8 + absmag-24.5(z-dep) +
+deflector_flux_scale 2.5(no sharpen) + companion 0-3 area-uniform rmin30 + sky2.2 +
+noise_corr0.45 + **arc-select thresh 4.0 min_extent 300**. ALL Nurkyz realism items
+resolved. Remaining: Nurkyz sign-off + gates C2 + evo_q + >1k.
+
 ## 2026-08-02 (cont.) — "BOTH TOGETHER" COMPLETE: deflector diversity (brighten) + arc-always-visible (selection works, was wrong-dir). SELECTED training set (93/120) matches real Q1 by eye. Full GEN5-COSMOS recipe converged.
 
 - ARC-VISIBILITY SELECTION: the earlier "0 arcs" was a WRONG-DIR path (euclidise_arcs
