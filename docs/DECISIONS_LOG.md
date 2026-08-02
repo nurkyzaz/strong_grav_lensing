@@ -5,6 +5,30 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — GEN5-COSMOS fix-round-2 RESULTS + noise-corr CALIBRATED to real. All of Nurkyz's round-2 observations addressed. Frozen recipe below; rating gallery delivered.
+
+Verified fix-round-2 (measured vs real):
+- COMPANIONS: now edge-ward (area-uniform + rmin 30) -- matches real field
+  distribution by eye (was center-piled). FIXED.
+- BACKGROUND: added-noise correlation calibrated -- LF_EUC_NOISE_CORR 0.3->0.700,
+  0.4->0.728, 0.6->0.836; **0.45 -> ~0.758 = real**. (SKY_SCALE 2.2 unchanged; RMS
+  was always right, only correlation was missing.) FIXED.
+- ARCS: source brighter (absmag -24.5, raw arc flux +58% vs -24.0); #5/#0/#17 show
+  clean thin rings. Some large-theta arcs (#22 1.96, #77 2.22, #90 3.30) still faint
+  -- partly PHYSICAL (big rings = lower surface brightness spread over a large arc).
+  AR0 arc_contrast metric confounded by the noise-smoothing (lowered residual floor).
+- DEFLECTOR: sharpen 1.0 (was 1.5 over-compact); visible/compact.
+FROZEN GEN5-COSMOS RECIPE (final calibration): COSMOS + SB cut 21.5 + min_flux_radius
+1.0 + minimum_size 8 + source_absolute_magnitude -24.5 (z-dependent cosmo dimming ->
+apparent ~23.7-24) + deflector_sharpen 1.0 + companion 2-9 --companion_area_uniform
+--companion_rmin 30 + euclidise LF_EUC_SKY_SCALE 2.2 LF_EUC_NOISE_CORR 0.45.
+Side-by-side (sbs_final_corr045.png) reads close to real Q1. Rating gallery
+_local/reviews/g5cosmos_final_review/.
+- OPEN: arc-visibility SELECTION (euclidise_arcs produced 0 in the corr run -- a
+  path/env glitch to fix); the training set = the SELECTED subset, so getting
+  selection right (isolate arc from backdrop, C36 corollary) is the last item for
+  the faint-arc fraction. Plus generation gates C2 + evo_q + Nurkyz >1k sign-off.
+
 ## 2026-08-02 (cont.) — Nurkyz eyeball round 2 DIAGNOSED (3 real issues found, 1 sign error caught): companion placement had TWO bugs; background roughness = white-vs-drizzle-correlated noise; arcs at faint floor. FIX ROUND 2 launched.
 
 Nurkyz: half the arcs invisible; companions too close to deflector/arc (real ones
