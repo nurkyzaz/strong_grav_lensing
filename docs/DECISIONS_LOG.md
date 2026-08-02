@@ -5,6 +5,25 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — GEN5-Q1 FULL 200 PILOT done (g5q1_pilot.sbatch): arcs realistic + all AR0 metrics PASS; per-image gallery delivered for Nurkyz eyeball. Residual: deflector peak/sky low; large-θ bright rings.
+
+Full 200 pilot, calibrated recipe (Q1 sources, pixscale 0.03, arc_flux_scale 0.5,
+companion 2-9, sky 2.2, selection 0.8/150). Gates:
+- AR0 arc: arc_contrast 6.63 (real 7.75), width 6 (6), n_knots 4 (3), asym 0.55
+  (0.56) — all PASS/match. **149/200 pass arc-visibility selection (vs 94 pre-fix)
+  — arcs are now visibly present.**
+- stage0: sky RMS 0.941 PASS; theta_E range PASS; **peak/sky 89 CHECK (real band
+  103-727)** — the deflector CORE is still a touch faint (the separate
+  deflector-brightness item, C30 residual; NOT the arcs).
+- Gallery: _local/reviews/g5q1_pilot_review/index.html (200 imgs, per-image
+  verdicts, 149 arc-selected tagged). Side-by-side real_vs_sim_g5q1_pilot.png:
+  arcs/rings/counter-images read like real Q1.
+- Residual to weigh: largest-θ (~2.0) still give bright thick full rings (real
+  configuration; median on-target). Deflector peak/sky low = optional deflector
+  brightening (ties to evo_q).
+- NEXT: Nurkyz per-image eyeball → then full GEN5-Q1 generation (still gated on
+  C2 q_scatter fit + evo_q confirm + Nurkyz >1k ruling).
+
 ## 2026-08-02 (cont.) — C37 CALIBRATED: GEN5-Q1 recipe = pixscale 0.03 + arc_flux_scale 0.5 matches real arc morphology on EVERY AR0 metric. Ready for the full pilot.
 
 Swept LF_Q1_PIXSCALE {0.02,0.03,0.04} × arc_flux_scale {1.0,0.5} (g5q1_calib.sbatch,
