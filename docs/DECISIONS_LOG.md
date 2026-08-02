@@ -5,6 +5,29 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — C37 source library CLEANED + BUILT: 316 real compact high-z Q1 sources (analysis/build_q1_sources.py). Eyeball galleries delivered; residual Voronoi-mesh blockiness (optional light smoothing).
+
+Cleaned the 322 delensed reconstructions -> **316 sources KEPT** (6 empty, 5 too
+small, 1 low-SNR). Recipe: SNR>2.5 mask via the noise map -> dilate(2) -> keep the
+flux-peak's connected component (drops the triangulation artifacts) -> crop 121px
+around the centroid (native source-plane scale preserved). Library:
+q1_sources_clean.h5 (sources/names/flux/re_px/peak_snr). Galleries:
+_local/reviews/q1_sources/q1_sources_{beforeafter,clean_montage}.png.
+- **Quality: compact + bright + clumpy star-forming morphology** (median half-light
+  Re ~7 native px; peak SNR q25/50/75 = 91/207/387 — bright, well-detected). A big
+  improvement over the diffuse COSMOS renders that caused invisible arcs (C36).
+- **Residual issue:** PyAutoLens pixelized (Voronoi/Delaunay) reconstructions leave
+  FACETED hard edges + small internal holes, worst on the larger/blobbier sources
+  (Re>~10). The Euclid PSF (~1.6px) will smooth most of it in re-lensing; optional
+  light Gaussian smooth (σ~0.8px) + small-hole fill would make them cleaner/more
+  physical. Compact ones (Re 3-8) are excellent as-is.
+- **TO PIN before re-lensing:** the source-plane PIXEL SCALE (arcsec/native-px) sets
+  the source angular size → arc thickness; read from the PyAutoLens modeling config
+  / header before the pilot.
+- NEXT (on Nurkyz eyeball OK): optional smooth/hole-fill → wire as the GEN5 source
+  (new source class drawing from q1_sources_clean.h5) → re-lens test pilot →
+  side-by-side vs real Q1 arcs.
+
 ## 2026-08-02 (cont.) — C37 sources DRAWN (Nurkyz chose Q1-field trick): found PyAutoLens delensed SOURCE-PLANE reconstructions from the same Q1 obs — 322 real compact high-z sources. Usable, need artifact cleaning. Eyeball delivered.
 
 Nurkyz's "draw sources from the same observations the lenses were found in" pays
