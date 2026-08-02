@@ -5,6 +5,29 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — "BOTH TOGETHER" COMPLETE: deflector diversity (brighten) + arc-always-visible (selection works, was wrong-dir). SELECTED training set (93/120) matches real Q1 by eye. Full GEN5-COSMOS recipe converged.
+
+- ARC-VISIBILITY SELECTION: the earlier "0 arcs" was a WRONG-DIR path (euclidise_arcs
+  is in einstein_cnn), NOT a bug. Re-ran cleanly on df2.5: pass 0.73/0.86/0.82 by
+  theta bin -> 93/120 selected. It uses the arc-ONLY euclidised render, so it truly
+  isolates arc visibility (not backdrop-blind). SELECTED = training set = arcs
+  visible by construction (mimics real Q1 discovery selection). The 27 dropped are
+  the faint-arc tail (correctly excluded).
+- SELECTED side-by-side (sbs_df25_selected.png) reads like real Q1: visible arcs in
+  all, diverse deflectors (large-diffuse + compact), few edge companions, smooth bg.
+  The invisible/too-bright BIMODALITY resolved (selection drops invisible; brighter
+  deflector balances the bright ones).
+CONVERGED GEN5-COSMOS RECIPE: COSMOS + SB cut 21.5 + min_flux_radius 1.0 +
+minimum_size 8 + source_absolute_magnitude -24.5 (z-dependent) + deflector_flux_scale
+2.5 (NO sharpen) + companion rate 0-3 --companion_area_uniform --companion_rmin 30 +
+euclidise LF_EUC_SKY_SCALE 2.2 LF_EUC_NOISE_CORR 0.45 + arc_visibility_select
+0.8/150. Training set = the SELECTED subset. Galleries: g5cosmos_selected_review/
+(training set), g5cosmos_final_review/ (full).
+- All Nurkyz eyeball items addressed: arc thickness/brightness, companions (count+
+  placement), background correlation, deflector faintness+diversity, arc visibility.
+- REMAINING before full gen: Nurkyz sign-off on the selected set; then the generation
+  gates C2 q-scatter fit + evo_q confirm + >1k ruling.
+
 ## 2026-08-02 (cont.) — DEFLECTOR DIVERSITY FIXED: library HAS large-diffuse deflectors (native Re med 1.27", migrated 0.82"); my deflector_SHARPEN was COMPACTIFYING them. Fix = BRIGHTEN not sharpen (deflector_flux_scale 2.5) -> matches real.
 
 Nurkyz "check/reweight library first" -> library ALREADY has large-diffuse (re_arcsec
