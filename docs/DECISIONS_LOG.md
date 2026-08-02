@@ -5,6 +5,25 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — DEFLECTOR DIVERSITY FIXED: library HAS large-diffuse deflectors (native Re med 1.27", migrated 0.82"); my deflector_SHARPEN was COMPACTIFYING them. Fix = BRIGHTEN not sharpen (deflector_flux_scale 2.5) -> matches real.
+
+Nurkyz "check/reweight library first" -> library ALREADY has large-diffuse (re_arcsec
+median 1.27, 72% >1"; migrated 0.82, 33% >1"). The render lost them because the
+deflector_sharpen unsharp-mask (added to fix the "faint dot") COMPACTIFIES diffuse
+galaxies. Unified fix: NEW hybrid_combine --deflector_flux_scale (C39) brightens the
+stamp WITHOUT sharpening (preserves diffuse extent + FJ). Measured (extent frac of
+frame / frac>0.4 large-diffuse / peak-sky; REAL 0.17/15%/194):
+  sharpen(old)     0.10 / 4%  / 82   (compact, faint)
+  flux1.5 nosharp  0.13 / 6%  / 101
+  **flux2.5 nosharp 0.18 / 20% / 158 -> matches real** (large-diffuse restored).
+By eye (sbs_df2.5.png): SIM #22/#114/#90 now large diffuse bright deflectors like
+real. Deflector faint-dot AND diversity BOTH fixed by brighten-not-sharpen. Retire
+deflector_sharpen for GEN5; use deflector_flux_scale 2.5.
+RECIPE now: COSMOS SB21.5 + min1.0/8 + absmag-24.5 + companion 0-3 area-uniform
+rmin30 + deflector_flux_scale 2.5 (NO sharpen) + sky2.2 + noise_corr0.45.
+- STILL OPEN (the other half of "both together"): arc ALWAYS-visible -> narrow source
+  SB (floor+ceiling) + fix arc-visibility selection so training set = visible arcs.
+
 ## 2026-08-02 (cont.) — Nurkyz eyeball round 3: companion COUNT was still too high (my estimator was BUGGY, owned) -> rate 2-9->0-3 fixes it. Two confirmed-by-data issues remain: deflector diversity + arc always-visible.
 
 - **Companions: my detection estimator was BUGGY** (excluded a huge radial annulus

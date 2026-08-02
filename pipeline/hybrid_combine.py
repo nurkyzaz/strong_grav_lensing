@@ -139,6 +139,11 @@ def main():
                         "the source (arc surface brightness scales linearly with "
                         "source flux). 1.0 = unchanged. Used to test/calibrate the "
                         "source luminosity-function evolution the dimming omits.")
+    p.add_argument("--deflector_flux_scale", type=float, default=1.0,
+                   help="C39: multiply the deflector stamp flux to raise its "
+                        "brightness/peak WITHOUT sharpening (unsharp compactifies "
+                        "the large-diffuse deflectors real Q1 has). 1.0=off; keeps "
+                        "the diffuse extent + the sigma_v->theta_E FJ channel.")
     p.add_argument("--deflector_sharpen", type=float, default=0.0,
                    help="GEN5 C37: unsharp-mask strength on the deflector stamp to "
                         "raise the central peak/concentration (real HST stamps carry "
@@ -374,6 +379,8 @@ def main():
         if mig_scale != 1.0 or mig_sb != 1.0:
             from scipy.ndimage import zoom as _ndi_zoom
             st = _ndi_zoom(st, mig_scale, order=1) * mig_sb
+        if args.deflector_flux_scale != 1.0:  # C39: brighten WITHOUT compactifying
+            st = st * args.deflector_flux_scale  # (preserves diffuse extent + FJ)
         if args.deflector_sharpen > 0:  # C37: raise the central peak (double-PSF fix)
             from scipy.ndimage import gaussian_filter as _gf
             st = np.clip(st + args.deflector_sharpen
