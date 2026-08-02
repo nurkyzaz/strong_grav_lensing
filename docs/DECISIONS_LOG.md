@@ -5,6 +5,25 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — MATCHED PILOT rendered (full final recipe + matched theta_E). Review gallery refreshed. theta_E excess gone.
+
+Rendered 240 with the matched manifest + full recipe (COSMOS SB21.5, absmag-24.5,
+min1.0/8, deflector_flux_scale 2.5, companion 0-3 area-uniform rmin30, sky2.2,
+noise_corr0.45), arc-select thresh 4 -> 39 selected training lenses. AR0 arc_contrast
+6.94 (real 7.75) PASS, width 5. SELECTED theta_E q05/50/90/95/max =
+0.5/1.03/1.48/1.53/1.63 frac>2.9=0% (REAL 0.48/0.88/1.48/1.86/3.5). No more 3+"; the
+excess Nurkyz flagged is GONE, matches real to the 90th pct (1.48).
+- RESIDUAL: the SELECTED set max is 1.63 vs real's rare tail to ~2.9-3.5 -- our
+  large-theta arcs are fainter (spread over a big radius, lower SB) so arc-visibility
+  selection (thresh 4) drops them, while real large-theta arcs ARE bright enough to
+  be discovered. To recover that tail: brighten sources specifically at large theta
+  (SB ~ theta-dependent), else the training set is slightly narrower than real >1.5.
+- Review gallery refreshed: g5cosmos_review/ (served on :8899). sbs_matched.png:
+  realistic moderate-radius lenses, visible arcs, diverse deflectors, few companions.
+- All Nurkyz realism items now addressed (companions, arc thickness/brightness,
+  background, deflector faint+diversity, arc visibility, theta_E distribution).
+  Remaining before full gen: Nurkyz final sign-off + gates C2 fit + evo_q + >1k.
+
 ## 2026-08-02 (cont.) — theta_E DISTRIBUTION matched to observed (Nurkyz: ours had too many 3+, real maxes ~2.9). g5_make_manifest --match_theta reweights to real Q1; verified.
 
 Measured: our manifest theta_E upper tail was way too heavy (90th 2.14 vs real 1.48,
