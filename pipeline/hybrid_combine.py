@@ -161,6 +161,10 @@ def main():
     p.add_argument("--companion_rate_hi", type=float, default=30.0)
     p.add_argument("--companion_flux_pct", type=float, default=50.0,
                    help="keep only stamps brighter than this flux percentile")
+    p.add_argument("--companion_area_uniform", action="store_true",
+                   help="C38: place companions uniform per unit AREA (real field "
+                        "statistics; default OFF keeps the legacy uniform-in-r "
+                        "draw so GEN4 reproduces exactly)")
     p.add_argument("--companion_rmin", type=int, default=18,
                    help="min radius [px] for a companion (protect lens+arc)")
     p.add_argument("--companion_rmax", type=int, default=62)
@@ -322,7 +326,13 @@ def main():
         sp = companions.shape[1]; h = sp // 2
         placed = 0
         for _ in range(n):
-            r = rng.uniform(args.companion_rmin, args.companion_rmax)
+            if args.companion_area_uniform:
+                # C38 (Nurkyz eyeball 2026-08-02): uniform per unit AREA like real
+                # field galaxies (uniform-in-r piles density ~1/r onto the arc)
+                r = np.sqrt(rng.uniform(args.companion_rmin ** 2,
+                                        args.companion_rmax ** 2))
+            else:
+                r = rng.uniform(args.companion_rmin, args.companion_rmax)
             ang = rng.uniform(0, 2 * np.pi)
             cy = int(round(n_px / 2 + r * np.sin(ang)))
             cx = int(round(n_px / 2 + r * np.cos(ang)))

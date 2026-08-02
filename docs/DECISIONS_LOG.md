@@ -5,6 +5,30 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — Nurkyz eyeball round 2 DIAGNOSED (3 real issues found, 1 sign error caught): companion placement had TWO bugs; background roughness = white-vs-drizzle-correlated noise; arcs at faint floor. FIX ROUND 2 launched.
+
+Nurkyz: half the arcs invisible; companions too close to deflector/arc (real ones
+edge-ward); real deflectors more diffuse+brighter; visible-arc THINNESS now matches
+real; real background smoother. Diagnosis against her parameter table:
+1. ARCS: confirmed at faint floor (AR0 3.38 vs real 7.75). Brighten ~0.7 mag.
+   **SIGN CORRECTION to the table: brighter = absmag MORE negative (-24.5), not
+   -23.5** (measured: -23.5 -> apparent 24.8 FAINTER; -24.5 -> 23.7 brighter).
+2. COMPANIONS — TWO bugs found in inject_companions: (a) rmin 18px=0.9" puts them
+   inside the arc annulus for big theta; (b) draw was UNIFORM-IN-R -> per-area
+   density ~1/r, center-piled (real field galaxies uniform per AREA -> edge-heavy,
+   exactly what Nurkyz saw). Fix: --companion_rmin 30 + NEW --companion_area_uniform
+   (default OFF -> GEN4 byte-identical).
+3. BACKGROUND: measured sky neighbor-pixel correlation REAL 0.758 vs SIM 0.697 —
+   our euclidise sky noise is added WHITE after PSF conv; real Q1 is drizzle-
+   CORRELATED (smoother at same RMS; RMS gate itself passes 0.944 so SKY_SCALE 2.2
+   is correct — do NOT change it). Fix: NEW env LF_EUC_NOISE_CORR (smooth the noise
+   realization only, renormalized to same RMS; default OFF -> GEN4 identical;
+   euclidise.py.bak_pre_c38 kept).
+4. DEFLECTOR: sharpen 1.5 over-compacts vs real "diffuse AND bright" -> sweep 0.5/1.0.
+Launched g5cosmos_fix2.sbatch: absmag -24.5, SB 21.5, min 1.0/8, companion 30px
+area-uniform, NOISE_CORR 0.6, sharpen {0.5,1.0}. GEN4 separation maintained (all
+three code changes flag/env-gated default-off).
+
 ## 2026-08-02 (cont.) — GEN5-COSMOS FULL FIX-LIST rendered: deflector FIXED (peak/sky 115 PASS) + thin subtle arcs. Best balance yet; arcs maybe slightly over-dimmed. Rating gallery delivered.
 
 Applied all remaining Nurkyz fixes (config_lensfusion_acs_g5cosmos + g5cosmos_fullfix.sbatch):

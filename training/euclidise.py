@@ -76,9 +76,22 @@ def euclidise(img, rng, add_noise=True):
     if add_noise:
         counts = np.clip(f, 0, None) * T_EXP
         sky_var = euclid_sky_variance_per_px()
+        noiseless = f.copy()
         noisy = rng.poisson(counts + sky_var).astype("float64") - sky_var
         f = np.where(f >= 0, noisy / T_EXP, f + rng.normal(0, np.sqrt(sky_var)
                                                            / T_EXP, f.shape))
+        # C38 (Nurkyz eyeball 2026-08-02): real Q1 noise is drizzle-CORRELATED
+        # (neighbor-corr 0.758 vs our white 0.697 -> real looks smoother at the
+        # same RMS). LF_EUC_NOISE_CORR = Gaussian sigma [Euclid px] to smooth
+        # the NOISE REALIZATION only, renormalized to the same RMS. Default OFF
+        # (unset/0) -> GEN4 output byte-identical.
+        corr = float(os.environ.get("LF_EUC_NOISE_CORR", "0"))
+        if corr > 0:
+            delta = f - noiseless
+            sm = gaussian_filter(delta, corr)
+            s0, s1 = delta.std(), sm.std()
+            if s1 > 0:
+                f = noiseless + sm * (s0 / s1)
     return zoom(f, 2.0, order=1)                          # back to 128 px grid
 
 
