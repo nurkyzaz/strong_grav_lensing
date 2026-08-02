@@ -5,6 +5,16 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — Nurkyz LOCKED source = COSMOS SB cut 22.5. Deflector: my peak/sky estimator distrusted -> delivered a RATING gallery (sharpen 0/1.5/3.0, 120 lenses) for Nurkyz to eyeball.
+
+- SOURCE LOCKED: COSMOS + Euclid SB cut 22.5 (config_lensfusion_acs_g5cosmos).
+- Deflector-sharpen: Nurkyz "maybe your estimator is wrong, give me images to rate."
+  Rendered 120 COSMOS-22.5 (g5cosmos_deflrate.sbatch), re-combined at sharpen
+  0/1.5/3.0. Rating gallery _local/reviews/deflrate/ (each card = 3 levels side by
+  side) + preview_defl_sharpen.png. By eye the deflectors are REASONABLE even at low
+  sharpen (my strict peak/sky estimator was likely too harsh, as Nurkyz suspected);
+  1.5 = balanced, 3.0 = over-sharpened (point-like core). AWAITING Nurkyz rating.
+
 ## 2026-08-02 (cont.) — BOTH fixes landed (Nurkyz "both in parallel"): deflector-sharpen closes the faint-core; COSMOS + Euclid-tuned SB cut 22.5 matches real arcs. Best look yet.
 
 TRACK B (deflector, C37): added hybrid_combine --deflector_sharpen (unsharp mask on
