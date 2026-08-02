@@ -5,6 +5,31 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — Nurkyz fix-list VERIFIED + APPLIED: arcs were too bright/thick because source too BRIGHT (fixed apparent mag, no z-dimming) + slightly large. mag 24 + SB cut 21.5 -> thin dim realistic arcs. mig_sb confirmed applied.
+
+Nurkyz checklist verified in-pipeline:
+- z_source: HIGH (manifest 1.25/2.08/2.92) -- OK, not the bug.
+- SB cut 22.5: APPLIED, 28388/56062 COSMOS pass.
+- source drawn Re median 0.29" (slightly large -> thickish arcs); source mag 22.7
+  gave arc/deflector flux 0.63 vs real 0.30 (arc 2x too dominant = the "thick bright
+  arc"). 
+- mig_sb (deflector dimming): APPLIED (hybrid_combine:366 zoom*mig_sb); manifest
+  mig_sb med 0.54 (~0.65 mag dim) + shrink 0.69. Deflector migration works.
+- COSMOLOGICAL DIMMING GAP (Nurkyz right): the COSMOS path (HighSBCOSMOSCatalog +
+  fixed apparent mag) is NOT z-dependent -- a z=1 and z=3 source get the same
+  brightness. Fainter apparent mag helps; physical fix = source_absolute_magnitude.
+FIX APPLIED (g5cosmos_thin.sbatch): src_mag 22.7->24.0 + SB cut sweep. Result: arcs
+DIMMER (AR0 contrast 4-5 vs old 7-12) + THINNER (width 5-6=real 6). **mag 24 + SB
+cut 21.5 looks realistic by eye** (sbs_thin_c215.png): thin arcs, visible balanced
+deflectors, big rings no longer over-bright. Converging recipe: COSMOS + SB cut ~21.5
++ src_mag ~24 + deflector_sharpen 1.5 + companion 2-9 + sky 2.2.
+- STILL TODO from the fix list (next iter if needed): min_flux_radius 2.0->1.0,
+  minimum_size 12->8 (allow smaller sources), z-DEPENDENT source dimming
+  (source_absolute_magnitude) for physical cosmological dimming.
+- GEN4/GEN5 code separation CONFIRMED: g5* configs separate; g2/pathb GEN4 configs
+  untouched; hybrid_combine additions optional+default-off (GEN4 reproduces);
+  hybrid_combine.py.bak_pre_c36 kept.
+
 ## 2026-08-02 (cont.) — Nurkyz LOCKED source = COSMOS SB cut 22.5. Deflector: my peak/sky estimator distrusted -> delivered a RATING gallery (sharpen 0/1.5/3.0, 120 lenses) for Nurkyz to eyeball.
 
 - SOURCE LOCKED: COSMOS + Euclid SB cut 22.5 (config_lensfusion_acs_g5cosmos).
