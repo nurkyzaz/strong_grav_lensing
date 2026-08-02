@@ -5,6 +5,25 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — GEN5-COSMOS FULL FIX-LIST rendered: deflector FIXED (peak/sky 115 PASS) + thin subtle arcs. Best balance yet; arcs maybe slightly over-dimmed. Rating gallery delivered.
+
+Applied all remaining Nurkyz fixes (config_lensfusion_acs_g5cosmos + g5cosmos_fullfix.sbatch):
+SB cut 21.5, min_flux_radius 1.0, minimum_size 8, source_ABSOLUTE_magnitude -24
+(z-dependent cosmological dimming -> apparent median 24.48), deflector_sharpen 1.5,
+companion 2-9, sky 2.2. 120 renders. Gates: sky RMS 0.944 PASS; **peak/sky 115 PASS
+(real band 103-727; was 89 -- deflector now in range)**; theta PASS; AR0 arc_contrast
+3.38 (real 7.75, floor 3.30 -> arcs now DIM, near faint edge), width 5 (real 6, thin),
+n_knots 5 (real 3, COSMOS clumpy). 95/120 arc-selected.
+- By eye (sbs_fullfix.png): deflectors now BRIGHT/COMPACT/VISIBLE, arcs THIN+SUBTLE,
+  balance matches real Q1 (deflector-prominent). SIM #0 ring no longer over-bright.
+  The "thick bright arc / faint dot" problem is RESOLVED.
+- Residual: arcs may be slightly over-dimmed (contrast at floor); n_knots high. Can
+  nudge brightness up (absmag -24 -> -24.5, or arc_flux_scale) if Nurkyz wants more
+  visible arcs.
+- Rating gallery: _local/reviews/g5cosmos_fullfix_review/ (120, per-image).
+- NEXT (Nurkyz rating): lock recipe -> full 200 pilot -> full generation (gated on
+  C2 q-scatter fit + evo_q confirm + Nurkyz >1k sign-off).
+
 ## 2026-08-02 (cont.) — Nurkyz fix-list VERIFIED + APPLIED: arcs were too bright/thick because source too BRIGHT (fixed apparent mag, no z-dimming) + slightly large. mag 24 + SB cut 21.5 -> thin dim realistic arcs. mig_sb confirmed applied.
 
 Nurkyz checklist verified in-pipeline:
