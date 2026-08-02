@@ -5,6 +5,31 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — Nurkyz eyeball: arcs look thick/bright. DIAGNOSED = the DEFLECTOR (peak/sky 3x low), NOT the source or tracing. Zoom-smoothing hypothesis REJECTED; leading cause = double-PSF (HST stamps + euclidise).
+
+Nurkyz: "arcs look thick and very bright, real ones thinner; small dot of light +
+thick big arc." Measured pilot vs real (arc/defl balance):
+- deflector peak/sky 60 vs real 172 (**3x too low**); arc/defl flux 0.63 vs 0.30;
+  arc ABSOLUTE contrast 27 vs 33 (arc slightly UNDER real, NOT over). So the arc
+  is fine; the DEFLECTOR is too faint-cored -> arc looks dominant ("small dot").
+- Real Q1 deflector mag (modeling_mge_magnitude.csv) = **21.39** [19.6-22.6]; ours
+  ~20.3 (BRIGHTER total). So it is NOT total brightness -> calibrating total mag
+  DOWN would worsen it. The gap is CONCENTRATION / central peak.
+- Zoom-smoothing hypothesis TESTED + REJECTED (zoom_cusp.py): migration zoom
+  preserves/increases concentration; peak drops only by mig_sb (~0.5); order-1 vs
+  order-3 interp ~identical. Migration is not the culprit.
+- **Leading cause: DOUBLE PSF** — deflector stamps are real HST (carry HST ACS
+  PSF); euclidise convolves the Euclid VIS PSF on top -> over-blurred core vs real
+  Q1 (single Euclid PSF). Plus mig_sb dimming. (Not yet directly measured.)
+- Nurkyz idea: use compact high-SB COSMOS (SB cut <=21) for sources. Noted: valid
+  CLEAN-source alternative to the artifact-y Q1 recons, BUT the past COSMOS
+  faintness was the high-z DIMMING not the cut; and the source is NOT the current
+  bottleneck (Q1-source arcs already match real). Deflector is.
+- Real Q1 deflector LIGHT models (mge_lens_light.fits, sersic/mge params) are
+  available for all 322 — the symmetric option to what we did for sources.
+- NEXT (Nurkyz to steer): deflector fix direction (real Q1 deflector light vs
+  sharpen/deconvolve HST stamps vs less dimming) + source choice (Q1 vs COSMOS).
+
 ## 2026-08-02 (cont.) — GEN5-Q1 FULL 200 PILOT done (g5q1_pilot.sbatch): arcs realistic + all AR0 metrics PASS; per-image gallery delivered for Nurkyz eyeball. Residual: deflector peak/sky low; large-θ bright rings.
 
 Full 200 pilot, calibrated recipe (Q1 sources, pixscale 0.03, arc_flux_scale 0.5,
