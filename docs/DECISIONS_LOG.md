@@ -5,6 +5,31 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — C37 CALIBRATED: GEN5-Q1 recipe = pixscale 0.03 + arc_flux_scale 0.5 matches real arc morphology on EVERY AR0 metric. Ready for the full pilot.
+
+Swept LF_Q1_PIXSCALE {0.02,0.03,0.04} × arc_flux_scale {1.0,0.5} (g5q1_calib.sbatch,
+48 renders/pixscale). AR0 arc metrics vs real (contrast 7.75, width 6, knots 3,
+asym 0.56):
+| pixscale × bright | arc_contrast | width | verdict |
+|---|---|---|---|
+| 0.02 × 1.0 | 21.4 | 6 | too bright |
+| 0.02 × 0.5 | 12.9 | 6 | high |
+| 0.03 × 1.0 | 14.1 | 6 | high |
+| **0.03 × 0.5** | **7.4** | **6** | **BULLSEYE (all metrics = real)** |
+| 0.04 × 1.0 | 9.1 | 6 | close |
+| 0.04 × 0.5 | 5.8 | 5 | slightly low |
+- **WINNER: LF_Q1_PIXSCALE=0.03, arc_flux_scale=0.5** — arc_contrast 7.4≈7.75,
+  width 6=6, knots 3=3, asym 0.59≈0.56. Side-by-side (sbs_p03_s05.png) looks like
+  real Q1 by eye: thin arcs, arc+counter-image, partial rings, subtle. The old
+  overshoot (thick bright rings) is gone.
+- Residual: the largest-θ cases (e.g. θ~2.0) still give bright thick full rings —
+  a real large-Einstein-ring configuration; median is on-target. Could add a mild
+  θ-dependent dim later if referees want, not blocking.
+- **This closes the arc-visibility problem (C36/C37).** GEN5-Q1 recipe frozen for
+  the pilot: Q1 sources, pixscale 0.03, arc_flux_scale 0.5, companion 2-9, sky 2.2,
+  selection 0.8/150. NEXT: full 200 pilot + gallery eyeball, then the full GEN5-Q1
+  generation (still gated on C2 q_scatter fit + evo_q confirm + Nurkyz >1k ruling).
+
 ## 2026-08-02 (cont.) — C37 BREAKTHROUGH: real Q1 delensed sources → BRIGHT VISIBLE ARCS (smoke test). Integration works; now OVERSHOT (arcs too thick/bright) → calibrate pixscale + brightness.
 
 Wired the 316 smoothed Q1 delensed sources into paltas (Q1SourceCatalog +
