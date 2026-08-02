@@ -5,6 +5,25 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — C37 BREAKTHROUGH: real Q1 delensed sources → BRIGHT VISIBLE ARCS (smoke test). Integration works; now OVERSHOT (arcs too thick/bright) → calibrate pixscale + brightness.
+
+Wired the 316 smoothed Q1 delensed sources into paltas (Q1SourceCatalog +
+config_lensfusion_acs_g5q1) and smoke-rendered 8 (g5q1_smoke.sbatch, pixscale
+0.05). **Every sim now shows a bright clear arc/Einstein ring** (SIM #0 θ2.01 full
+ring, #4/#5/#7 clear arcs) — vs the invisible diffuse COSMOS arcs (C36). The core
+arc-visibility problem is SOLVED by using real delensed sources; native amplitude
+preserved (z=z_source → no rescale) so arcs land at real Euclid surface brightness
+automatically. Side-by-side: _local/reviews/q1_sources/real_vs_sim_g5q1_smoke.png.
+- **Now OVERSHOT:** sim arcs are too THICK / too BRIGHT / too prominent vs real
+  (real arcs thinner + subtler, deflector more comparable). A calibration problem,
+  not a physics gap. Knobs: LF_Q1_PIXSCALE ↓ (smaller source → thinner arcs; 0.05
+  gives Re~0.35" → thick rings) and a mild arc dim if needed. Calibrate to real
+  AR0 arc_width (~6px) + arc_contrast (~7.75).
+- acceptance ~1.0 (every draw strongly lensed — expected for a smoke of 8; the full
+  pilot's arc-visibility selection still applies).
+- NEXT: pixscale/brightness calibration sweep → eyeball → full 200 pilot → the
+  full GEN5-Q1 re-render.
+
 ## 2026-08-02 (cont.) — C37 source library CLEANED + BUILT: 316 real compact high-z Q1 sources (analysis/build_q1_sources.py). Eyeball galleries delivered; residual Voronoi-mesh blockiness (optional light smoothing).
 
 Cleaned the 322 delensed reconstructions -> **316 sources KEPT** (6 empty, 5 too
