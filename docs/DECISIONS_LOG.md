@@ -5,6 +5,29 @@ Corrections/retractions are logged explicitly rather than silently edited.
 
 ---
 
+## 2026-08-02 (cont.) — Nurkyz eyeball round 3: companion COUNT was still too high (my estimator was BUGGY, owned) -> rate 2-9->0-3 fixes it. Two confirmed-by-data issues remain: deflector diversity + arc always-visible.
+
+- **Companions: my detection estimator was BUGGY** (excluded a huge radial annulus
+  -> reported median 0, misleading). Corrected all-blob count: real mean 2.0, sim
+  rate2-9 mean 2.7 (high), **rate 0-3 mean 1.5** (injected median 1). Cut rate to
+  0-3 -> matches real by eye (sbs_lowcomp.png: clean 0-1 companion fields). Placement
+  fix (area-uniform+rmin30) WAS applied+verified in code/run; the COUNT (rate) was
+  the miss. Nurkyz's eye correct; my metric wrong.
+- **Deflector diversity (Nurkyz right, quantified):** central-light frame-fraction
+  real q25/50/75 0.11/0.17/0.30, frac>0.4 (large diffuse) 15%; SIM 0.05/0.10/0.20,
+  frac>0.4 4%. Real deflectors bigger + ~4x more large-diffuse ones. Our G1b library
+  (compact LRG stamps) LACKS the large-diffuse population. -> library-level fix
+  (broaden deflector sample / reweight size / or use real Q1 deflector light).
+- **Arcs bimodal (invisible OR too bright/thick); real ALWAYS visible.** Root: real
+  Q1 = DISCOVERED lenses (selection guarantees visible arcs); our source SB range is
+  too wide -> extremes. Fix = (a) fix+eye-match the arc-visibility SELECTION (glitched
+  this run) so the TRAINING set = visible arcs only; (b) narrow source SB (floor AND
+  ceiling) to kill the invisible + too-bright extremes. Show the SELECTED subset, not
+  the full set.
+- Background: closer to real now (corr 0.45) per Nurkyz. GOOD.
+- NEXT (Nurkyz to prioritize): deflector-library diversity + arc-visibility selection
+  redesign + source SB narrowing. Both are deeper than knob-turns.
+
 ## 2026-08-02 (cont.) — GEN5-COSMOS fix-round-2 RESULTS + noise-corr CALIBRATED to real. All of Nurkyz's round-2 observations addressed. Frozen recipe below; rating gallery delivered.
 
 Verified fix-round-2 (measured vs real):
