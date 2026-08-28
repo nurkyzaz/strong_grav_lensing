@@ -10,6 +10,33 @@ holds current numbers; PAPER_DRAFT.md is the manuscript; CLAUDE.md holds the
 operating rules. If a stage here conflicts with a newer DECISIONS_LOG entry,
 the log wins — update this file when that happens.
 
+## 0c. GEN5 v2 delivered + paper-revision phase (2026-08-21)
+
+GEN5 (real Q1 deflector light) is DONE and validated: **v2 = R² +0.73 on real
+Euclid Q1, ahead of LEMON's 0.71 on R²** (ties NMAD/bias at matched difficulty;
+trails only on RMSE = a high-θ tail). Final model `einstein_cnn_gen5_v2.pt`. Full
+recipe: docs/GEN5_PIPELINE.md; GEN4-vs-GEN5 crossover: docs/DOMAIN_SPECIALIZATION.md.
+Negative results banked: T0 ensemble (variance, not the lever) and v3 high-θ
+oversampling (overfits the tail) — the residual RMSE needs better high-θ DATA, not
+resampling/ensembling.
+
+**We are now in the paper-revision phase; WEEK GOAL = finish draft v2 answering the
+9 comments.** Mapping in **docs/PROF_COMMENTS_RESPONSE.md**; section-by-section
+writing plan in **docs/DRAFT_V2_PLAN.md**.
+
+EXPERIMENTS ARE DONE — the draft is no longer blocked on compute:
+- #1 mock realism → mock_realism.png ✓ (σ_v 268, z_l 0.76, z_s 2.09, θ_E 0.91, logM_E 11.5)
+- #2 σ_v→θ_E → sigma_theta_validation.png ✓ (bias +2%, scatter 16% after C15a)
+- #5 UQ → deep ensemble ✓ (σ↔error ρ=0.59; recalibrate ×1.6 for coverage)
+- #7 arch → resnet best ✓ (R²0.70; incnext/cnv2 tighter core, worse tail)
+- HONEST headline: GEN5 Q1 R² ≈ **0.71 (ensemble; seed 0.68–0.73) = on par with LEMON**,
+  not the seed-lucky 0.729.
+
+Remaining = WRITING (see DRAFT_V2_PLAN.md sequence): §4 headline+positioning+domain-
+spec → §2 simulator+mock+σ_v+GT → §4 UQ+§3 arch → §4 DA+intro+discussion. Optional
+5-min recalibrate_sigma for the coverage number. User-parallel: LEMON same-354
+email; Sam/Brian meeting.
+
 ## 0. Where we are (2026-07-13, eval count 22; details in MODELS_AND_RESULTS.md)
 
 GEN4 (self-consistent population: real HST galaxy = light AND mass, SDSS σ_v →
@@ -40,6 +67,16 @@ crossmatch (incl. EELs J1218/J0913/J1248 — Q1 contamination averted); 6 new
 lens candidates (tables/g1b_lens_candidates.csv). LEMON-31 quality review
 ruled: primary head-to-head = real-θ_E rows only (SLACS-29 + EEL + COSMOS-3
 ≈ 44, row-filter on banked CSVs); ACS-13 excluded/disclosed. C5 measurement pass DONE same day (488 measured, 394 AR3-clean) — AR3 + C21 z-migration UNBLOCKED.**
+
+**Update 2026-08-20 (GEN5 real-Euclid milestone): the "dots" blocker is SOLVED —
+deflector now rendered from REAL Q1 deflector light (not synthetic FJ). Nurkyz
+signed off the look; a 100k deflector-disjoint set was generated and the first
+CNN trained on it (sim-val R² 0.996). First eval on the 322 real Euclid Q1 lenses:
+R²+0.65 (clean 0.69), RMSE 0.253″ — BEATS our prior real-Q1 attempt (#24/#25:
++0.61), closing on LEMON (0.71). Remaining gap = a high-θ / faint-arc / missing-
+multiply-image outlier tail. Improvement program in docs/GEN5_IMPROVEMENT_PLAN.md
+(ensemble + θ_E reweight + faint-arc tier + compact-source doubles/quads);
+ensemble + v2 pilot running. Full details in MODELS_AND_RESULTS.md (2026-08-20).**
 
 ## 0b. GEN5 status (2026-07-22; the ACTIVE workstream) — see DECISIONS_LOG
 
