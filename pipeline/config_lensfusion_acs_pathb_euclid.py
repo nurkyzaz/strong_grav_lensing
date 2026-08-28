@@ -43,6 +43,17 @@ class HighSBCOSMOSCatalog(COSMOSCatalog):
                 sb = self.catalog['mag_auto'] + 2.5 * np.log10(
                     2.0 * np.pi * np.clip(r_as, 1e-4, None) ** 2)
             is_ok &= sb <= sb_max
+        # C51 (GEN5-only, env-gated so GEN4 pathb is untouched): MAX source
+        # half-light radius. Our COSMOS arcs measured ~2.5x too THICK vs real Q1
+        # (radial FWHM 1.2" vs 0.47"; Nurkyz "small deflector, thick arc") because
+        # COSMOS galaxies are angularly larger than the compact high-z sources real
+        # Euclid lenses show. Capping the catalog flux_radius selects compact
+        # sources -> thinner, realistic arcs. Off unless LF_SRC_MAX_RE_ARCSEC set.
+        import os as _os
+        _rmax = _os.environ.get('LF_SRC_MAX_RE_ARCSEC')
+        if _rmax:
+            r_as = self.catalog['flux_radius'] * HUBBLE_ACS_PIXEL_WIDTH
+            is_ok &= r_as <= float(_rmax)
         return is_ok
 
     def draw_source(self, catalog_i=None, phi=None):

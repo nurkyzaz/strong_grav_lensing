@@ -17,6 +17,7 @@ import os
 from scipy.stats import truncnorm as _tn
 
 from config_lensfusion_acs_g5 import *   # noqa: F401,F403  (GEN5 machinery)
+import config_lensfusion_acs_g2 as _g2
 from config_lensfusion_acs_pathb_euclid import HighSBCOSMOSCatalog
 
 _sp = config_dict['source']['parameters']                     # noqa: F405
@@ -40,3 +41,29 @@ else:
 print("GEN5-COSMOS source: SB cut %.1f | min_flux_radius %.1f | minimum_size %d | %s"
       % (_sp['max_source_surface_brightness'], _sp['min_flux_radius'],
          _sp['minimum_size_in_pixels'], _mode))
+
+# C41: theta_E-scaled source-plane offset (partial arcs at every theta_E). Only
+# engages when the manifest carries non-zero source_cx/source_cy (emitted by
+# g5_make_manifest --src_off_hi>0); otherwise the config's fixed U(+-0.25")
+# source offset from the base config is left untouched (GEN4/prior behaviour).
+if (_g2._ROWS and "source_cx" in _g2._ROWS[0]
+        and any(float(r.get("source_cx", 0) or 0) or float(r.get("source_cy", 0) or 0)
+                for r in _g2._ROWS[:100])):
+    def _g2_src_cx():
+        return float(_g2._g2_row("scx")["source_cx"])
+
+    def _g2_src_cy():
+        return float(_g2._g2_row("scy")["source_cy"])
+
+    _sp['center_x'] = _g2_src_cx
+    _sp['center_y'] = _g2_src_cy
+    print("GEN5-COSMOS source offset: theta_E-scaled per-row "
+          "(manifest source_cx/source_cy) -> partial arcs")
+
+# C45: magnification cut matched to real Euclid Q1 (median total_magnification 2.6,
+# q25 2.0). The base mag_cut=3.0 EXCLUDED most real systems -> our accepted sample
+# was biased to high-mu = brighter/more-complete arcs. LF_MAG_CUT lowers it so the
+# accepted magnification distribution matches real. GEN5-only (base config's 3.0
+# untouched for GEN4).
+mag_cut = float(os.environ.get('LF_MAG_CUT', str(mag_cut)))  # noqa: F405,F811
+print("GEN5-COSMOS mag_cut = %.2f (real Q1 total_magnification median 2.6)" % mag_cut)

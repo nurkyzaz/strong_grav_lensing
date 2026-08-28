@@ -119,6 +119,106 @@ def quantile_ranks(x):
     return ranks
 
 
+_TAPER_CACHE = {}
+_ESMOOTH_W = {}
+
+
+def _edge_smooth(st, sigma, r_in=0.30):
+    """C43: peak-preserving edge smoothing (Nurkyz 'photo-editing' function; the
+    v5 principle from build_deflector_from_lrg.py -- NO opacity ramp / taper,
+    which zeroes light mid-frame and leaves a circular/square cut once FJ raises
+    the faint de Vaucouleurs wing above the noise). Instead the core (r<r_in) is
+    left UNTOUCHED and the blur strength ramps up smoothstep-wise toward the edge,
+    where the stamp is padded with zeros so the wing bleeds smoothly to sky
+    instead of a hard support boundary. 'peak stays untouched, edges smooth more.'"""
+    from scipy.ndimage import gaussian_filter as _gf
+    pad = int(np.ceil(sigma * 3))
+    st = np.pad(st, pad)                                    # zeros to bleed into
+    n = st.shape[0]
+    key = (n, round(sigma, 3), round(r_in, 3))
+    w = _ESMOOTH_W.get(key)
+    if w is None:
+        c = (n - 1) / 2.0
+        yy, xx = np.mgrid[0:n, 0:n]
+        r = np.hypot(yy - c, xx - c) / ((n - 1) / 2.0)
+        t = np.clip((r - r_in) / max(1.0 - r_in, 1e-6), 0.0, 1.0)
+        w = t * t * (3 - 2 * t)                             # smoothstep 0->1
+        _ESMOOTH_W[key] = w
+    sm = _gf(st, sigma, mode="constant", cval=0.0)
+    return (1.0 - w) * st + w * sm
+
+
+def _add_devauc_envelope(st, n=4.4, r_in=0.4, r_out=1.0, max_re=4.0):
+    """C54: graft an elliptical Sersic-n outer envelope onto the real deflector
+    core. Real ellipticals have de Vaucouleurs wings to ~3-4 Re (n~4.4), but the
+    shallow HST LRG cutouts only capture ~1.3 Re -> the wings sit below the HST
+    noise (verified: raw cutout R(1%)/Re 1.3, real Euclid 3.1). So we ADD the
+    physically-missing wings: keep the REAL core (r<r_in*Re) unchanged, cross-fade
+    to an analytic Sersic-n (amplitude MATCHED to the stamp at Re for continuity)
+    in the wings (r>r_out*Re), out to max_re*Re. Total flux is renormalized by FJ
+    afterward, so BRIGHTNESS is unchanged -- only the light PROFILE extends."""
+    from scipy.ndimage import gaussian_filter as _gf
+    s = np.clip(st, 0, None)
+    tot = float(s.sum())
+    if tot <= 0:
+        return st
+    N = s.shape[0]
+    yy, xx = np.mgrid[0:N, 0:N]
+    w = _gf(s, 1.0)                                   # smooth for stable moments
+    sw = float(w.sum())
+    cy = (w * yy).sum() / sw
+    cx = (w * xx).sum() / sw
+    Ixx = (w * (xx - cx) ** 2).sum() / sw
+    Iyy = (w * (yy - cy) ** 2).sum() / sw
+    Ixy = (w * (xx - cx) * (yy - cy)).sum() / sw
+    tr = Ixx + Iyy
+    disc = max(tr * tr / 4.0 - (Ixx * Iyy - Ixy ** 2), 0.0)
+    l1 = tr / 2.0 + np.sqrt(disc)
+    l2 = tr / 2.0 - np.sqrt(disc)
+    q = float(np.sqrt(max(l2, 1e-3) / max(l1, 1e-3)))
+    q = min(max(q, 0.3), 0.98)
+    pa = 0.5 * np.arctan2(2.0 * Ixy, Ixx - Iyy)
+    r = np.hypot(yy - cy, xx - cx).ravel()
+    o = np.argsort(r)
+    Re = float(r[o][np.searchsorted(np.cumsum(s.ravel()[o]), 0.5 * tot)])
+    Re = max(Re, 2.0)
+    dx = xx - cx
+    dy = yy - cy
+    xr = dx * np.cos(pa) + dy * np.sin(pa)
+    yr = -dx * np.sin(pa) + dy * np.cos(pa)
+    r_ell = np.sqrt(xr ** 2 + (yr / q) ** 2)
+    # PHYSICAL de Vauc amplitude from the galaxy's TOTAL flux (I_e-L relation),
+    # NOT matched at Re -- our cores are over-concentrated so an Re-match gives
+    # faint wings. Sersic total L = 2 pi n Re^2 q I_e e^bn Gamma(2n) / bn^(2n).
+    from scipy.special import gamma as _G
+    bn = 2.0 * n - 0.327 + 4.0 / (405.0 * n)
+    I_e = tot * bn ** (2 * n) / (2.0 * np.pi * n * Re ** 2 * q
+                                 * np.exp(bn) * _G(2 * n))
+    ser = I_e * np.exp(-bn * ((np.clip(r_ell, 1e-3, None) / Re) ** (1.0 / n) - 1.0))
+    ser = np.clip(ser, 0, None)
+    ser[r_ell > max_re * Re] = 0.0
+    # keep the REAL core (r<r_in*Re), cross-fade to the de Vauc model outward
+    t = np.clip((r_ell / Re - r_in) / max(r_out - r_in, 1e-6), 0.0, 1.0)
+    blend = t * t * (3 - 2 * t)                       # smoothstep core->wings
+    return (1.0 - blend) * s + blend * ser
+
+
+def _edge_taper(n, frac):
+    """C42: radial cosine apodization window (n x n). 1.0 inside radius
+    (1-frac)*half-width, cosine-tapering to 0 at the half-width, so a stamp whose
+    de Vaucouleurs wing reaches the SQUARE postage boundary fades smoothly and
+    roundly into the background instead of showing a hard rectangular edge once FJ
+    normalization brightens it. Cached per (n, frac)."""
+    key = (n, round(frac, 4))
+    if key not in _TAPER_CACHE:
+        yy, xx = np.mgrid[0:n, 0:n]
+        r = np.hypot(yy - (n - 1) / 2.0, xx - (n - 1) / 2.0) / ((n - 1) / 2.0)
+        ramp = np.clip((1.0 - r) / max(frac, 1e-6), 0.0, 1.0)
+        w = np.where(r <= 1.0 - frac, 1.0, 0.5 - 0.5 * np.cos(np.pi * ramp))
+        _TAPER_CACHE[key] = w
+    return _TAPER_CACHE[key]
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--run", required=True, help="paltas NOISELESS run folder")
@@ -144,6 +244,49 @@ def main():
                         "brightness/peak WITHOUT sharpening (unsharp compactifies "
                         "the large-diffuse deflectors real Q1 has). 1.0=off; keeps "
                         "the diffuse extent + the sigma_v->theta_E FJ channel.")
+    p.add_argument("--deflector_taper", type=float, default=0.0,
+                   help="C42 (SUPERSEDED by --deflector_edgesmooth): radial cosine "
+                        "apodization over the outer fraction. Kept for repro but it "
+                        "ZEROES light mid-frame -> circular cut (the v2 mistake). "
+                        "Use --deflector_edgesmooth instead. 0=off.")
+    p.add_argument("--deflector_envelope", type=float, default=0.0,
+                   help="C54: graft an elliptical Sersic-n de Vaucouleurs ENVELOPE "
+                        "onto the real deflector core (n value, ~4.4 = real Euclid). "
+                        "The shallow HST cutouts miss the faint extended wings real "
+                        "ellipticals have (R(1%%)/Re 1.3 vs real 3.1) -> deflectors "
+                        "render as dots. This adds the physically-missing wings; FJ "
+                        "renormalizes total flux so brightness is unchanged. 0=off.")
+    p.add_argument("--deflector_edgesmooth", type=float, default=0.0,
+                   help="C43: peak-preserving edge smoothing (Nurkyz photo-editing "
+                        "function / v5 principle). Gaussian sigma [px] whose strength "
+                        "ramps up toward the stamp edge (core untouched), padding "
+                        "with zeros so the FJ-brightened de Vauc wing bleeds smoothly "
+                        "to sky instead of a hard support cut. ~1.5 typical. 0=off "
+                        "(GEN4 repro).")
+    p.add_argument("--deflector_fj", action="store_true",
+                   help="C40: enforce Faber-Jackson -- set each deflector's TOTAL "
+                        "flux from its per-row theta_E (mass proxy), so brighter "
+                        "deflectors host larger arcs (physical). Overrides mig_sb / "
+                        "--deflector_flux_scale for brightness (mig_scale still "
+                        "sets the high-z angular size). Off by default (GEN4 repro).")
+    p.add_argument("--fj_mag0", type=float, default=21.39,
+                   help="C40 FJ zero-point: deflector VIS AB mag at theta_E=fj_theta0 "
+                        "(real Q1 median mag 21.39 at theta 0.88).")
+    p.add_argument("--fj_slope", type=float, default=8.6,
+                   help="C40 FJ slope: mag = fj_mag0 - fj_slope*log10(theta_E/"
+                        "fj_theta0). ~8.6 -> real deflector-mag spread over theta.")
+    p.add_argument("--fj_theta0", type=float, default=0.88,
+                   help="C40 FJ pivot theta_E [arcsec] (real Q1 median).")
+    p.add_argument("--fj_scatter", type=float, default=0.55,
+                   help="C40 FJ Gaussian scatter [mag] about the relation; tuned so "
+                        "rho(deflector_mag,theta_E) matches real Q1 (~-0.47), not -1.")
+    p.add_argument("--fj_mag_min", type=float, default=-np.inf,
+                   help="C47: clip the FJ deflector mag at this BRIGHT bound (real Q1 "
+                        "q~1 ~19.2). Default -inf = no clip.")
+    p.add_argument("--fj_mag_max", type=float, default=np.inf,
+                   help="C47: clip the FJ deflector mag at this FAINT bound (real Q1 "
+                        "max ~23.4). Trims the Gaussian faint tail that reads as an "
+                        "'invisible deflector'. Default +inf = no clip.")
     p.add_argument("--deflector_sharpen", type=float, default=0.0,
                    help="GEN5 C37: unsharp-mask strength on the deflector stamp to "
                         "raise the central peak/concentration (real HST stamps carry "
@@ -361,7 +504,8 @@ def main():
             if sc != 1.0 or sb != 1.0:
                 n_mig += 1
             g2_assign[int(r["file_row"])] = (int(r["stamp_id"]),
-                                             int(r["dihedral_k"]), sc, sb)
+                                             int(r["dihedral_k"]), sc, sb,
+                                             float(r.get("theta_E", 0) or 0))
         print("G2 manifest mode: %d assignments, native amplitude, no mag draw"
               % len(g2_assign)
               + ("; C21 z-migration on %d rows (zoom by D_A ratio, "
@@ -370,21 +514,69 @@ def main():
     def inject_deflector_g2(sim, i):
         """GEN4-G2: the assigned real galaxy at its own brightness
         (C21: optionally z-migrated — shrunk and Tolman-dimmed)."""
-        di, k, mig_scale, mig_sb = g2_assign[i]
+        di, k, mig_scale, mig_sb, theta_E = g2_assign[i]
         st = deflectors[di]
         st = np.rot90(st, k % 4)
         if k >= 4:
             st = np.fliplr(st)
         st = np.ascontiguousarray(st).copy()
-        if mig_scale != 1.0 or mig_sb != 1.0:
-            from scipy.ndimage import zoom as _ndi_zoom
-            st = _ndi_zoom(st, mig_scale, order=1) * mig_sb
-        if args.deflector_flux_scale != 1.0:  # C39: brighten WITHOUT compactifying
-            st = st * args.deflector_flux_scale  # (preserves diffuse extent + FJ)
-        if args.deflector_sharpen > 0:  # C37: raise the central peak (double-PSF fix)
-            from scipy.ndimage import gaussian_filter as _gf
-            st = np.clip(st + args.deflector_sharpen
-                         * (st - _gf(st, args.deflector_sharpen_sigma)), 0, None)
+        if args.deflector_envelope > 0:  # C54: add the missing de Vauc wings
+            st = _add_devauc_envelope(st, n=args.deflector_envelope)
+        if args.deflector_taper > 0:
+            # C42: apodize the stamp's outer edge to zero. The de Vaucouleurs wing
+            # reaches the SQUARE postage-stamp boundary at a non-zero level (bright
+            # at the mid-edges, ~0 at the corners); before FJ the mig_sb dimming hid
+            # it, but FJ's multiplicative flux normalization raises that square
+            # isophote above the noise -> a hard rectangular "cut" (Nurkyz review
+            # 2026-08-03, cards 104/84/69/63/39/10/227/237). A cosine radial taper
+            # over the outer `deflector_taper` fraction turns the square truncation
+            # into a smooth round fade. Applied BEFORE zoom+FJ so the FJ total-flux
+            # normalization stays exact (taper removes only faint-wing flux).
+            st = st * _edge_taper(st.shape[0], args.deflector_taper)
+        fj_mag = None
+        if args.deflector_fj and theta_E > 0:
+            # C40: enforce Faber-Jackson -- the deflector's TOTAL flux is set from
+            # its theta_E (mass proxy), so brighter deflectors host larger arcs.
+            # mig_scale still applies for high-z angular SIZE, but FJ overrides the
+            # brightness (mig_sb / flux_scale / sharpen are skipped -- FJ sets the
+            # amplitude). Gaussian scatter is tuned so rho(mag,theta_E) matches real
+            # Q1 (~-0.47), NOT a deterministic -1 relation. Falls through to the
+            # shared jitter/composite/return path below.
+            if mig_scale != 1.0:
+                from scipy.ndimage import zoom as _ndi_zoom
+                st = _ndi_zoom(st, mig_scale, order=1)
+            # C47/C50: FJ Gaussian scatter, TRUNCATED to real Q1's observed
+            # deflector-mag support [fj_mag_min, fj_mag_max]. The scatter reproduces
+            # the real IQR but its Gaussian tails run ~1.3 mag past real (real max
+            # 23.4; unclipped reaches 24.7) -> a faint-deflector tail that reads as
+            # "invisible deflector in a noisy image" (Nurkyz 2026-08-03: NOT noise --
+            # sky RMS matches real; it is this tail). C50: REJECTION-SAMPLE (redraw)
+            # instead of clip, so the truncated tail redistributes toward the centre
+            # (no pile-up spike at the boundary that a hard clip leaves).
+            _ctr = args.fj_mag0 - args.fj_slope * np.log10(
+                max(theta_E, 0.1) / args.fj_theta0)
+            fj_mag = _ctr + rng.normal(0.0, args.fj_scatter)
+            _t = 0
+            while not (args.fj_mag_min <= fj_mag <= args.fj_mag_max) and _t < 20:
+                fj_mag = _ctr + rng.normal(0.0, args.fj_scatter)
+                _t += 1
+            fj_mag = float(np.clip(fj_mag, args.fj_mag_min, args.fj_mag_max))
+            ft = 10.0 ** (-0.4 * (fj_mag - args.zeropoint))
+            cur = float(np.clip(st, 0, None).sum())
+            if cur > 0:
+                st = st * (ft / cur)
+        else:
+            if mig_scale != 1.0 or mig_sb != 1.0:
+                from scipy.ndimage import zoom as _ndi_zoom
+                st = _ndi_zoom(st, mig_scale, order=1) * mig_sb
+            if args.deflector_flux_scale != 1.0:  # C39: brighten WITHOUT compactifying
+                st = st * args.deflector_flux_scale  # (preserves diffuse extent + FJ)
+            if args.deflector_sharpen > 0:  # C37: raise central peak (double-PSF fix)
+                from scipy.ndimage import gaussian_filter as _gf
+                st = np.clip(st + args.deflector_sharpen
+                             * (st - _gf(st, args.deflector_sharpen_sigma)), 0, None)
+        if args.deflector_edgesmooth > 0:  # C43: peak-preserving edge smoothing
+            st = _edge_smooth(st, args.deflector_edgesmooth)
         sp = st.shape[0]
         jy = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
         jx = int(round(rng.uniform(-args.deflector_jitter, args.deflector_jitter)))
@@ -401,7 +593,11 @@ def main():
             ys, xs = max(y0, 0), max(x0, 0)
             ye, xe = min(y0 + sp, n_px), min(x0 + sp, n_px)
             sim[ys:ye, xs:xe] += st[ys - y0:ye - y0, xs - x0:xe - x0]
-        mag_native = args.zeropoint - 2.5 * np.log10(max(float(np.clip(st, 0, None).sum()), 1e-9))
+        if fj_mag is not None:  # C40: report the enforced FJ mag
+            mag_native = fj_mag
+        else:
+            mag_native = args.zeropoint - 2.5 * np.log10(
+                max(float(np.clip(st, 0, None).sum()), 1e-9))
         return di, mag_native
 
     def inject_deflector(sim):

@@ -465,6 +465,12 @@ def main():
                     help="load only first N train images (smoke test)")
     ap.add_argument("--val_limit", type=int, default=None,
                     help="load only first N val images (smoke test)")
+    ap.add_argument("--theta_oversample", type=float, default=0.0,
+                    help="if >0, oversample high-theta training examples via a "
+                         "WeightedRandomSampler (weight = 1 + k*max(theta-1.4,0)) to "
+                         "counter high-theta regression-to-mean, WITHOUT duplicating "
+                         "data on disk. Epoch size grown by mean weight so low-theta "
+                         "coverage is preserved.")
     args = ap.parse_args()
 
     torch.manual_seed(args.seed); np.random.seed(args.seed)
@@ -477,8 +483,19 @@ def main():
                                 max_theta_e=args.max_theta_e, norm=args.norm,
                                 asinh_a=args.asinh_a, scale_stats=train_set.stats(),
                                 limit=args.val_limit)
-    train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
-                              num_workers=2, drop_last=True)
+    if args.theta_oversample > 0:
+        _th = np.asarray(train_set.theta, dtype=np.float64)
+        _w = 1.0 + args.theta_oversample * np.clip(_th - 1.4, 0.0, None)
+        _ns = int(len(_w) * float(_w.mean()))
+        _sampler = torch.utils.data.WeightedRandomSampler(
+            torch.as_tensor(_w, dtype=torch.double), num_samples=_ns, replacement=True)
+        train_loader = DataLoader(train_set, batch_size=args.batch_size,
+                                  sampler=_sampler, num_workers=2, drop_last=True)
+        print(f"[theta_oversample k={args.theta_oversample}] high-theta weighted; "
+              f"epoch size {len(train_set)}->{_ns}")
+    else:
+        train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
+                                  num_workers=2, drop_last=True)
     val_loader = DataLoader(val_set, batch_size=args.batch_size, shuffle=False,
                             num_workers=2)
     print(f"[data] train={len(train_set)} val={len(val_set)} device={device} | "

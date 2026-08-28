@@ -72,6 +72,18 @@ ap.add_argument("--evo_q", type=float, default=1.2,
                      "PENDING CONFIRMATION (Nurkyz/Brian), gate-arbitrated")
 ap.add_argument("--couple_shear", action="store_true",
                 help="AR2: gamma_ext coupled to |dPA| (C1); default OFF")
+ap.add_argument("--src_off_lo", type=float, default=0.0,
+                help="C41: source-plane offset as a fraction of theta_E, lower "
+                     "bound. Emits per-row source_cx/source_cy = beta*(cos,sin)phi "
+                     "with beta = theta_E*U(src_off_lo,src_off_hi). Scaling the "
+                     "offset WITH theta_E makes arcs partial at every theta_E (a "
+                     "fixed 0.25\" offset left large-theta systems near-aligned -> "
+                     "full rings). 0/0 (default) => columns emitted as 0 (GEN4/prior "
+                     "behaviour: the config's fixed U(+-0.25) offset still applies).")
+ap.add_argument("--src_off_hi", type=float, default=0.0,
+                help="C41: upper bound of the theta_E-fraction source offset. "
+                     "Real Q1 arcs are typically partial (~25-50%% of a ring); "
+                     "~0.35-0.75 of theta_E reproduces that. See --src_off_lo.")
 ap.add_argument("--match_theta", default="",
                 help="path to a .npy of TARGET theta_E values (e.g. real Q1 "
                      "theta_E_pub). Reweight the theta_E distribution to MATCH the "
@@ -239,6 +251,14 @@ while len(rows) < a.n and attempts < a.n * 2000:
         m3a = min(g["m3"] * thj, a.mult_cap * thj)
         m4a = min(g["m4"] * thj, a.mult_cap * thj)
         ph4 = g["ph4"]
+        # C41: theta_E-scaled source offset -> partial arcs at every theta_E
+        if a.src_off_hi > 0:
+            beta = thj * float(rng.uniform(a.src_off_lo, a.src_off_hi))
+            phib = float(rng.uniform(0, 2 * np.pi))
+            src_cx = round(beta * np.cos(phib), 6)
+            src_cy = round(beta * np.sin(phib), 6)
+        else:
+            src_cx = src_cy = 0.0
         il0, iln = zidx(g["z_l"]), zidx(float(zln[j]))
         mig_scale = float(DA[il0] / DA[iln])
         mig_sb = float(((1.0 + g["z_l"]) / (1.0 + float(zln[j]))) ** 4
@@ -260,6 +280,7 @@ while len(rows) < a.n and attempts < a.n * 2000:
                          stamp_mag_mig=round(g["mag"] - 2.5 * np.log10(
                              mig_scale ** 2 * mig_sb), 3),
                          q_light=g["q"],
+                         source_cx=src_cx, source_cy=src_cy,
                          pa_light_eff=round(pa_l, 2), dpa=round(dpa, 2),
                          **extra))
 

@@ -45,3 +45,19 @@ class Q1SourceCatalog(GalaxyCatalog):
         z = float(self.source_parameters["z_source"])
         metadata = {"pixel_width": self.pixscale, "z": z}
         return img, metadata
+
+    def draw_source(self, catalog_i=None, phi=None):
+        # C53: DECOUPLE brightness from pixscale. Native-amplitude preservation
+        # ties the arc's total flux to pixscale (= arc thickness): at the pixscale
+        # that gives real arc WIDTH the arc mag is wrong, and vice-versa. If
+        # q1_source_apparent_magnitude is set, renormalize the source's TOTAL flux
+        # to that mag (as HighSBCOSMOSCatalog does) so pixscale controls SIZE and
+        # mag controls BRIGHTNESS independently. None (default) = native amplitude.
+        models, kwargs_list, zs = super().draw_source(catalog_i, phi)
+        target = self.source_parameters.get("q1_source_apparent_magnitude")
+        if target is not None:
+            kw = kwargs_list[0]
+            self.normalize_to_mag(
+                kw["image"], float(target),
+                self.source_parameters["output_ab_zeropoint"], kw["scale"])
+        return models, kwargs_list, zs
