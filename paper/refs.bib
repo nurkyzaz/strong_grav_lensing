@@ -1,0 +1,206 @@
+% refs.bib — LensCNN (MNRAS)
+% Entries below without a % VERIFY tag are standard, well-established references
+% filled with canonical bibliographic details (still worth a final spot-check
+% against NASA ADS before submission). Entries tagged % VERIFY are ones whose
+% exact details could not be confirmed here — replace with the ADS export.
+
+% ---- Benchmark / ground truth ----
+@ARTICLE{Bolton2008,
+  author  = {{Bolton}, A.~S. and {Burles}, S. and {Koopmans}, L.~V.~E. and
+             {Treu}, T. and {Gavazzi}, R. and {Moustakas}, L.~A. and
+             {Wayth}, R. and {Schlegel}, D.~J.},
+  title   = {The Sloan Lens ACS Survey. V. The Full ACS Strong-Lens Sample},
+  journal = {ApJ},
+  volume  = {682},
+  pages   = {964},
+  year    = {2008},
+}
+@ARTICLE{Shu2017,          % VERIFY volume/page (S4TM = SLACS for the Masses)
+  author  = {{Shu}, Y. and {Bolton}, A.~S. and {Kochanek}, C.~S. and others},
+  title   = {The Sloan Lens ACS Survey. XIII. Discovery of 40 New Galaxy-scale
+             Strong Lenses (SLACS for the Masses)},
+  journal = {ApJ},
+  volume  = {851},
+  pages   = {48},
+  year    = {2017},
+}
+
+% ---- CNN lens estimation ----
+@ARTICLE{Hezaveh2017,
+  author  = {{Hezaveh}, Y.~D. and {Perreault Levasseur}, L. and {Marshall}, P.~J.},
+  title   = {Fast automated analysis of strong gravitational lenses with
+             convolutional neural networks},
+  journal = {Nature},
+  volume  = {548},
+  pages   = {555},
+  year    = {2017},
+}
+@ARTICLE{PerreaultLevasseur2017,
+  author  = {{Perreault Levasseur}, L. and {Hezaveh}, Y.~D. and {Wechsler}, R.~H.},
+  title   = {Uncertainties in Parameters Estimated with Neural Networks:
+             Application to Strong Gravitational Lensing},
+  journal = {ApJL},
+  volume  = {850},
+  pages   = {L7},
+  year    = {2017},
+}
+@ARTICLE{Busillo2026,      % Euclid Q1 XXXI (LEMON); arXiv:2503.15329
+  author  = {{Busillo}, V. and {Euclid Collaboration}},
+  title   = {Euclid Quick Data Release (Q1). LEMON -- Lens Modelling with Neural
+             networks. Automated and fast modelling of Euclid gravitational
+             lenses with a singular isothermal ellipsoid mass profile},
+  journal = {A\&A},
+  year    = {2026},
+  note    = {arXiv:2503.15329; doi:10.1051/0004-6361/202554538},
+}
+@ARTICLE{Gawade2025,       % VERIFY (HSC / YattaLens GT)
+  author  = {{Gawade}, and others},
+  year    = {2025},
+}
+@ARTICLE{Schuldt2023,      % VERIFY volume/page (HOLISMOKES X)
+  author  = {{Schuldt}, S. and others},
+  title   = {HOLISMOKES X. Comparison of neural network and conventional lens
+             modelling},
+  journal = {A\&A},
+  year    = {2023},
+}
+@ARTICLE{Cao2025,          % TinyLensGPU; arXiv:2503.08586
+  author  = {{Cao}, X. and others},
+  title   = {CSST Strong Lensing Preparation: Fast Modelling of Galaxy-Galaxy
+             Strong Lenses in the Big Data Era},
+  journal = {MNRAS},
+  volume  = {540},
+  pages   = {3121},
+  year    = {2025},
+  note    = {arXiv:2503.08586; doi:10.1093/mnras/staf891},
+}
+
+% ---- Domain adaptation ----
+@ARTICLE{Ciprijanovic2023, % VERIFY
+  author  = {{{\'C}iprijanovi{\'c}}, A. and others},
+  title   = {Domain adaptation for strong-lens parameter estimation},
+  year    = {2023},
+}
+@ARTICLE{Agarwal2025,      % VERIFY
+  author  = {{Agarwal}, and {{\'C}iprijanovi{\'c}}, A. and {Nord}, B.},
+  title   = {Neural network prediction of strong lensing systems with domain
+             adaptation and uncertainty quantification},
+  year    = {2025},
+}
+@ARTICLE{Swierc2024,       % arXiv:2410.16347 (Domain-Adaptive NPE)
+  author  = {{Swierc}, P. and others},
+  title   = {Domain-Adaptive Neural Posterior Estimation for Strong
+             Gravitational Lens Analysis},
+  year    = {2024},
+  note    = {arXiv:2410.16347},
+}
+
+% ---- Surveys / facilities ----
+@ARTICLE{Laureijs2011,
+  author  = {{Laureijs}, R. and others},
+  title   = {Euclid Definition Study Report},
+  year    = {2011},
+  note    = {arXiv:1110.3193},
+}
+@ARTICLE{Spergel2015,
+  author  = {{Spergel}, D. and others},
+  title   = {Wide-Field InfraRed Survey Telescope-Astrophysics Focused
+             Telescope Assets WFIRST-AFTA 2015 Report},
+  year    = {2015},
+  note    = {arXiv:1503.03757},
+}
+@ARTICLE{Ivezic2019,
+  author  = {{Ivezi{\'c}}, {\v Z}. and others},
+  title   = {LSST: From Science Drivers to Reference Design and Anticipated
+             Data Products},
+  journal = {ApJ},
+  volume  = {873},
+  pages   = {111},
+  year    = {2019},
+}
+@ARTICLE{Wedig2025,        % VERIFY (Roman lens simulations)
+  author  = {{Wedig}, and others},
+  year    = {2025},
+}
+
+% ---- Simulation tools / catalogues ----
+@ARTICLE{WagnerCarena2023, % VERIFY volume/page (paltas)
+  author  = {{Wagner-Carena}, S. and others},
+  title   = {paltas: Simulation-based inference on strong gravitational lenses},
+  journal = {ApJ},
+  volume  = {942},
+  pages   = {75},
+  year    = {2023},
+}
+@ARTICLE{Newton2011,       % VERIFY volume/page (SLACS source magnitudes)
+  author  = {{Newton}, E.~R. and {Marshall}, P.~J. and {Treu}, T. and others},
+  journal = {ApJ},
+  volume  = {734},
+  pages   = {104},
+  year    = {2011},
+}
+@ARTICLE{Mandelbaum2012,   % VERIFY (COSMOS_23.5 / GREAT3 galaxy sample)
+  author  = {{Mandelbaum}, R. and {Hirata}, C.~M. and {Leauthaud}, A. and
+             {Massey}, R.~J. and {Rhodes}, J.},
+  title   = {Precision simulation of ground-based lensing data using
+             observations from space},
+  journal = {MNRAS},
+  volume  = {420},
+  pages   = {1518},
+  year    = {2012},
+}
+@ARTICLE{Pawase2014,       % VERIFY (arc radii)
+  author  = {{Pawase}, R.~S. and others},
+  year    = {2014},
+}
+
+% ---- SLACS mass-profile / isothermality (C18) ----
+@ARTICLE{Koopmans2006,
+  author  = {{Koopmans}, L.~V.~E. and {Treu}, T. and {Bolton}, A.~S. and
+             {Burles}, S. and {Moustakas}, L.~A.},
+  title   = {The Sloan Lens ACS Survey. III. The Structure and Formation of
+             Early-Type Galaxies and Their Evolution since z ~ 1},
+  journal = {ApJ},
+  volume  = {649},
+  pages   = {599},
+  year    = {2006},
+}
+@ARTICLE{Auger2010,
+  author  = {{Auger}, M.~W. and {Treu}, T. and {Bolton}, A.~S. and
+             {Gavazzi}, R. and {Koopmans}, L.~V.~E. and {Marshall}, P.~J. and
+             {Moustakas}, L.~A. and {Burles}, S.},
+  title   = {The Sloan Lens ACS Survey. X. Stellar, Dynamical, and Total Mass
+             Correlations of Massive Early-type Galaxies},
+  journal = {ApJ},
+  volume  = {724},
+  pages   = {511},
+  year    = {2010},
+}
+
+% ---- Textbook / reviews (C10) ----
+@BOOK{Meneghetti2021,
+  author    = {{Meneghetti}, M.},
+  title     = {Introduction to Gravitational Lensing: With Python Examples},
+  publisher = {Springer},
+  series    = {Lecture Notes in Physics},
+  volume    = {956},
+  year      = {2021},
+  note      = {doi:10.1007/978-3-030-73582-1},
+}
+@ARTICLE{Saha2024,         % arXiv:2401.04165 (Space Science Reviews)
+  author  = {{Saha}, P. and {Sluse}, D. and {Wagner}, J. and {Williams}, L.~L.~R.},
+  title   = {Essentials of Strong Gravitational Lensing},
+  journal = {Space Science Reviews},
+  volume  = {220},
+  pages   = {12},
+  year    = {2024},
+  note    = {arXiv:2401.04165},
+}
+@ARTICLE{Treu2010,
+  author  = {{Treu}, T.},
+  title   = {Strong Lensing by Galaxies},
+  journal = {ARA\&A},
+  volume  = {48},
+  pages   = {87},
+  year    = {2010},
+}
