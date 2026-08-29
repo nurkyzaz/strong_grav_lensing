@@ -79,6 +79,40 @@ Chan notes Cao "is not too expensive" and *provides uncertainty quantification.*
 Only F814W / VIS single band; only θ_E (no ellipticity, shear, source). Referee will note the narrow scope. 
 - **Fix (writing):** frame scope explicitly; position θ_E as the first, most robust step; future multi-band/multi-parameter work.
 
+### R13. Faber–Jackson dilution — the self-consistency advantage is partly weakened (MEDIUM-HIGH)
+The headline claim is that tying light and mass (the Faber–Jackson channel) is the
+decisive step. But the paper's own disclosed number is that the tempered θ_E prior
+**dilutes** that correlation: simulator ρ(mag, θ_E) = −0.15 vs real SLACS −0.32
+(sign preserved, amplitude roughly halved). A referee can argue the mechanism you
+credit is only half-present. **Fix (writing):** foreground the sign+direction
+argument (the network still *can* read faint→small θ_E), quote the FJ-gate
+threshold (|ρ| within 0.25 of real, sign-matched), and show the ablation that
+turns FJ off entirely. **Experiment (optional, high-value):** an explicit
+"FJ-on vs FJ-off" ablation isolating the channel on the *same* recipe.
+
+### R14. Ensemble / member pre-registration integrity (MEDIUM)
+The SLACS headline is the full ensemble (R²=0.64) but the S4TM headline is a single
+member (r50\_3, R²=0.90; ensemble 0.81 — see §7). A referee will ask whether r50\_3
+was pre-registered or picked post-hoc. **Fix:** document the pre-registration (seed
+fixed on validation before the benchmark was touched), or report the ensemble for
+both. Do not headline a best-of-three member without an airtight paper trail.
+
+### R15. Frozen-benchmark evaluation-count integrity (MEDIUM-HIGH — disclosed in project records)
+Project records (CLAUDE.md / DECISIONS_LOG) state the frozen benchmark was evaluated
+an *unrecorded* number of times in early sessions before logging discipline, and a
+running eval count (~25) has been kept since. A careful referee worries about
+implicit tuning to the test set. **Fix (writing):** disclose this honestly —
+state that (i) model selection used only the simulation validation split, (ii) the
+architecture was frozen from the m3 baseline and not tuned on the benchmark, and
+(iii) an eval count is logged. Framing it transparently is far stronger than hoping
+it is not asked.
+
+### Metric note — R² is sample-variance-dependent
+R² depends on the spread of true θ_E in each sample; a narrow-range sample deflates
+R² even at fixed scatter. **Recommendation:** lead with **NMAD / fractional scatter**
+(sample-independent) as the primary metric and report R² as secondary, so
+cross-sample and cross-paper comparisons are fair.
+
 ### R12. Reproducibility (LOW but easy points)
 Configs, seeds, library CSVs are in-repo — make the Data Availability Statement concrete (repo, DOI, exact config files, seed lists).
 
@@ -194,11 +228,60 @@ Script: `analysis/calibration_gating.py`.
   this as the reliability/trade-off figure; apply the k-scaling before reporting
   calibrated coverage.
 
-### E1 — SIS(σ_v)-vs-b_SIE label noise (R1) — blocked in-repo (needs external join)
-No in-repo object has *both* a measured σ_v and a measured SIE θ_E: the benchmark
-(`bolton08_table5.csv`) has b_SIE but no σ_v/z_s; the library
-(`g0_stamp_kinematics.csv`, 84 non-lens galaxies) has σ_v/z but no measured θ_E,
-and shares 0 J-names with the benchmark. **Action:** join SDSS σ_v + source
-redshifts (Bolton 2008 / Auger 2009) to the 62 SLACS benchmark J-names, then
-θ_E^SIS(σ_v,z_l,z_s) vs b_SIE gives the label-noise floor directly. This remains
-the single highest-value experiment for R1.
+### E1 — σ_v→θ_E vs b_SIE (R1) — DONE, and it *rebuts* the concern (major result)
+Data fetched from the internet: **Bolton et al. 2008 (SLACS V) table4** [VizieR
+J/ApJ/682/964] — σ_v, z_l (zFG), z_s (zBG) — joined by J-name to the repo b_SIE
+(table5) → `tables/slacs_benchmark_kinematics.csv` (N=58 of 62; 4 lack SDSS σ).
+Script: `analysis/sis_vs_sie_labelnoise.py` (θ_E^SIS = 4π(σ_v/c)²(D_ls/D_s), flat
+ΛCDM Ω_m=0.3).
+
+| Quantity | σ_v→θ_E (SIS label relation) | CNN on same benchmark |
+|---|---|---|
+| NMAD | **0.203″** (frac 17%) | **0.047″** |
+| R² vs b_SIE | **+0.05** (Pearson r=0.68) | **+0.64** |
+| bias | **−0.11″** (SIS under SIE) | +0.005″ |
+| fail (>15%) | 47% | 15% |
+
+**Interpretation (this is the important part).** My original framing —"σ_v label
+noise caps the CNN's R²"— is **wrong**, and the truth is stronger. The training
+arcs are rendered *exactly* at each galaxy's θ_E^SIS, so there is no per-image
+label noise; σ_v only sets the training θ_E *prior* and a luminosity-based
+*fallback*. On real lenses the CNN reads the **arc geometry** directly, so it is
+**4× tighter than the σ_v→θ_E relation** (0.047″ vs 0.203″). This is a direct,
+quantitative **rebuttal** of "your R² is just a luminosity–σ_v proxy": if it were,
+the CNN would be capped at ~18%; it achieves ~4%. **Honest nuance (ties to R13):**
+σ_v self-consistency therefore matters most for the *faint-arc* minority (the ~18%
+fallback channel), while clear arcs are read geometrically — the paper should own
+this rather than over-claim self-consistency for every lens. **This turns R1 from
+a liability into a headline strength.**
+
+---
+
+## 8. Plan self-evaluation and "beyond-defense" strengthening (2026-08-29 review)
+
+**Evaluation of the plan itself.** The concern list (R1–R15) is comprehensive and
+correctly ordered by referee risk; the four experiments already run (E2/E3/E4/E9)
+turned three of the highest concerns from assertions into evidence. Two structural
+gaps in the *original* plan have now been closed by this review: it under-weighted
+(a) the **Faber–Jackson dilution** (R13) — ironic, since FJ is the headline
+mechanism — and (b) the **benchmark evaluation-count integrity** (R15), which the
+project's own records flag. It also implicitly over-trusted **R²**; NMAD should
+lead. With R13–R15 added and the metric note, the plan is now a faithful map of a
+referee's likely report.
+
+**Remaining single biggest risk:** R4 (LEMON reproducibility) — it is external and
+cannot be closed by writing; it needs the authors. R8 (incomplete Euclid Q1 GEN5 /
+DA results) is the only pure blocker.
+
+**Beyond defense — what would make this a materially stronger paper (not just
+referee-proof):**
+1. **A direct FJ-on/FJ-off ablation** on the identical recipe — the cleanest
+   possible evidence for the paper's central claim (addresses R13 head-on).
+2. **A second, independent real benchmark** (e.g. the BELLS or SL2S samples, or a
+   blind holdout never touched during development) — the strongest answer to R15.
+3. **Report NMAD/scatter as primary** with R² secondary, plus bootstrap CIs
+   (done) — makes every comparison sample-independent and honest.
+4. **The label-noise floor (E1)** plotted *alongside* the CNN scatter — if the CNN
+   scatter approaches the σ_v→θ_E floor, that is a powerful "we are as good as the
+   labels allow" statement, and reframes the residual as physics, not model error.
+   This is why E1 is the highest-value single experiment (see below).
