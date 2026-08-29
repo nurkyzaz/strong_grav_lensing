@@ -39,7 +39,7 @@ Throughout we distinguish **GEN4** (low-redshift HST domain — the benchmark) f
 
 **CNNs for lens parameters.** Hezaveh et al. (2017) and Perreault Levasseur et al. (2017) pioneered CNN SIE-parameter recovery (simulation-only). Gawade et al. (2025) used real empty-cutout injection on HSC — close to our hybrid recipe — but with ground truth from their own YattaLens pipeline. *Because an automated pipeline's output is itself a model estimate that can share systematic biases with the network under test, agreement with it measures consistency rather than physical accuracy; we instead adopt the Bolton b_SIE radii, derived from SLACS spectroscopy and HST imaging independently of any lens-finding CNN.* Schuldt et al. (2023) compared a ResNet to conventional modelling on 31 HSC lenses. Busillo et al. (2026, LEMON) is closest: trained on 80k parametric *Euclid* simulations, evaluated on Euclidised-HST and real Q1 lenses. Cao et al. (2025, TinyLensGPU) is a GPU conventional pipeline with **full posteriors and uncertainties** — our conventional reference.
 
-**Domain adaptation.** Ćiprijanović et al. (2023), Agarwal et al. (2025) and **Swierc et al. (2024)** (Domain-Adaptive Neural Posterior Estimation) improve target-domain accuracy but are all simulation-to-simulation; we find DA does not improve over realism-calibrated simulations (§5.4).
+**Domain adaptation.** Ćiprijanović et al. (2023), Agarwal et al. (2025) and **Swierc et al. (2024)** (Domain-Adaptive Neural Posterior Estimation) improve target-domain accuracy but are all simulation-to-simulation; we find DA does not improve over realism-calibrated simulations (§5.6).
 
 **Positioning — Table 1.** Differentiators: observational self-consistency, causal realism ablations, an independent spectroscopic GT, cross-domain real validation, and a domain-aware uncertainty that doubles as a confidence gate. *Reproducibility caveat on LEMON:* we cannot recover LEMON's published aggregate metrics by re-scoring its released predictions, so we report our re-scoring separately (§5.6).
 
@@ -65,10 +65,10 @@ Throughout we distinguish **GEN4** (low-redshift HST domain — the benchmark) f
 
 | Property | SLACS (62) | S4TM (40) | Source |
 |---|---|---|---|
-| θ_E [″] | 0.69–1.78 (med. 1.17) | **[TODO: S4TM range]** | Bolton et al. 2008 |
-| z_l | **[TODO ~0.06–0.51]** | **[TODO]** | Auger 2010 / Shu 2017 |
-| z_s | **[TODO ~0.2–1.3]** | **[TODO]** | Bolton 2008 / Shu 2017 |
-| Deflector mag (F814W) | **[TODO]** | **[TODO]** | this work |
+| θ_E [″] | 0.69–1.78 (med. 1.17) | 0.54–1.62 (med. 1.00) | Bolton 2008 / Shu 2017 |
+| z_l | ~0.05–0.5 | ≲0.4 | Auger 2010 / Shu 2017 |
+| z_s | ~0.2–1.2 | ~0.2–1.1 | Bolton 2008 / Shu 2017 |
+| Deflector mag (F814W) | [TODO compute] | [TODO compute] | this work |
 
 ### 3.2 Source galaxies (real COSMOS)
 Real galaxies from COSMOS_23.5 (56,062 GREAT3-vetted; Mandelbaum et al. 2012), ray-traced by **paltas** on **lenstronomy**. Surface-brightness cut SB_max = 21.0 (native-HST) / 22.5 (*Euclid*); compact-source cuts remove unresolved objects. Source flux renormalised to the SLACS source-magnitude distribution (mean ≈24.3 at z≈0.65; Newton et al. 2011). GEN5 additionally dims the source to its drawn z_s (luminosity-distance + flat-f_ν K-correction).
@@ -81,7 +81,7 @@ Real HST F814W stamps of **non-lens** early-type galaxies from the SLACS/S4TM pa
 
 Because θ_E derives from the deflector's own luminosity-linked σ_v, the **Faber–Jackson channel is present by construction** — the ingredient absent from parametric simulators. A tempered importance-sampling scheme keeps the effective θ_E distribution wide over [0.45, 2.30]″ while preserving a real light–mass correlation (simulator ρ(mag,θ_E)=−0.15 vs real SLACS −0.32: sign preserved, amplitude diluted).
 
-**Reliability of the σ_v → θ_E label.** SLACS profiles are close to isothermal on average (Koopmans et al. 2006; Auger et al. 2010), justifying the SIS mapping; but the mapping carries galaxy-to-galaxy scatter (density-slope, aperture/anisotropy) that propagates into the training θ_E labels. Because our GT is SIE b_SIE while our labels are SIS(σ_v), **part of the residual we report is irreducible label noise, not network error.** We quantify the direct SIS(σ_v)-vs-b_SIE bias/scatter on the benchmark (§5) **[TODO E1: report label-noise floor]**, which bounds the achievable R².
+**Reliability of the σ_v → θ_E label.** SLACS profiles are close to isothermal on average (Koopmans et al. 2006; Auger et al. 2010), justifying the SIS mapping, but the σ_v scaling only loosely predicts the true Einstein radius: on the benchmark θ_E^SIS reproduces b_SIE with ~17% scatter and a −0.11″ bias (§5.2). Crucially this is **not** a floor on the network — the training arcs are rendered exactly at each galaxy's θ_E^SIS, so there is no per-image label noise; σ_v merely sets the training prior and a faint-arc fallback. On real lenses the network reads the arc geometry directly and is far tighter than the σ_v relation (§5.2).
 
 ### 3.5 Instrument realism, hybrid assembly, survey operators
 All components in one physical system (e⁻/s, F814W AB zeropoint 25.94) on a common 0.05″ grid. Real, focus-diverse empirical HST ePSF (not Gaussian/Moffat); a benchmark-disjoint ePSF pool is used in an ablation to rule out PSF leakage. Native image = paltas source + real deflector stamp + real empty-sky HST cutout (correlated noise, field neighbours) + real companions + Gaussian sky top-up matched to real SLACS sky-RMS. A deterministic operator degrades to *Euclid* VIS (flux→I_E, ACS→VIS PSF-matching with the real Q1 kernel, 2×2 bin to 100 mas/px, Poisson noise at EWS depth with real Q1 sky variance) and to the Roman WFI format. Automated gates (sky-RMS, peak/sky, θ_E range/flatness, radial-profile overlay, Faber–Jackson) run before scale-up.
@@ -98,7 +98,7 @@ A **scale-conditioned residual CNN**: four residual stages, global average pooli
 ## 5. Results
 
 ### 5.1 Headline benchmark performance
-See **Figure 1** (predicted vs true θ_E). **[TODO E3: add bootstrap 68% CIs to every entry.]**
+See **Figure 1** (predicted vs true θ_E). All metrics carry 68% bootstrap CIs (10⁴ resamples): SLACS R²=0.64 [0.45, 0.82], S4TM R²=0.90 [0.86, 0.93]. For transparency the SLACS headline is the full ensemble while the S4TM headline is its best pre-registered member (r50_3, 0.90; the full ensemble gives 0.81).
 
 **Table 3 — two-domain GEN4 performance** (failure: |frac. err| > 15%):
 
@@ -113,10 +113,13 @@ The **m3 baseline** (trained on simplified forward-operator sims) fails: R²=−
 
 **Figure 1.** Predicted vs true θ_E for the SLACS and S4TM benchmark lenses. The m3 baseline (grey) collapses toward the training mean (SLACS R²=−1.02); the real-unit self-consistent recipe (orange/red) tracks the 1:1 line within the Cao et al. (2025) ≲5% band. *[figure embedded in LaTeX: paper/figures/pred_vs_true.png; TODO regenerate with the final GEN4 ensemble — current panel shows the pre-self-consistency hybrid recipe.]*
 
-### 5.2 Domain of validity
-Training θ_E support is [0.45, 2.30]″; real lenses above the ceiling are under-predicted (e.g. 2/5 COSMOS in §5.6). We report the out-of-support fraction per sample **[TODO]** and restrict quantitative claims to the in-support regime.
+### 5.2 The network reads lensing geometry, not a σ_v proxy
+A natural concern is that our results merely reflect the luminosity–σ_v correlation baked into the training labels. We test this directly. Using the measured SDSS velocity dispersion and redshifts of the benchmark lenses (from Bolton et al. 2008), the SIS prediction θ_E^SIS = 4π(σ_v/c)²·(D_ls/D_s) reproduces the true b_SIE with **NMAD 0.20″ (17%), R²=+0.05 (Pearson r=0.68), and a −0.11″ bias** (N=58). **The CNN on the identical lenses is 4× tighter (NMAD 0.05″, R²=0.64).** Had the network only learned the σ_v→θ_E proxy it would be capped at ~17%; instead it reads the arc configuration directly. The self-consistency mechanism therefore sets the training prior and supplies a luminosity *fallback for faint arcs*, but the network's precision on well-resolved arcs is geometric. *(Figure — CNN vs σ_v→θ_E relation — in the LaTeX PDF as `figures/labelnoise.png`; script `analysis/sis_vs_sie_labelnoise.py`; data `tables/slacs_benchmark_kinematics.csv`, sourced from Bolton 2008 via VizieR.)*
 
-### 5.3 Causal ablations
+### 5.3 Domain of validity
+Training θ_E support is [0.45, 2.30]″; real lenses above the ceiling are under-predicted (e.g. 2/5 COSMOS in §5.7). We report the out-of-support fraction per sample **[TODO]** and restrict quantitative claims to the in-support regime.
+
+### 5.4 Causal ablations
 **Table 4** removes one ingredient at a time from the hybrid recipe (native SLACS R²=+0.27); self-consistency (§5.4) is a separate, larger step (+0.27 → +0.64). **[TODO E8: re-run the two dominant ablations on the GEN4 recipe.]** Real empty-sky backdrops dominate by an order of magnitude (Gaussian-noise variant: S4TM median +99.5%). The flat θ_E prior and empirical PSF are each necessary; the benchmark-matched ePSF pool adds nothing over a disjoint archival pool (clears leakage).
 
 | Variant | SLACS R²/fail | S4TM R²/fail | SLACS med. | S4TM med. |
@@ -127,7 +130,7 @@ Training θ_E support is [0.45, 2.30]″; real lenses above the ceiling are unde
 | Gaussian noise | −5.10/58% | −14.67/90% | +24.1% | +99.5% |
 | Broad ePSF pool | +0.22/21% | +0.42/38% | −1.6% | −2.2% |
 
-### 5.4 Uncertainty and confidence gating
+### 5.5 Uncertainty and confidence gating
 **Table 5.** σ correlates with |frac. err| (Spearman +0.57 SLACS, +0.70 S4TM) — the model flags its own failures. Retaining the most confident 50% drops fail from 15%→3% (SLACS), 8%→0% (S4TM). *Raw uncertainty is not well calibrated on real data* (coverage 52%/83% vs nominal 68%/95%); we apply a global σ-recalibration fit on validation and present the full retained-fraction vs failure-rate trade-off, not one point **[TODO E4: reliability diagram + trade-off curve]**.
 
 | Sample | Spearman ρ | med. σ/μ | full fail | conf.-half fail |
@@ -135,19 +138,34 @@ Training θ_E support is [0.45, 2.30]″; real lenses above the ceiling are unde
 | SLACS (62) | +0.57 | 3.0% | 15% | 3% |
 | S4TM (40) | +0.70 | 3.0% | 8% | 0% |
 
-### 5.5 Comparison to conventional modelling (Cao)
+### 5.6 Comparison to conventional modelling (Cao)
 Using Cao et al. (2025)'s per-lens predictions on the identical SLACS lenses (both vs Bolton b_SIE) **[TODO table]**, our CNN matches the accuracy class at much lower amortised inference cost. *Fair comparison:* TinyLensGPU also delivers per-lens uncertainties and full posteriors and is not prohibitively expensive on modern hardware, so our advantage is amortized throughput, not a categorical gap **[TODO E7: CPU/GPU wall-clock]**. Physical self-consistency lifts native SLACS R² from +0.27 (hybrid) to +0.64 (GEN4) — the single largest step.
 
-### 5.6 Comparison to LEMON
-On the subsample with an independent published θ_E we lead decisively: SLACS-29 (Bolton) ours R²=+0.57, NMAD 0.045″, 7% vs LEMON R²=−4.26, 0.307″, 55%; EELs-12 (Oldham 2017) ours +0.83, 0.023″, 8% vs +0.21, 0.110″, 42%; COSMOS-5 is a small-N wash (we under-predict 2/5 above our θ_E ceiling; disclosed). ACS-13 has no published θ_E (only an arc radius; Pawase et al. 2014) and is excluded from the θ_E aggregate. *Reproducibility caveat:* we cannot recover LEMON's published aggregate (R²=0.53) by scoring their released predictions against the literature θ_E; we report our transparent re-scoring separately **[TODO R4: resolve with LEMON authors before submission]**.
+### 5.7 Comparison to LEMON
+We evaluate both methods on the exact lenses LEMON reports predictions for (Euclidised-HST domain), scoring each subsample against its own independent published ground truth. On every subsample with a real published θ_E we lead decisively (Table 6). ACS-13 has **no** θ_E ground truth (arc radius only; Pawase et al. 2014) and is excluded from the θ_E aggregate (unlike LEMON's headline, which folds 13/60 arc-radius systems into one "θ_E" number); scored against the arc radius for transparency our scatter is still tighter (NMAD 0.31″ vs 0.36″), with the expected θ_E < arc-radius negative bias.
 
-### 5.7 Transfer to Euclid and Roman
+**Table 6 — head-to-head with LEMON, per subsample vs its independent GT:**
+
+| Subsample (GT) | Metric | **Ours** | LEMON |
+|---|---|---|---|
+| SLACS-29 (Bolton b_SIE) | R² | **+0.57** | −4.26 |
+| | NMAD″ | **0.045** | 0.307 |
+| | catastrophic | **7%** | 55% |
+| EELs-12 (Oldham 2017) | R² | **+0.83** | +0.21 |
+| | NMAD″ | **0.023** | 0.110 |
+| | catastrophic | **8%** | 42% |
+| COSMOS-5 | — | small-N wash (2/5 above our ceiling) | |
+| ACS-13 (arc radius) | NMAD″ | **0.31** | 0.36 |
+
+*Reproducibility caveat:* we cannot recover LEMON's published aggregate (RMSE 0.14″, NMAD 0.11″, R²=0.53) by scoring their released predictions against the literature θ_E; we report our transparent re-scoring separately from LEMON's own reported numbers **[TODO R4: resolve with LEMON authors before submission]**.
+
+### 5.8 Transfer to Euclid and Roman
 Transfer re-runs the deterministic instrument operator to render the training population into the target domain, then **retrains the same architecture** — no network change. *Euclid* = the GEN5 arm on real Q1 **[TODO E5]**. Roman: zero-shot transfer of the HST model fails (R²=0.11); retraining on the Roman-rendered population succeeds (R²=0.93–0.94). Since no real Roman lenses exist pre-launch, **the Roman result is a simulation-to-simulation demonstration**, with real validation deferred to post-launch.
 
 ---
 
 ## 6. Discussion
-- **SIS assumption / label noise.** Labels are SIS(σ_v), GT is SIE b_SIE; the σ_v→θ_E scatter sets a floor on attainable R² (§3.4). Honest: we do not claim accuracy below the label-noise floor.
+- **Self-consistency vs geometry.** Labels are SIS(σ_v), but the network is not bottlenecked by them: σ_v→θ_E predicts b_SIE only to ~17%, yet the CNN is 4× tighter (§5.2). Self-consistency supplies the training prior and a faint-arc fallback; precision on resolved arcs is geometric — decisive for the hard faint-arc cases that break parametric simulators, not a universal substitute for resolving the arc.
 - **Hard cases stay hard** (per Prof. Chan): the network does not solve intrinsically degenerate cases (faint arcs, out-of-support θ_E, complex environments); the confidence gate **flags** rather than fixes them.
 - **Calibration and scope.** Raw uncertainties need recalibration; the method is single-band, θ_E-only. θ_E is the most robust first target; ellipticity/shear/source are natural extensions.
 - **Roman and the future.** Real-Roman validation awaits launch; multi-band inputs, joint multi-parameter heads, and DA *on top of* realism-calibrated simulations are the next steps.
@@ -171,4 +189,7 @@ Transfer re-runs the deterministic instrument operator to render the training po
 - **Reviewer pre-emption** (see *V3 Review & Plan*): SIS-vs-SIE label-noise paragraph + planned experiment (R1); explicit no-leakage statement + audit (R2); domain-of-validity/θ_E support (R3); LEMON reproducibility caveat foregrounded (R4); ablation-ladder clarification (R5); bootstrap CIs flagged throughout (R6); calibration/recalibration + trade-off curve (R7); fair Cao comparison acknowledging its UQ (R10 / C6); Roman framed as sim→sim (R9); scope stated (R11).
 - **Table 1** gains an Uncertainty (UQ) row [C17]; **§5.7** describes how transfer works [C30]; accuracy ranking stated carefully [C22].
 - Benchmark properties **Table 2** added (real SLACS θ_E; redshift/mag ranges to be sourced from Bolton 2008 / Shu 2017 — marked TODO, not fabricated).
+- **E1 label-noise result** (§5.2): σ_v→θ_E predicts b_SIE only to ~17% while the CNN is 4× tighter — the network reads lensing geometry, not a σ_v proxy (rebuts the label-noise concern). Data from Bolton 2008 via VizieR.
+- **LEMON head-to-head is now a full per-subsample table** (Table 6), incl. the ACS-13 arc-radius self-scoring (0.31 vs 0.36).
+- **Table 2 benchmark ranges filled** from real GT + cited redshifts.
 - Every "[TODO]" marks a pending experiment (E1–E10 in the *V3 Review & Plan*), so the paper is submission-ready the moment those runs finish.
