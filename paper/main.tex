@@ -133,7 +133,13 @@ simulations and report degraded real-vs-simulated performance.
 
 \subsection{This work}
 We present a CNN $\thetaE$ estimator trained on a physically self-consistent,
-real-ingredient pipeline. Our contributions are:
+real-ingredient pipeline. The intuition is simple: a neural network is only as
+good as the examples it learns from, so if those examples are cartoon
+simulations the network fails on real telescope images. We therefore build each
+training example around a \emph{real} galaxy --- using its true light, and giving
+it a mass fixed by that same galaxy's own measured internal motion (its velocity
+dispersion) --- so the network practises on systems that obey the same physics as
+the real lenses it must ultimately measure. Concretely, our contributions are:
 \begin{enumerate}
 \item \textbf{Observational self-consistency (GEN4):} each training system uses
 one real HST galaxy for both its light and its mass ($\thetaE$ from that
