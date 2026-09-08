@@ -78,7 +78,7 @@ tail -f ~/lensfusion/logs/DAPS_<jobid>.out
 
 Cancel a job if needed: `scancel <jobid>`
 
-### Method B — interactive session (your prof's method) + `screen` **[needs GPU access]**
+### Method B — interactive session + `screen` **[needs GPU access]**
 
 Use `screen` so a long queue-wait survives if your laptop disconnects (TK guide §4.3).
 ```
@@ -121,7 +121,7 @@ Tip (TK guide §1.2): your home has a small quota. For big output runs, keep res
 
 ---
 
-## 6. Guideline checklist (TK's cluster guide)
+## 6. Guideline checklist 
 
 - [x] Log in via `ssh` + Duo (§1)
 - [x] Set up env with modules + conda (§2.3)
