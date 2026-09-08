@@ -38,7 +38,7 @@ light, real empty-sky background, real instrument PSF) calibrated to real flux u
 - **Pipeline:** `g1b_measure_stamps.py` (measure galaxies) → `g2_make_manifest.py`
   (one self-consistent system per row) → `run_paltas_pilot.py` + a `config_lensfusion_acs*`
   config (render the arc) → `hybrid_combine.py` (add real deflector + sky + companions +
-  noise). Full detail: `GENERATOR_AND_CODEBASE_REFERENCE.md`.
+  noise). Full detail: [`GEN4_PIPELINE.md`](GEN4_PIPELINE.md).
 
 ## GEN5 — native Euclid Q1
 
