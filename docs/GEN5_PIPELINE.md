@@ -1,10 +1,10 @@
 # GEN5 — how the successful Euclid pipeline works (2026-08-21)
 
-The GEN5 pipeline that reaches **R² +0.73 on real Euclid Q1** (ahead of LEMON's
-0.71). This documents the complete winning recipe end-to-end: what each stage
-does, the exact knobs, and why. Companion docs: GEN5_IMPROVEMENT_PLAN.md (the
-v2 upgrade rationale), DOMAIN_SPECIALIZATION.md (GEN4 vs GEN5 crossover),
-MODELS_AND_RESULTS.md (numbers).
+The GEN5 pipeline that reaches **R² ≈ 0.73 on real Euclid Q1**. This documents the
+complete recipe end-to-end: what each stage does, the exact knobs, and why. For the
+big picture (what GEN4/GEN5 are, the CNN, uncertainty, how to run) see
+[HOW_IT_WORKS.md](HOW_IT_WORKS.md); for generator internals and units see
+[GENERATOR_AND_CODEBASE_REFERENCE.md](GENERATOR_AND_CODEBASE_REFERENCE.md).
 
 ## 0. The one idea that unlocked it
 
@@ -108,7 +108,7 @@ At LEMON-matched difficulty (Grade-A / top-61%, N≈185): GEN5 v2 **R² +0.78, N
 0.076″** — we **win R², tie NMAD and bias, trail only on RMSE** (0.196 vs 0.17),
 which the matched-difficulty test localizes entirely to the high-θ tail (v3
 target). GEN5 also generalizes to Euclid-SLACS (R² 0.60). GEN4 remains best on
-low-θ HST S4TM — the instrument-specialization crossover (DOMAIN_SPECIALIZATION.md).
+low-θ HST S4TM — the instrument-specialization crossover.
 
 ## 5. Honest caveats (carry into the paper)
 - Ground truth is PyAutoLens SIE (the Q1 reference; ~1% on good fits, a handful of

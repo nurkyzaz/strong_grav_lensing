@@ -5,8 +5,8 @@ generator works, what every core script does, and the full photometry / units /
 normalization chain. Written 2026-08-01 by reading the actual cluster code
 (`~/cosmos_acs/tiles/`, `~/einstein_cnn/`), not the older plan docs. Where a
 line cites a file, it was verified against that file. If code changes, update
-this file. Chronology of *decisions* lives in DECISIONS_LOG.md; current *numbers*
-in MODELS_AND_RESULTS.md.
+this file. For the big-picture guide (GEN4/GEN5, the CNN, uncertainty, how to run)
+see [HOW_IT_WORKS.md](HOW_IT_WORKS.md).
 
 ---
 

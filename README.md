@@ -18,11 +18,12 @@ Two instrument domains share one population model: native **HST** (ACS/WFC F814W
 
 | Doc | What it covers |
 |-----|----------------|
-| [`docs/PROJECT_OVERVIEW.md`](docs/PROJECT_OVERVIEW.md) | One-page overview of the problem and approach |
-| [`docs/GENERATOR_AND_CODEBASE_REFERENCE.md`](docs/GENERATOR_AND_CODEBASE_REFERENCE.md) | **How the training-data generator works** — photometry, units, normalization, file-by-file map, GEN0→GEN5 lineage. Read this first for the code. |
-| [`docs/GEN5_PIPELINE.md`](docs/GEN5_PIPELINE.md) | The Euclid ("GEN5") simulation recipe, stage by stage |
-| [`docs/CODEBASE_MAP.md`](docs/CODEBASE_MAP.md) | Map of the older Phase-2 (diffusion) tree |
-| [`docs/LensFusion_cluster_runbook.md`](docs/LensFusion_cluster_runbook.md) | How to log in and run jobs on the CUHK cluster (SLURM) |
+| [`docs/HOW_IT_WORKS.md`](docs/HOW_IT_WORKS.md) | **Start here.** What GEN4/GEN5 are and how they work, the CNN, uncertainty, and exactly how to run generation/training/eval. |
+| [`docs/GENERATOR_AND_CODEBASE_REFERENCE.md`](docs/GENERATOR_AND_CODEBASE_REFERENCE.md) | Generator internals — photometry, units, normalization, file-by-file map, GEN lineage. |
+| [`docs/GEN5_PIPELINE.md`](docs/GEN5_PIPELINE.md) | The Euclid ("GEN5") simulation recipe, stage by stage. |
+| [`docs/PROJECT_OVERVIEW.md`](docs/PROJECT_OVERVIEW.md) | Background/motivation (some legacy framing; see HOW_IT_WORKS for the current pipeline). |
+| [`docs/CODEBASE_MAP.md`](docs/CODEBASE_MAP.md) | Map of the older Phase-2 (diffusion) tree. |
+| [`docs/LensFusion_cluster_runbook.md`](docs/LensFusion_cluster_runbook.md) | How to log in and run jobs on the CUHK cluster (SLURM). |
 
 ## Repository layout
 

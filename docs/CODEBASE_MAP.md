@@ -20,5 +20,5 @@ strong_lensing_dataset/kappa_light/train_camera_complete.h5` (keys `kappa`, `len
 Train with **paltas** (`~/cosmos_acs/tiles/config_lensfusion_acs.py` → `paltas_to_train.py`),
 evaluate with **`~/einstein_cnn/metrics_real.py`** on `real_slacs_images.h5` + `real_s4tm_images.h5`.
 The baseline is `einstein_cnn_m3.pt`. Everything labeled SUPERSEDED (the bespoke SIMCT composite
-generator, HSTempty, harvested ellipticals) is a dead end — see `DECISIONS_LOG.md` for why. The one
+generator, HSTempty, harvested ellipticals) is a dead end. The one
 open task is `diagnose_paltas_lens_light.py`.
