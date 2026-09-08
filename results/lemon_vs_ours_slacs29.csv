@@ -1,4 +1,0 @@
-model,N,bias,RMSE,NMAD,R2,median_frac_pct,fail_gt15pct_pct
-LEMON_euclidised_CNN,29,0.2877,0.473,0.3074,-4.263,14.4,55.0
-OURS_euclid_g4_cnv2_ens,29,-0.0427,0.1351,0.0452,0.571,-1.2,7.0
-OURS_native_g4n_cnv2_ens,29,-0.0117,0.1731,0.0375,0.295,-0.5,10.0

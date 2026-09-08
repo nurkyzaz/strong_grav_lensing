@@ -1,7 +1,7 @@
 # LensFusion on the CUHK Central Cluster — Run Guide
 
-Account: `s1155256561`  ·  Group account/QOS: `tkcastrosim`
-Your code copy: `~/lensfusion`  (i.e. `/users/s1155256561/lensfusion`)
+Account: `<YOUR_CUHK_ACCOUNT>`  ·  Group account/QOS: `tkcastrosim`
+Your code copy: `~/lensfusion`  (i.e. `/users/<YOUR_CUHK_ACCOUNT>/lensfusion`)
 Shared data + checkpoints: `/lustre/project/tkcastrosim/TKChan/Diffusion-Sampling-For-Strong-Gravitational-Lensing/datafiles/`
 
 ---
@@ -35,7 +35,7 @@ GPU jobs currently stay pending with **`Reason=BadConstraints`** and never start
 ## 1. Connect (every session)
 
 ```
-ssh -Y s1155256561@chpc-login.itsc.cuhk.edu.hk
+ssh -Y <YOUR_CUHK_ACCOUNT>@chpc-login.itsc.cuhk.edu.hk
 ```
 - At the Duo prompt: type `1`, then approve the push on your phone.
 - At `Password:` type your password (nothing shows as you type — normal).
@@ -64,7 +64,7 @@ Quick check (optional): `which python` should point inside `Stronglensing`; `pyt
 ```
 mkdir -p ~/lensfusion/logs
 sbatch scripts/daps/sample_multi_daps.sh
-squeue -u s1155256561
+squeue -u <YOUR_CUHK_ACCOUNT>
 ```
 Read the `squeue` `(REASON)`:
 - `(Priority)` or `(Resources)` → healthy: queued, will start when a GPU frees. Leave it; no need to watch.
