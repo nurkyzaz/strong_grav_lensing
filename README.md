@@ -38,17 +38,23 @@ Two instrument domains share one population model: native **HST** (ACS/WFC F814W
 - `results/` — per-lens prediction CSVs from benchmark evaluations.
 - `paper_figures/` — figures.
 
-## Dependencies
+## Setup
 
-The pipeline is built on **paltas** (Wagner-Carena et al.). Install paltas and its
-dependencies (`lenstronomy`, `astropy`, `galsim`, `numpy`, `scipy`), plus `torch` +
-`timm` for training. The configs use a multipole-extended deflector class
-(`PEMDShearFourMultipole`); make sure your paltas build provides it (see
-`docs/GEN5_PIPELINE.md`).
+```
+conda create -n lensfusion python=3.8 && conda activate lensfusion
+pip install -r requirements.txt
+```
 
-> ⚠️ **Note for the maintainers:** confirm which paltas build/commit the configs require
-> and pin it here before handing the repo to new users, so `import paltas` resolves the
-> multipole deflector class.
+The pipeline is built on **[paltas](https://github.com/swagnercarena/paltas)**
+(Wagner-Carena et al.), pinned to **0.2.0** in `requirements.txt`. paltas is used
+**unmodified** — the multipole deflector class `PEMDShearFourMultipole` that the GEN5
+configs use is part of stock paltas 0.2.0. Our contribution is the per-galaxy,
+isophote-anchored multipole *priors* passed to it in `pipeline/config_lensfusion_acs*.py`
+(see `docs/GEN5_PIPELINE.md`), not a fork of paltas.
+
+`galsim` is the one dependency that can be awkward to pip-install (it needs FFTW/Eigen);
+if it fails, `conda install -c conda-forge galsim=2.5.3`. For GPU training, install the
+`torch` build matching your CUDA (the cluster used cu121).
 
 ## Key entry points
 
