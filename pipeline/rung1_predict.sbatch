@@ -27,9 +27,8 @@ PY=/home/user/nurkyz/miniconda3/envs/Stronglensing/bin/python
 cd /home/user/nurkyz/einstein_cnn
 
 HARD_FLAG=""; [ -n "${HARD:-}" ] && HARD_FLAG="--hard_label"
-ID_FLAG="";   [ -n "${ID_KEY:-}" ] && ID_FLAG="--id_key ${ID_KEY}"
 
 # CKPTS is intentionally unquoted so the space-separated list expands to args
 $PY predict_rung1.py --test_file "$TEST_H5" --ckpt $CKPTS \
-    --out "$OUT" --prob_col "$PROB_COL" $ID_FLAG $HARD_FLAG
+    --out "$OUT" --prob_col "$PROB_COL" $HARD_FLAG
 echo "RUNG1_PREDICT_DONE $OUT"

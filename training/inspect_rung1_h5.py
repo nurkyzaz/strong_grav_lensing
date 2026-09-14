@@ -1,128 +1,121 @@
 #!/usr/bin/env python
 """Step 0 for Roman Data Challenge Rung 1: print the structure of a challenge
-HDF5 so we can fill in the exact key names the train/predict scripts need.
+HDF5 so we can confirm the group/attr layout the train/predict scripts rely on.
 
-The 11.8 GB labeled file (`roman_data_challenge_rung_1_v_3_0.h5`) and the
-`view_rung_1_dataset.ipynb` example notebook are NOT in this repo -- they are
-downloaded from Zenodo (doi:10.5281/zenodo.20249305 labeled;
-doi:10.5281/zenodo.20249307 unlabeled). Run this on the machine that has the
-download instead of reading the notebook by hand.
+The real layout (from view_rung_1_dataset.ipynb) is a per-lens GROUP hierarchy,
+not a flat image cube:
 
-It reports, for every dataset in the file:
-  - full key path, shape, dtype
-  - for the image cube: inferred (N, bands, H, W) layout and per-band pixel
-    stats (min / median / max) on a small sample
-  - for any 0/1-looking column: the class balance (this is your label)
-  - for any integer id-looking column: min/max (this is your submission ID)
+    images/
+      strong_lens_00000000/           (attrs: substructure, uid, theta_e, ...)
+        exposure_00000000_F106        (91, 91) float, MJy/sr
+        exposure_00000000_F129
+        exposure_00000000_F158
+      strong_lens_00000001/
+      ...
 
-Nothing here is Rung-1-specific beyond the candidate-name lists, so it also
-works on the unlabeled file (which simply won't have a label column).
+  * label = group.attrs['substructure'][0]  -> 'True' / 'False'
+  * id    = group.attrs['uid'][0]           -> '00000000'
+  * bands = F106, F129, F158  (10.01" FOV, 0.11"/pix -> 91x91)
 
-Usage:
-    python inspect_rung1_h5.py /path/to/roman_data_challenge_rung_1_v_3_0.h5
-    python inspect_rung1_h5.py /path/to/unlabeled.h5 --sample 512
+This reports the root attrs, the number of lenses, the exposure shape/dtype and
+per-band pixel ranges, and the substructure class balance over a sample. Works
+on the unlabeled file too (which has no 'substructure' attr).
+
+    python inspect_rung1_h5.py roman_data_challenge_rung_1_v_3_0.h5 --sample 400
 """
 import argparse
 import h5py
 import numpy as np
 
-# Best-guess key names, most likely first. The script auto-detects by shape
-# too, so these are only used to LABEL what it finds, not to require it.
-IMAGE_KEYS = ["lensed", "images", "image", "data", "cutouts", "x"]
-LABEL_KEYS = ["label", "labels", "subhalo", "subhalos", "has_subhalos",
-              "substructure", "y", "cdm", "class"]
-ID_KEYS = ["ID", "id", "ids", "obj_id", "object_id", "index"]
+BANDS = ["F106", "F129", "F158"]
 
 
-def walk(f):
-    """Yield (path, dataset) for every dataset in the file, recursively."""
-    out = []
-
-    def _visit(name, obj):
-        if isinstance(obj, h5py.Dataset):
-            out.append((name, obj))
-    f.visititems(_visit)
-    return out
-
-
-def guess_role(name, dset):
-    n = name.split("/")[-1].lower()
-    shape = dset.shape
-    if n in [k.lower() for k in IMAGE_KEYS] or (len(shape) >= 3):
-        return "IMAGE?"
-    if n in [k.lower() for k in LABEL_KEYS]:
-        return "LABEL?"
-    if n in [k.lower() for k in ID_KEYS]:
-        return "ID?"
-    return ""
+def attr0(group, name, default=None):
+    """mejiro stores each attr as [value, description]; return the value."""
+    if name not in group.attrs:
+        return default
+    v = group.attrs[name]
+    v = v[0] if np.ndim(v) > 0 else v
+    if isinstance(v, bytes):
+        v = v.decode()
+    return v
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("h5_path")
-    ap.add_argument("--sample", type=int, default=256,
-                    help="rows to sample for image/label stats")
+    ap.add_argument("--sample", type=int, default=400,
+                    help="lenses to sample for label balance + pixel stats")
     args = ap.parse_args()
 
     with h5py.File(args.h5_path, "r") as f:
         print(f"=== {args.h5_path} ===")
-        if f.attrs:
-            print("file attrs:", dict(f.attrs))
-        datasets = walk(f)
-        print(f"\n{len(datasets)} dataset(s):\n")
-        for name, dset in datasets:
-            role = guess_role(name, dset)
-            print(f"  {name:24s} shape={str(dset.shape):22s} "
-                  f"dtype={str(dset.dtype):10s} {role}")
+        print("root attrs:")
+        for k, v in f.attrs.items():
+            print(f"  {k}: {v}")
 
-        n_total = max((d.shape[0] for _, d in datasets), default=0)
+        if "images" not in f:
+            print("\n!! no 'images' group -- unexpected layout; top-level keys:",
+                  list(f.keys()))
+            return
+        g = f["images"]
+        names = list(g.keys())
+        n_total = len(names)
+        print(f"\nimages/: {n_total} lens groups")
+        print("first 5:", names[:5])
+
+        # structure of the first lens
+        first = g[names[0]]
+        uid0 = attr0(first, "uid")
+        print(f"\nfirst lens '{names[0]}' uid={uid0}")
+        print("  datasets:", list(first.keys()))
+        for b in BANDS:
+            key = f"exposure_{uid0}_{b}"
+            if key in first:
+                d = first[key]
+                print(f"    {key}: shape={d.shape} dtype={d.dtype}")
+        print("  attrs:", {k: attr0(first, k) for k in
+                           ("substructure", "theta_e", "z_lens", "z_source",
+                            "sigma_sub", "log_mlow", "log_mhigh")})
+
+        # sample for label balance + per-band pixel ranges
         n = min(args.sample, n_total)
-        print(f"\n--- stats on first {n} rows ---")
-
-        for name, dset in datasets:
-            shape = dset.shape
-            # --- image cube: infer layout, per-band pixel stats ---
-            if len(shape) >= 3:
-                arr = dset[:n].astype("float32")
-                if arr.ndim == 4 and arr.shape[1] in (1, 3, 4):
-                    layout, bands = "(N,C,H,W)", arr.shape[1]
-                    per_band = [arr[:, c] for c in range(bands)]
-                elif arr.ndim == 4 and arr.shape[-1] in (1, 3, 4):
-                    layout, bands = "(N,H,W,C)", arr.shape[-1]
-                    per_band = [arr[..., c] for c in range(bands)]
+        idx = np.linspace(0, n_total - 1, n).astype(int)
+        labels, has_sub_attr = [], ("substructure" in first.attrs)
+        band_stats = {b: [] for b in BANDS}
+        missing = 0
+        for i in idx:
+            grp = g[names[i]]
+            uid = attr0(grp, "uid")
+            if has_sub_attr:
+                labels.append(str(attr0(grp, "substructure")))
+            for b in BANDS:
+                key = f"exposure_{uid}_{b}"
+                if key in grp:
+                    arr = grp[key][:]
+                    band_stats[b].append((float(arr.min()), float(np.median(arr)),
+                                          float(arr.max())))
                 else:
-                    layout, bands = "(N,H,W) single-band", 1
-                    per_band = [arr]
-                print(f"\n[{name}] layout {layout}  bands={bands}  "
-                      f"H,W={shape[-2:] if layout != '(N,H,W,C)' else shape[1:3]}")
-                for c, b in enumerate(per_band):
-                    print(f"    band {c}: min {b.min():+.4g}  median "
-                          f"{np.median(b):+.4g}  max {b.max():+.4g}  "
-                          f"mean {b.mean():+.4g}")
-                continue
+                    missing += 1
 
-            # --- 1-D columns: is it a binary label or an id? ---
-            if len(shape) == 1:
-                col = dset[:n]
-                uniq = np.unique(col)
-                if col.dtype.kind in "iub" and len(uniq) <= 10:
-                    counts = {int(u): int((dset[:n] == u).sum()) for u in uniq}
-                    print(f"\n[{name}] discrete, values {counts} "
-                          f"(sample of {n})  <-- LABEL if this is 0/1")
-                elif col.dtype.kind in "iu":
-                    full = dset[:]
-                    print(f"\n[{name}] integer  min {full.min()} max {full.max()} "
-                          f"unique {len(np.unique(full))}  <-- ID if contiguous")
-                else:
-                    print(f"\n[{name}] float  min {col.min():.4g} "
-                          f"max {col.max():.4g}")
+        print(f"\n--- sample of {n} lenses ---")
+        if has_sub_attr:
+            uq, ct = np.unique(labels, return_counts=True)
+            print("substructure balance:", dict(zip(uq.tolist(), ct.tolist())),
+                  "  <-- LABEL (binary)")
+        else:
+            print("no 'substructure' attr -> this is the UNLABELED set")
+        if missing:
+            print(f"!! {missing} expected exposures missing (band naming?)")
+        for b in BANDS:
+            s = np.array(band_stats[b])
+            if len(s):
+                print(f"  {b}: min~{s[:,0].mean():+.4g}  median~{s[:,1].mean():+.4g}"
+                      f"  max~{s[:,2].mean():+.4g}   (units MJy/sr)")
 
-    print("\nNow set these in train_cnn_rung1.py / predict_rung1.py:")
-    print("  --image_key   the IMAGE? dataset above")
-    print("  --label_key   the 0/1 LABEL? column above")
-    print("  --id_key      the ID? column (or omit to use the row index)")
-    print("Also open view_rung_1_dataset.ipynb once to confirm the required")
-    print("submission COLUMN NAME and METRIC (AUC vs accuracy).")
+    print("\nFor train/predict: image key = per-group 'exposure_<uid>_<band>',")
+    print("label attr = 'substructure' (True/False), id attr = 'uid'.")
+    print("These are already the defaults in train_cnn_rung1.py / predict_rung1.py.")
 
 
 if __name__ == "__main__":

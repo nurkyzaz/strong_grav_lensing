@@ -14,8 +14,8 @@
 #   SEEDS      space-separated            (default "0 1 2")
 #   EPOCHS                                (default 40)
 #   DATA_DIR   ckpt + submission location (default ~/cosmos_acs/roman_dc)
-#   PROB_COL   submission column name     (default prob; set from the notebook)
-#   IMAGE_KEY / LABEL_KEY / ID_KEY / HARD  (optional; see rung1_*.sbatch)
+#   PROB_COL   submission column name     (default prob; confirm w/ organizers)
+#   HARD       set to write 0/1 instead of the probability
 #
 # Usage:
 #   TRAIN_H5=~/cosmos_acs/roman_dc/roman_data_challenge_rung_1_v_3_0.h5 \
@@ -35,10 +35,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # these are identical across jobs -> export so SLURM's default --export=ALL
 # propagates them; per-job vars (ARCH/SEED/CKPT/CKPTS) are set inline below.
 export TRAIN_H5 TEST_H5
-[ -n "${IMAGE_KEY:-}" ] && export IMAGE_KEY
-[ -n "${LABEL_KEY:-}" ] && export LABEL_KEY
-[ -n "${ID_KEY:-}" ]    && export ID_KEY
-[ -n "${HARD:-}" ]      && export HARD
+[ -n "${HARD:-}" ] && export HARD
 
 train_jids=()
 ckpts=()
