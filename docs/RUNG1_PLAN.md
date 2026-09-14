@@ -90,6 +90,17 @@ Resubmit step 1 with `SEED=1` and `SEED=2` (and optionally `ARCH=convnextv2`).
 Each writes `rung1_<arch>_s<seed>.pt` to `~/cosmos_acs/roman_dc/`. Ensembling +
 TTA gave measurable gains in Rung 0 and is essentially free here.
 
+**One-command path (Steps 1–3 together).** Once Step 0 has confirmed the keys,
+`pipeline/rung1_ensemble.sh` submits the seed training jobs and a predict job
+gated on `afterok` of all of them, so the submission is written only if every
+run succeeds:
+```bash
+TRAIN_H5=~/cosmos_acs/roman_dc/roman_data_challenge_rung_1_v_3_0.h5 \
+TEST_H5=~/cosmos_acs/roman_dc/rung_1_unlabeled.h5 \
+PROB_COL=<NAME_FROM_NOTEBOOK> \
+    bash pipeline/rung1_ensemble.sh
+```
+
 ### 3. Predict + submit
 ```bash
 TEST_H5=~/cosmos_acs/roman_dc/rung_1_unlabeled.h5 \
