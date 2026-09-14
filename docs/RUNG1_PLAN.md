@@ -44,6 +44,11 @@ the `resnet50` / `convnextv2` timm backbones (the only archs that accept
 | [`training/train_cnn_rung1.py`](../training/train_cnn_rung1.py) | Classifier: multi-band per-channel normalization, BCE-with-logits (`pos_weight` for balance), stratified train/val split, **ROC-AUC** model selection. |
 | [`training/predict_rung1.py`](../training/predict_rung1.py) | Scores the unlabeled set with 8-view TTA, ensembles across seed checkpoints, writes `ID,<prob>` submission CSV. |
 
+SLURM wrappers (in `pipeline/`, mirroring `train_ablation.sbatch`):
+`rung1_inspect.sbatch` (Step 0), `rung1_train.sbatch` (Steps 1–2, env
+`TRAIN_H5`/`ARCH`/`SEED`), `rung1_predict.sbatch` (Step 3, env
+`TEST_H5`/`CKPTS`/`PROB_COL`).
+
 **Deliberately NOT added:** no data generation, no domain-adaptation/"romanise"
 step (Rung 0 needed it to bridge our HST/Euclid sims to Roman; Rung 1 data is
 *already* native Roman), no θ_E regression/uncertainty head.
@@ -52,36 +57,45 @@ step (Rung 0 needed it to bridge our HST/Euclid sims to Roman; Rung 1 data is
 
 ## Step-by-step
 
+Everything below runs on the CUHK SLURM cluster via the wrappers in
+`pipeline/rung1_*.sbatch`. Those `cd ~/einstein_cnn`, so the four scripts
+(`inspect/train/predict_rung1.py` + the reused `train_cnn_paltas.py`) must be
+present there, and the data downloaded to `~/cosmos_acs/roman_dc/`.
+
 ### 0. Download + inspect (resolves the two unknowns)
-Download both Zenodo records to the cluster (`~/cosmos_acs/roman_dc/` alongside
-the Rung 0 files). Then:
+Download both Zenodo records to `~/cosmos_acs/roman_dc/` (alongside the Rung 0
+files). Then:
 ```bash
-python training/inspect_rung1_h5.py <labeled>.h5
+H5=~/cosmos_acs/roman_dc/roman_data_challenge_rung_1_v_3_0.h5 \
+    sbatch pipeline/rung1_inspect.sbatch
 ```
 Note the **image key**, **label key**, and **ID key** it reports. Open
 `view_rung_1_dataset.ipynb` once to confirm the required **submission column
 name** and the official **metric** (AUC vs. accuracy vs. TPR@FPR). These are the
-only two facts the code can't infer on its own.
+only facts the code can't infer on its own; pass them via the env vars below.
 
 ### 1. Baseline train (single seed)
 ```bash
-python training/train_cnn_rung1.py \
-  --train_file <labeled>.h5 --image_key <IMG> --label_key <LAB> \
-  --arch resnet50 --in_chans 3 --epochs 40 --seed 0 --out_ckpt rung1_r50_s0.pt
+TRAIN_H5=~/cosmos_acs/roman_dc/roman_data_challenge_rung_1_v_3_0.h5 \
+    ARCH=resnet50 SEED=0 sbatch pipeline/rung1_train.sbatch
 ```
-Watch `val_AUC` climb and plateau. If it sits at ~0.5, the signal isn't being
-learned — revisit normalization (`--asinh_a`, or `--norm minmax`) and check the
-label key is right. `convnextv2` is the stronger backbone to try second.
+(Add `IMAGE_KEY=... LABEL_KEY=...` if inspect showed the auto-detection would
+miss.) Watch `val_AUC` climb and plateau in the slurm log. If it sits at ~0.5,
+the signal isn't being learned — revisit normalization (`--asinh_a`, or
+`--norm minmax`) and check the label key. `convnextv2` is the stronger backbone
+to try second.
 
 ### 2. Ensemble (seeds 0/1/2)
-Repeat step 1 with `--seed 1` / `--seed 2` (and optionally `--arch convnextv2`).
-Ensembling + TTA gave measurable gains in Rung 0 and is essentially free here.
+Resubmit step 1 with `SEED=1` and `SEED=2` (and optionally `ARCH=convnextv2`).
+Each writes `rung1_<arch>_s<seed>.pt` to `~/cosmos_acs/roman_dc/`. Ensembling +
+TTA gave measurable gains in Rung 0 and is essentially free here.
 
 ### 3. Predict + submit
 ```bash
-python training/predict_rung1.py --test_file <unlabeled>.h5 \
-  --ckpt rung1_r50_s0.pt rung1_r50_s1.pt rung1_r50_s2.pt \
-  --out submission_rung1.csv --prob_col <NAME_FROM_NOTEBOOK>
+TEST_H5=~/cosmos_acs/roman_dc/rung_1_unlabeled.h5 \
+CKPTS="rung1_resnet50_s0.pt rung1_resnet50_s1.pt rung1_resnet50_s2.pt" \
+PROB_COL=<NAME_FROM_NOTEBOOK> \
+    sbatch pipeline/rung1_predict.sbatch
 ```
 Verify the printed `frac>=0.5 ≈ 0.5` (matches the balanced prior) and that the
 row count equals the test-set size, then submit
