@@ -83,18 +83,49 @@ def index_dataset(h5_path, with_labels=True, limit=None):
     return group_names, uids, labels
 
 
+def standardize(x):
+    """(C,H,W) -> per-channel zero-mean/unit-std float32 (no asinh; for the
+    ~zero-mean bipolar residual channels)."""
+    mn = x.mean(axis=(1, 2), keepdims=True)
+    sd = x.std(axis=(1, 2), keepdims=True) + 1e-8
+    return ((x - mn) / sd).astype("float32")
+
+
 def normalize_one(img, norm, asinh_a):
-    """(C,H,W) -> per-channel normalized float32."""
+    """(C,H,W) -> per-channel normalized float32 (raw bands)."""
     if norm == "asinh":
-        x = np.arcsinh(img / asinh_a)
-        mn = x.mean(axis=(1, 2), keepdims=True)
-        sd = x.std(axis=(1, 2), keepdims=True) + 1e-8
-        return ((x - mn) / sd).astype("float32")
+        return standardize(np.arcsinh(img / asinh_a))
     if norm == "minmax":
         mn = img.min(axis=(1, 2), keepdims=True)
         mx = img.max(axis=(1, 2), keepdims=True)
         return ((img - mn) / (mx - mn + 1e-8)).astype("float32")
     raise ValueError(f"unknown norm {norm}")
+
+
+def _gauss_kernel(sigma):
+    r = max(1, int(round(3 * sigma)))
+    x = np.arange(-r, r + 1, dtype="float32")
+    k = np.exp(-(x ** 2) / (2.0 * sigma * sigma))
+    return (k / k.sum()).astype("float32")
+
+
+def gaussian_blur(img, sigma):
+    """Separable Gaussian blur of an (C,H,W) stack, reflect-padded. Pure numpy
+    (no scipy dependency) — cheap at 91x91."""
+    k = _gauss_kernel(sigma)
+    r = len(k) // 2
+    p = np.pad(img, ((0, 0), (r, r), (0, 0)), mode="reflect")
+    out = sum(k[j] * p[:, j:j + img.shape[1], :] for j in range(len(k)))
+    p = np.pad(out, ((0, 0), (0, 0), (r, r)), mode="reflect")
+    out = sum(k[j] * p[:, :, j:j + img.shape[2]] for j in range(len(k)))
+    return out.astype("float32")
+
+
+def highpass(img, sigma):
+    """Residual = raw - smooth. Removes the extended deflector light + smooth
+    arc envelope, leaving the small-scale structure where subhalo perturbations
+    live. (C,H,W) -> (C,H,W)."""
+    return (img - gaussian_blur(img, sigma)).astype("float32")
 
 
 class Rung1H5Dataset(Dataset):
@@ -103,12 +134,14 @@ class Rung1H5Dataset(Dataset):
     multiprocessing is safe (never hold an open handle across a fork)."""
 
     def __init__(self, h5_path, group_names, uids, labels, norm, asinh_a,
-                 bands=BANDS):
+                 input_mode="raw", hp_sigma=4.0, bands=BANDS):
         self.h5_path = h5_path
         self.group_names = group_names
         self.uids = uids
         self.labels = labels  # np array or None (predict)
         self.norm, self.asinh_a, self.bands = norm, asinh_a, bands
+        self.input_mode = input_mode      # raw | residual | stack
+        self.hp_sigma = hp_sigma
         self._f = None
 
     def _file(self):
@@ -123,8 +156,20 @@ class Rung1H5Dataset(Dataset):
         grp = self._file()[IMAGES_GROUP][self.group_names[i]]
         uid = self.uids[i]
         img = np.stack([grp[f"exposure_{uid}_{b}"][:] for b in self.bands]
-                       ).astype("float32")          # (C,H,W)
-        return normalize_one(img, self.norm, self.asinh_a)
+                       ).astype("float32")          # (C,H,W) raw MJy/sr
+        if self.input_mode == "raw":
+            return normalize_one(img, self.norm, self.asinh_a)
+        res = standardize(highpass(img, self.hp_sigma))   # residual, std-only
+        if self.input_mode == "residual":
+            return res
+        if self.input_mode == "stack":                    # raw(3) + residual(3)
+            return np.concatenate([normalize_one(img, self.norm, self.asinh_a),
+                                   res], axis=0)
+        raise ValueError(f"unknown input_mode {self.input_mode}")
+
+    @staticmethod
+    def n_channels(input_mode, n_bands=len(BANDS)):
+        return n_bands * (2 if input_mode == "stack" else 1)
 
     def __getitem__(self, i):
         img = torch.from_numpy(self.read_image(i))
@@ -184,7 +229,15 @@ def main():
                     help="only timm archs take in_chans>1 (Roman 3-band)")
     ap.add_argument("--norm", choices=["asinh", "minmax"], default="asinh")
     ap.add_argument("--asinh_a", type=float, default=1.0)
-    ap.add_argument("--augment", action="store_true", default=True)
+    ap.add_argument("--input_mode", choices=["raw", "residual", "stack"],
+                    default="raw",
+                    help="raw bands (3ch); residual = high-pass only (3ch); "
+                         "stack = raw+residual (6ch) [Tier-1 residual imaging]")
+    ap.add_argument("--hp_sigma", type=float, default=4.0,
+                    help="Gaussian sigma (px) for the high-pass residual")
+    ap.add_argument("--augment", dest="augment", action="store_true", default=True)
+    ap.add_argument("--no_augment", dest="augment", action="store_false",
+                    help="disable flip/rot augmentation (e.g. for overfit sanity tests)")
     ap.add_argument("--limit", type=int, default=None, help="first N lenses (smoke test)")
     args = ap.parse_args()
 
@@ -200,8 +253,10 @@ def main():
     tr_idx, va_idx = stratified_split(labels, args.val_frac, args.seed)
     tr = subset(group_names, uids, labels, tr_idx)
     va = subset(group_names, uids, labels, va_idx)
-    train_set = Rung1H5Dataset(args.train_file, *tr, args.norm, args.asinh_a)
-    val_set = Rung1H5Dataset(args.train_file, *va, args.norm, args.asinh_a)
+    train_set = Rung1H5Dataset(args.train_file, *tr, args.norm, args.asinh_a,
+                               args.input_mode, args.hp_sigma)
+    val_set = Rung1H5Dataset(args.train_file, *va, args.norm, args.asinh_a,
+                             args.input_mode, args.hp_sigma)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
                               num_workers=args.num_workers, drop_last=True,
                               persistent_workers=args.num_workers > 0)
@@ -210,8 +265,10 @@ def main():
                             persistent_workers=args.num_workers > 0)
     print(f"[data] train={len(train_set)} val={len(val_set)} device={device}")
 
-    model = build_model(args.arch, out_dim=1, in_chans=3).to(device)
-    print(f"[model] arch={args.arch} in_chans=3 "
+    in_chans = Rung1H5Dataset.n_channels(args.input_mode)
+    model = build_model(args.arch, out_dim=1, in_chans=in_chans).to(device)
+    print(f"[model] arch={args.arch} input_mode={args.input_mode} "
+          f"in_chans={in_chans} hp_sigma={args.hp_sigma} "
           f"params={sum(p.numel() for p in model.parameters())/1e6:.2f}M | BCE head")
 
     n_pos = float((labels[tr_idx] == 1).sum())
@@ -242,8 +299,9 @@ def main():
         if auc > best:
             best = auc
             torch.save({"state_dict": model.state_dict(), "arch": args.arch,
-                        "in_chans": 3, "out_dim": 1,
+                        "in_chans": in_chans, "out_dim": 1,
                         "norm": args.norm, "asinh_a": args.asinh_a,
+                        "input_mode": args.input_mode, "hp_sigma": args.hp_sigma,
                         "bands": BANDS, "val_auc": float(auc), "seed": args.seed,
                         "train_file": args.train_file}, args.out_ckpt)
     print(f"\n[done] best val AUC = {best:.4f} -> {args.out_ckpt}")

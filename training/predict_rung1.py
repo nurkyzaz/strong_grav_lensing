@@ -50,6 +50,9 @@ def predict_one(ckpt_path, dataset, loader, device, tta):
     model.eval()
     dataset.norm, dataset.asinh_a = ck["norm"], ck["asinh_a"]
     dataset.bands = ck.get("bands", dataset.bands)
+    # match the checkpoint's residual-imaging preprocessing (Tier 1)
+    dataset.input_mode = ck.get("input_mode", "raw")
+    dataset.hp_sigma = ck.get("hp_sigma", 4.0)
     views = [(k, fl) for fl in (False, True) for k in range(4)] if tta else [(0, False)]
     probs = np.zeros(len(dataset), dtype="float64")
     pos = 0
