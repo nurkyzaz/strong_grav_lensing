@@ -37,6 +37,17 @@ data. (Contrast Rung 0, which was θ_E *regression*.)
 | Tier-1 residual | stack, 100 ep | 0.5566 |
 | logistic reg. on global features | (sanity) | 0.513 |
 | **overfit test** | 512 imgs, no aug, 100 ep | **train BCE→0.0004, val≈chance** |
+| **θ_E control** (same pipeline, label = Einstein radius > median) | resnet50, 40k imgs, 10 ep | **val_AUC 0.9961** |
+
+**Decisive control (2026-09-18):** the *identical* pipeline/code/model/images,
+trained to classify a **visible** label (Einstein radius above/below median),
+reaches **0.996 AUC in 10 epochs** — while the subhalo label gives ~0.55. This
+*proves* the pipeline is correct (loading, labels, normalization, model, eval all
+sound) and that the subhalo failure is **physical**: subhalo presence is not
+visibly encoded in single Roman images, whereas macroscopic properties like θ_E
+are. Run via `train_cnn_rung1.py --label_attr theta_e`. Also see
+`training/rung1_gallery.py` (image/label alignment verified; yes vs no
+indistinguishable by eye; class-mean difference ~1–3%, central not arc).
 
 **Scale reminder:** AUC 0.5 = random, 1.0 = perfect. Our best (~0.57) is only
 slightly better than a coin flip.

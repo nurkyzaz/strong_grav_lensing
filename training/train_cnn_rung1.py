@@ -63,10 +63,12 @@ def attr0(group, name, default=None):
     return v
 
 
-def index_dataset(h5_path, with_labels=True, limit=None):
+def index_dataset(h5_path, with_labels=True, limit=None, label_attr=LABEL_ATTR):
     """One pass over images/* reading only attrs: returns (group_names, uids,
-    labels|None). Cheap relative to reading pixels."""
-    group_names, uids, labels = [], [], []
+    labels|None). label_attr='substructure' -> binary True/False; any other attr
+    (e.g. 'theta_e') -> median-split binary, used for DIAGNOSTICS (verify the
+    whole pipeline can learn a label we know is visible in the image)."""
+    group_names, uids, vals = [], [], []
     with h5py.File(h5_path, "r") as f:
         g = f[IMAGES_GROUP]
         names = list(g.keys())
@@ -77,9 +79,16 @@ def index_dataset(h5_path, with_labels=True, limit=None):
             group_names.append(nm)
             uids.append(str(attr0(grp, UID_ATTR)))
             if with_labels:
-                labels.append(1.0 if str(attr0(grp, LABEL_ATTR)) in TRUE_STRINGS
-                              else 0.0)
-    labels = np.asarray(labels, dtype="float32") if with_labels else None
+                if label_attr == LABEL_ATTR:
+                    vals.append(1.0 if str(attr0(grp, LABEL_ATTR)) in TRUE_STRINGS
+                                else 0.0)
+                else:
+                    vals.append(float(attr0(grp, label_attr)))
+    if not with_labels:
+        return group_names, uids, None
+    labels = np.asarray(vals, dtype="float32")
+    if label_attr != LABEL_ATTR:               # numeric attr -> median split
+        labels = (labels > np.median(labels)).astype("float32")
     return group_names, uids, labels
 
 
@@ -239,6 +248,10 @@ def main():
     ap.add_argument("--no_augment", dest="augment", action="store_false",
                     help="disable flip/rot augmentation (e.g. for overfit sanity tests)")
     ap.add_argument("--limit", type=int, default=None, help="first N lenses (smoke test)")
+    ap.add_argument("--label_attr", default="substructure",
+                    help="DIAGNOSTIC: label from another attr via median split "
+                         "(e.g. theta_e) to verify the pipeline can learn a "
+                         "known-visible target; default = the real substructure label")
     args = ap.parse_args()
 
     torch.manual_seed(args.seed)
@@ -246,9 +259,10 @@ def main():
     device = torch.device(args.device)
 
     group_names, uids, labels = index_dataset(args.train_file, with_labels=True,
-                                              limit=args.limit)
-    print(f"[data] {args.train_file}: {len(labels)} lenses | "
-          f"{int((labels == 1).sum())} substructure / {int((labels == 0).sum())} smooth")
+                                              limit=args.limit,
+                                              label_attr=args.label_attr)
+    print(f"[data] {args.train_file}: {len(labels)} lenses | label='{args.label_attr}' "
+          f"| {int((labels == 1).sum())} pos / {int((labels == 0).sum())} neg")
 
     tr_idx, va_idx = stratified_split(labels, args.val_frac, args.seed)
     tr = subset(group_names, uids, labels, tr_idx)
