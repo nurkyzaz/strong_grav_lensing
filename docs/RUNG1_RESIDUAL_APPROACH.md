@@ -1,5 +1,12 @@
 # Rung 1 — Residual-Imaging Approach (scope)
 
+> **Update (2026-09-18):** **Tier 1 was tried and did NOT help** — fit-free
+> high-pass residual channels scored 0.556 (30 ep) / 0.5566 (100 ep), *below*
+> plain raw + longer training (0.5704). See [`RUNG1_RESULTS.md`](RUNG1_RESULTS.md).
+> Tiers **2a (forward-model residuals)** and **2b (generative anomaly residuals)**
+> below are untried and remain the real levers — pending a professor decision on
+> effort + expected AUC.
+
 **Why.** Our plain whole-image CNN tops out at **~0.55–0.57 AUC** (see
 [`RUNG1_PLAN.md`](RUNG1_PLAN.md) and the diagnostics: it can overfit 512 images
 to train-BCE≈0 but doesn't generalize). The reason is physical: each 91×91 image

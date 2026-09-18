@@ -1,5 +1,12 @@
 # Roman Data Challenge — Rung 1 Plan (CDM subhalo classifier)
 
+> **Status (2026-09-18):** Steps 0–3 done. Pipeline built, trained on the full
+> 107,507-lens set, and a valid ensemble submission produced (95,603 rows). Best
+> model ~**0.57 AUC** (weak — barely above the 0.5 coin-flip); Tier-1 residual
+> imaging did not help. Full numbers + post-mortem in
+> [`RUNG1_RESULTS.md`](RUNG1_RESULTS.md); the real next lever is Tier 2 in
+> [`RUNG1_RESIDUAL_APPROACH.md`](RUNG1_RESIDUAL_APPROACH.md).
+
 **Task.** Rung 1 is a *binary classification* problem: for each simulated Roman
 strong-lens system, decide whether a Cold-Dark-Matter **subhalo population is
 present** (label 1) or **absent** (label 0). This is a different task from our
