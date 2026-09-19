@@ -36,9 +36,9 @@ on the frozen val split. Full evidence in [`RUNG1_RESULTS.md`](RUNG1_RESULTS.md)
 The subhalo signal is a few perturbed **arc** pixels; global pooling averages them
 away and the bright central galaxy dominates. `theta_e` *is* available and tells
 us the ring radius — useless as a classifier feature, but perfect as a **guide**.
-- **Phase 1a — arc-annulus mask (cheapest).** Zero everything outside the ring
-  `[~0.4·θ_E, ~1.6·θ_E]` (θ_E→px via /0.11). Removes the deflector galaxy + outer
-  noise; the CNN sees only arc pixels. New `--input_mode arcmask`, reuses resnet50.
+- **Phase 1a — arc-annulus mask (cheapest). TRIED → 0.5377, WORSE than 0.5704.**
+  Zeroing everything outside `[0.4, 1.6]·θ_E` threw away useful context (exact
+  centre, arc beyond the annulus) and added hard-edge artifacts. Dead end.
 - **Phase 1b — polar transform.** Resample each image to (r, φ) about the centre so
   the ring becomes a horizontal band and arc perturbations become local features;
   the repo already has `LogPolarScale` (needs adapting 128px→91px, 1→3 band).
