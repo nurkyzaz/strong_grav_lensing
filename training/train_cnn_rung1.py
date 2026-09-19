@@ -137,20 +137,58 @@ def highpass(img, sigma):
     return (img - gaussian_blur(img, sigma)).astype("float32")
 
 
+_RADIUS_CACHE = {}
+
+
+def _radius_index(H, W):
+    key = (H, W)
+    if key not in _RADIUS_CACHE:
+        yy, xx = np.mgrid[0:H, 0:W]
+        cy, cx = (H - 1) / 2.0, (W - 1) / 2.0
+        _RADIUS_CACHE[key] = np.round(np.sqrt((yy - cy) ** 2 +
+                                              (xx - cx) ** 2)).astype(np.int64)
+    return _RADIUS_CACHE[key]
+
+
+def radial_residual(img):
+    """(C,H,W) -> img minus its per-channel azimuthally-averaged radial profile.
+    A fit-free, TARGETED deflector removal: the centered ~radially-symmetric lens
+    galaxy is captured by the radial profile and subtracted, while the
+    azimuthally-localized arc (where subhalos act) survives. Contrast highpass(),
+    which removes all smooth flux and amplifies noise."""
+    C, H, W = img.shape
+    r = _radius_index(H, W)
+    rflat = r.ravel()
+    nb = int(rflat.max()) + 1
+    counts = np.maximum(np.bincount(rflat, minlength=nb), 1).astype("float32")
+    out = np.empty_like(img)
+    for c in range(C):
+        prof = (np.bincount(rflat, weights=img[c].ravel(),
+                            minlength=nb) / counts).astype("float32")
+        out[c] = img[c] - prof[r]
+    return out.astype("float32")
+
+
+def residual_of(img, residual_type, hp_sigma):
+    return radial_residual(img) if residual_type == "radial" else highpass(img, hp_sigma)
+
+
 class Rung1H5Dataset(Dataset):
     """Lazy per-lens reader. group_names/uids/labels are precomputed subsets;
     the h5 file is (re)opened inside each worker on first access so DataLoader
     multiprocessing is safe (never hold an open handle across a fork)."""
 
     def __init__(self, h5_path, group_names, uids, labels, norm, asinh_a,
-                 input_mode="raw", hp_sigma=4.0, bands=BANDS):
+                 input_mode="raw", hp_sigma=4.0, residual_type="highpass",
+                 bands=BANDS):
         self.h5_path = h5_path
         self.group_names = group_names
         self.uids = uids
         self.labels = labels  # np array or None (predict)
         self.norm, self.asinh_a, self.bands = norm, asinh_a, bands
-        self.input_mode = input_mode      # raw | residual | stack
+        self.input_mode = input_mode          # raw | residual | stack
         self.hp_sigma = hp_sigma
+        self.residual_type = residual_type    # highpass | radial
         self._f = None
 
     def _file(self):
@@ -168,7 +206,7 @@ class Rung1H5Dataset(Dataset):
                        ).astype("float32")          # (C,H,W) raw MJy/sr
         if self.input_mode == "raw":
             return normalize_one(img, self.norm, self.asinh_a)
-        res = standardize(highpass(img, self.hp_sigma))   # residual, std-only
+        res = standardize(residual_of(img, self.residual_type, self.hp_sigma))
         if self.input_mode == "residual":
             return res
         if self.input_mode == "stack":                    # raw(3) + residual(3)
@@ -244,6 +282,11 @@ def main():
                          "stack = raw+residual (6ch) [Tier-1 residual imaging]")
     ap.add_argument("--hp_sigma", type=float, default=4.0,
                     help="Gaussian sigma (px) for the high-pass residual")
+    ap.add_argument("--residual_type", choices=["highpass", "radial"],
+                    default="highpass",
+                    help="how residual/stack channels remove the smooth part: "
+                         "highpass (Gaussian) or radial (subtract azimuthal "
+                         "profile -> targeted deflector removal) [Phase 1a]")
     ap.add_argument("--augment", dest="augment", action="store_true", default=True)
     ap.add_argument("--no_augment", dest="augment", action="store_false",
                     help="disable flip/rot augmentation (e.g. for overfit sanity tests)")
@@ -268,9 +311,9 @@ def main():
     tr = subset(group_names, uids, labels, tr_idx)
     va = subset(group_names, uids, labels, va_idx)
     train_set = Rung1H5Dataset(args.train_file, *tr, args.norm, args.asinh_a,
-                               args.input_mode, args.hp_sigma)
+                               args.input_mode, args.hp_sigma, args.residual_type)
     val_set = Rung1H5Dataset(args.train_file, *va, args.norm, args.asinh_a,
-                             args.input_mode, args.hp_sigma)
+                             args.input_mode, args.hp_sigma, args.residual_type)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
                               num_workers=args.num_workers, drop_last=True,
                               persistent_workers=args.num_workers > 0)
@@ -316,6 +359,7 @@ def main():
                         "in_chans": in_chans, "out_dim": 1,
                         "norm": args.norm, "asinh_a": args.asinh_a,
                         "input_mode": args.input_mode, "hp_sigma": args.hp_sigma,
+                        "residual_type": args.residual_type,
                         "bands": BANDS, "val_auc": float(auc), "seed": args.seed,
                         "train_file": args.train_file}, args.out_ckpt)
     print(f"\n[done] best val AUC = {best:.4f} -> {args.out_ckpt}")
