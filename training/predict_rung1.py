@@ -54,6 +54,8 @@ def predict_one(ckpt_path, dataset, loader, device, tta):
     dataset.input_mode = ck.get("input_mode", "raw")
     dataset.hp_sigma = ck.get("hp_sigma", 4.0)
     dataset.residual_type = ck.get("residual_type", "highpass")
+    dataset.arc_lo = ck.get("arc_lo", 0.4)
+    dataset.arc_hi = ck.get("arc_hi", 1.6)
     views = [(k, fl) for fl in (False, True) for k in range(4)] if tta else [(0, False)]
     probs = np.zeros(len(dataset), dtype="float64")
     pos = 0

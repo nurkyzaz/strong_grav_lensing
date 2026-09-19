@@ -47,6 +47,7 @@ from train_cnn_paltas import build_model, augment_batch  # noqa: E402
 
 IMAGES_GROUP = "images"
 BANDS = ["F106", "F129", "F158"]
+PIX_SCALE = 0.11                      # arcsec/pixel (constant across the dataset)
 LABEL_ATTR = "substructure"
 UID_ATTR = "uid"
 TRUE_STRINGS = {"True", "true", "1", "1.0", "TRUE"}
@@ -180,15 +181,16 @@ class Rung1H5Dataset(Dataset):
 
     def __init__(self, h5_path, group_names, uids, labels, norm, asinh_a,
                  input_mode="raw", hp_sigma=4.0, residual_type="highpass",
-                 bands=BANDS):
+                 arc_lo=0.4, arc_hi=1.6, bands=BANDS):
         self.h5_path = h5_path
         self.group_names = group_names
         self.uids = uids
         self.labels = labels  # np array or None (predict)
         self.norm, self.asinh_a, self.bands = norm, asinh_a, bands
-        self.input_mode = input_mode          # raw | residual | stack
+        self.input_mode = input_mode          # raw | residual | stack | arcmask
         self.hp_sigma = hp_sigma
         self.residual_type = residual_type    # highpass | radial
+        self.arc_lo, self.arc_hi = arc_lo, arc_hi   # arcmask: keep [lo,hi]*theta_E
         self._f = None
 
     def _file(self):
@@ -206,6 +208,14 @@ class Rung1H5Dataset(Dataset):
                        ).astype("float32")          # (C,H,W) raw MJy/sr
         if self.input_mode == "raw":
             return normalize_one(img, self.norm, self.asinh_a)
+        if self.input_mode == "arcmask":
+            # normalize, then keep only the ring [arc_lo, arc_hi]*theta_E (px),
+            # zeroing the central deflector + outer noise so the CNN sees the arc
+            normed = normalize_one(img, self.norm, self.asinh_a)
+            rE = float(attr0(grp, "theta_e")) / PIX_SCALE
+            r = _radius_index(img.shape[1], img.shape[2])
+            keep = ((r >= self.arc_lo * rE) & (r <= self.arc_hi * rE)).astype("float32")
+            return (normed * keep).astype("float32")
         res = standardize(residual_of(img, self.residual_type, self.hp_sigma))
         if self.input_mode == "residual":
             return res
@@ -276,10 +286,16 @@ def main():
                     help="only timm archs take in_chans>1 (Roman 3-band)")
     ap.add_argument("--norm", choices=["asinh", "minmax"], default="asinh")
     ap.add_argument("--asinh_a", type=float, default=1.0)
-    ap.add_argument("--input_mode", choices=["raw", "residual", "stack"],
+    ap.add_argument("--input_mode",
+                    choices=["raw", "residual", "stack", "arcmask"],
                     default="raw",
                     help="raw bands (3ch); residual = high-pass only (3ch); "
-                         "stack = raw+residual (6ch) [Tier-1 residual imaging]")
+                         "stack = raw+residual (6ch); arcmask = keep only the ring "
+                         "at theta_E, zero the rest (3ch) [Phase 1a arc-focus]")
+    ap.add_argument("--arc_lo", type=float, default=0.4,
+                    help="arcmask inner radius as a fraction of theta_E")
+    ap.add_argument("--arc_hi", type=float, default=1.6,
+                    help="arcmask outer radius as a fraction of theta_E")
     ap.add_argument("--hp_sigma", type=float, default=4.0,
                     help="Gaussian sigma (px) for the high-pass residual")
     ap.add_argument("--residual_type", choices=["highpass", "radial"],
@@ -311,9 +327,11 @@ def main():
     tr = subset(group_names, uids, labels, tr_idx)
     va = subset(group_names, uids, labels, va_idx)
     train_set = Rung1H5Dataset(args.train_file, *tr, args.norm, args.asinh_a,
-                               args.input_mode, args.hp_sigma, args.residual_type)
+                               args.input_mode, args.hp_sigma, args.residual_type,
+                               args.arc_lo, args.arc_hi)
     val_set = Rung1H5Dataset(args.train_file, *va, args.norm, args.asinh_a,
-                             args.input_mode, args.hp_sigma, args.residual_type)
+                             args.input_mode, args.hp_sigma, args.residual_type,
+                             args.arc_lo, args.arc_hi)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
                               num_workers=args.num_workers, drop_last=True,
                               persistent_workers=args.num_workers > 0)
@@ -360,6 +378,7 @@ def main():
                         "norm": args.norm, "asinh_a": args.asinh_a,
                         "input_mode": args.input_mode, "hp_sigma": args.hp_sigma,
                         "residual_type": args.residual_type,
+                        "arc_lo": args.arc_lo, "arc_hi": args.arc_hi,
                         "bands": BANDS, "val_auc": float(auc), "seed": args.seed,
                         "train_file": args.train_file}, args.out_ckpt)
     print(f"\n[done] best val AUC = {best:.4f} -> {args.out_ckpt}")
