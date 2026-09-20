@@ -174,6 +174,32 @@ def residual_of(img, residual_type, hp_sigma):
     return radial_residual(img) if residual_type == "radial" else highpass(img, hp_sigma)
 
 
+def peak_arc_angle(img, rE, lo=0.7, hi=1.3):
+    """Flux-weighted mean azimuth (deg) of the arc in the ring band [lo,hi]*rE.
+    Robust (no histogram/argmax noise). atan2 in array coords (y down)."""
+    C, H, W = img.shape
+    yy, xx = np.mgrid[0:H, 0:W]
+    cy, cx = (H - 1) / 2.0, (W - 1) / 2.0
+    r = np.sqrt((yy - cy) ** 2 + (xx - cx) ** 2)
+    ring = (r >= lo * rE) & (r <= hi * rE)
+    if not ring.any():
+        return 0.0
+    f = img.sum(0)[ring]
+    phi = np.arctan2((yy - cy)[ring], (xx - cx)[ring])
+    return float(np.degrees(np.arctan2(np.sum(f * np.sin(phi)),
+                                       np.sum(f * np.cos(phi)))))
+
+
+def arc_align(img, rE):
+    """Rotate (C,H,W) so the arc's flux-weighted azimuth lands at 0 (canonical),
+    removing rotational nuisance variance. scipy rotates +CCW in array coords, so
+    rotating by +ang cancels an azimuth of +ang."""
+    from scipy.ndimage import rotate as nd_rotate
+    ang = peak_arc_angle(img, rE)
+    return nd_rotate(img, ang, axes=(1, 2), reshape=False, order=1,
+                     mode="nearest").astype("float32")
+
+
 class Rung1H5Dataset(Dataset):
     """Lazy per-lens reader. group_names/uids/labels are precomputed subsets;
     the h5 file is (re)opened inside each worker on first access so DataLoader
@@ -208,6 +234,9 @@ class Rung1H5Dataset(Dataset):
                        ).astype("float32")          # (C,H,W) raw MJy/sr
         if self.input_mode == "raw":
             return normalize_one(img, self.norm, self.asinh_a)
+        if self.input_mode == "arcalign":
+            rE = float(attr0(grp, "theta_e")) / PIX_SCALE
+            return normalize_one(arc_align(img, rE), self.norm, self.asinh_a)
         if self.input_mode == "arcmask":
             # normalize, then keep only the ring [arc_lo, arc_hi]*theta_E (px),
             # zeroing the central deflector + outer noise so the CNN sees the arc
@@ -287,7 +316,7 @@ def main():
     ap.add_argument("--norm", choices=["asinh", "minmax"], default="asinh")
     ap.add_argument("--asinh_a", type=float, default=1.0)
     ap.add_argument("--input_mode",
-                    choices=["raw", "residual", "stack", "arcmask"],
+                    choices=["raw", "residual", "stack", "arcmask", "arcalign"],
                     default="raw",
                     help="raw bands (3ch); residual = high-pass only (3ch); "
                          "stack = raw+residual (6ch); arcmask = keep only the ring "
