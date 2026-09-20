@@ -36,6 +36,7 @@ data. (Contrast Rung 0, which was θ_E *regression*.)
 | Tier-1 residual | stack (raw+high-pass), 30 ep | 0.5562 |
 | Tier-1 residual | stack, 100 ep | 0.5566 |
 | Phase-1a arc-mask | ring-only (θ_E annulus), 100 ep | 0.5377 (worse) |
+| arc-align | canonical arc orientation, no-aug, 100 ep | 0.5490 (worse; train BCE→0.23, overfit) |
 | logistic reg. on global features | (sanity) | 0.513 |
 | **overfit test** | 512 imgs, no aug, 100 ep | **train BCE→0.0004, val≈chance** |
 | **θ_E control** (same pipeline, label = Einstein radius > median) | resnet50, 40k imgs, 10 ep | **val_AUC 0.9961** |
