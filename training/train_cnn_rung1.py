@@ -336,6 +336,9 @@ def main():
     ap.add_argument("--no_augment", dest="augment", action="store_false",
                     help="disable flip/rot augmentation (e.g. for overfit sanity tests)")
     ap.add_argument("--limit", type=int, default=None, help="first N lenses (smoke test)")
+    ap.add_argument("--init_backbone", default=None,
+                    help="load a self-supervised encoder (rung1_ssl_pretrain.py "
+                         "output) into the timm backbone before fine-tuning")
     ap.add_argument("--label_attr", default="substructure",
                     help="DIAGNOSTIC: label from another attr via median split "
                          "(e.g. theta_e) to verify the pipeline can learn a "
@@ -371,6 +374,12 @@ def main():
 
     in_chans = Rung1H5Dataset.n_channels(args.input_mode)
     model = build_model(args.arch, out_dim=1, in_chans=in_chans).to(device)
+    if args.init_backbone and hasattr(model, "backbone"):
+        sd = torch.load(args.init_backbone, map_location=device,
+                        weights_only=False)["backbone_state"]
+        miss, unexp = model.backbone.load_state_dict(sd, strict=False)
+        print(f"[init] SSL backbone <- {args.init_backbone} "
+              f"(missing {len(miss)}, unexpected {len(unexp)})")
     print(f"[model] arch={args.arch} input_mode={args.input_mode} "
           f"in_chans={in_chans} hp_sigma={args.hp_sigma} "
           f"params={sum(p.numel() for p in model.parameters())/1e6:.2f}M | BCE head")
