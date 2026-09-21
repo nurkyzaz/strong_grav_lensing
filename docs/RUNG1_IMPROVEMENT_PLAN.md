@@ -44,22 +44,40 @@ us the ring radius — useless as a classifier feature, but perfect as a **guide
   the repo already has `LogPolarScale` (needs adapting 128px→91px, 1→3 band).
 Success = beat 0.5704 on the identical val split + seeds. One ~40-min run each.
 
-## Medium — only if Phase 1 shows a real lift
-- Self-supervised **masked-autoencoder pretraining** on the ~95k unlabeled lenses,
-  then fine-tune (MAE gave ~+1 AUC pt in the literature).
-- Arc-aligned canonicalization (rotate each arc to a common frame).
+## Medium — TRIED, both underperformed 0.5704
+- **Masked-autoencoder SSL pretraining + fine-tune → 0.5641.** Best of all the
+  tweaks, still < raw+longer. Encoder learns source/galaxy morphology, not the
+  noise-level subhalo cue.
+- **Arc-aligned canonicalization → 0.5490.** Worse (overfit without augmentation).
 
-## Hard / professor-gated (weeks; may exceed Rung-1 scope)
-- **Tier 2 forward-model residuals** ([`RUNG1_RESIDUAL_APPROACH.md`](RUNG1_RESIDUAL_APPROACH.md)):
-  per-system reconstruct + subtract smooth lens+source (lenstronomy). Now known to
-  require full source reconstruction — the challenge withholds the source model.
-- **Simulation-based inference** on the substructure *population* parameters
-  (Brehmer et al.) — reframes the task away from per-image binary.
+## Literature cross-check (what the field does vs. what we did)
+| Method | Reference | Us |
+|---|---|---|
+| Direct CNN on images (no subtraction) | Diaz Rivero & Dvorkin 2020 | ✅ baseline 0.57 |
+| Longer training + ensemble | standard | ✅ |
+| Self-supervised MAE | Masked-AE lensing 2025 | ✅ 0.564 |
+| **Polar / rotation-equivariant net** | arXiv:2607.02663 (2026) | ❌ **not done (Phase 1b)** |
+| Substructure **power-spectrum** regression | Wagner-Carena 2024 (arXiv:2403.13881) | ❌ needs a PS target we lack; reframes task |
+| **SBI / neural posterior** on the population | arXiv:2511.17732 (2025) | ❌ Tier 2b, heavy |
+| Forward-model residuals (grav. imaging) | Vegetti/Hezaveh | ❌ Tier 2a, heavy |
+
+**Key insight:** on *realistic* data the field does **not** rely on per-image
+binary CNN — it does **population-level inference** (power spectrum, SBI). Rung 1's
+per-image binary framing is the hardest possible, which is exactly why direct CNNs
+(ours *and* Diaz Rivero & Dvorkin's) plateau. Two levers remain:
+
+## Remaining, in order of cost
+- **Phase 1b — polar / equivariant architecture (cheap, ~1 run).** The one
+  literature-backed method we have NOT tried (`LogPolarScale` in repo needs
+  91px/3-band adapting). Given every preprocessing tweak failed, odds are modest,
+  but it is architecturally different and worth it for completeness.
+- **Tier 2 (weeks, professor-gated):** forward-model residuals (needs source
+  reconstruction the challenge withholds) or SBI/power-spectrum on the population
+  — the field-standard for realistic data, but reframes the task.
 
 ## Honest expectation & recommendation
-Given constraints 1–5, even the arc-focused model likely lands ~0.55–0.62. So:
-1. Run **Phase 1a** (arc-annulus mask) — the single best-justified cheap try.
-2. Regardless of outcome, the highest-value deliverable is the **write-up**: we
-   proved the pipeline is correct, that the parameters are uninformative, that the
-   label can't be enriched, and that the physics caps detectability — then **ask
-   the professor what AUC Rung 1 actually targets** before any Tier-2 investment.
+Everything cheap-to-medium is done and all landed 0.54–0.57. The only untried
+cheap item is **Phase 1b (polar)**; the only path with real upside is Tier 2, which
+reframes to population inference and is a multi-week project. Recommendation: run
+Phase 1b for completeness *or* stop here, then take the write-up + these two
+literature-grounded options to the professor — the Tier-2 decision is theirs.
