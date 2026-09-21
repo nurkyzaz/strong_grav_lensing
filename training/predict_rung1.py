@@ -28,7 +28,7 @@ from torch.utils.data import DataLoader
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from train_cnn_paltas import build_model                               # noqa: E402
-from train_cnn_rung1 import index_dataset, Rung1H5Dataset              # noqa: E402
+from train_cnn_rung1 import index_dataset, Rung1H5Dataset, PolarClassifier  # noqa: E402
 
 
 def dihedral(x, k, flip):
@@ -45,7 +45,10 @@ def predict_one(ckpt_path, dataset, loader, device, tta):
     # weights_only=False: our own trusted checkpoints carry non-tensor metadata
     # (arch/norm/val_auc) that the torch>=2.6 default would reject.
     ck = torch.load(ckpt_path, map_location=device, weights_only=False)
-    model = build_model(ck["arch"], out_dim=1, in_chans=ck["in_chans"]).to(device)
+    if ck["arch"] == "polar":
+        model = PolarClassifier(out_dim=1, in_chans=ck["in_chans"]).to(device)
+    else:
+        model = build_model(ck["arch"], out_dim=1, in_chans=ck["in_chans"]).to(device)
     model.load_state_dict(ck["state_dict"])
     model.eval()
     dataset.norm, dataset.asinh_a = ck["norm"], ck["asinh_a"]

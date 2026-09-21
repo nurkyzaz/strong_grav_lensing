@@ -200,6 +200,55 @@ def arc_align(img, rE):
                      mode="nearest").astype("float32")
 
 
+class PolarClassifier(nn.Module):
+    """Ring-geometry model (Phase 1b; adapted from train_cnn_paltas.LogPolarScale
+    for 3-band 91px). Resamples the image to (r, phi) about the centre so the ring
+    becomes a horizontal band and arc perturbations become local features; a polar
+    branch (phi-pooled -> radial 1D conv, rotation-invariant) + a small cartesian
+    branch + the scale scalar -> classification head. See arXiv:2607.02663."""
+
+    def __init__(self, out_dim=1, in_chans=3, n_r=64, n_phi=96, r_min=1.5,
+                 r_max=44.0, img=91):
+        super().__init__()
+        self.out_dim = out_dim
+        rr = torch.linspace(r_min, r_max, n_r)
+        pp = torch.linspace(0, 2 * float(np.pi), n_phi + 1)[:-1]
+        c = (img - 1) / 2.0
+        gx = (c + rr[:, None] * torch.cos(pp[None, :])) / (img - 1) * 2 - 1
+        gy = (c + rr[:, None] * torch.sin(pp[None, :])) / (img - 1) * 2 - 1
+        self.register_buffer("pgrid", torch.stack([gx, gy], dim=-1).unsqueeze(0))
+
+        def blk(i, o, s):
+            return nn.Sequential(
+                nn.Conv2d(i, o, 3, stride=(1, s), padding=1,
+                          padding_mode="circular", bias=False),
+                nn.BatchNorm2d(o), nn.ReLU(inplace=True))
+        self.polar = nn.Sequential(blk(in_chans, 32, 2), blk(32, 64, 2),
+                                   blk(64, 64, 2), blk(64, 64, 2))
+        self.radial = nn.Sequential(
+            nn.Conv1d(64, 64, 5, padding=2), nn.ReLU(inplace=True),
+            nn.Conv1d(64, 64, 5, padding=2), nn.ReLU(inplace=True))
+        self.cart = nn.Sequential(
+            nn.Conv2d(in_chans, 16, 7, stride=2, padding=3, bias=False),
+            nn.BatchNorm2d(16), nn.ReLU(inplace=True),
+            nn.Conv2d(16, 32, 3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(32), nn.ReLU(inplace=True),
+            nn.Conv2d(32, 64, 3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(64), nn.ReLU(inplace=True),
+            nn.AdaptiveAvgPool2d(1))
+        self.head = nn.Sequential(nn.Linear(64 * 2 + 64 + 1, 128),
+                                  nn.ReLU(inplace=True), nn.Linear(128, out_dim))
+
+    def forward(self, x, s):
+        b = x.shape[0]
+        pol = torch.nn.functional.grid_sample(
+            x, self.pgrid.expand(b, -1, -1, -1), align_corners=True)
+        f = self.radial(self.polar(pol).mean(dim=3))   # phi pooling -> [b,64,n_r]
+        rad = torch.cat([f.mean(dim=2), f.max(dim=2).values], dim=1)
+        cart = self.cart(x).flatten(1)
+        return self.head(torch.cat([rad, cart, s], dim=1))
+
+
 class Rung1H5Dataset(Dataset):
     """Lazy per-lens reader. group_names/uids/labels are precomputed subsets;
     the h5 file is (re)opened inside each worker on first access so DataLoader
@@ -311,8 +360,10 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     ap.add_argument("--out_ckpt", default="rung1_resnet50_s0.pt")
-    ap.add_argument("--arch", choices=["resnet50", "convnextv2"], default="resnet50",
-                    help="only timm archs take in_chans>1 (Roman 3-band)")
+    ap.add_argument("--arch", choices=["resnet50", "convnextv2", "polar"],
+                    default="resnet50",
+                    help="resnet50/convnextv2 (timm) or polar (ring-geometry, "
+                         "from-scratch, Phase 1b)")
     ap.add_argument("--norm", choices=["asinh", "minmax"], default="asinh")
     ap.add_argument("--asinh_a", type=float, default=1.0)
     ap.add_argument("--input_mode",
@@ -373,7 +424,10 @@ def main():
     print(f"[data] train={len(train_set)} val={len(val_set)} device={device}")
 
     in_chans = Rung1H5Dataset.n_channels(args.input_mode)
-    model = build_model(args.arch, out_dim=1, in_chans=in_chans).to(device)
+    if args.arch == "polar":
+        model = PolarClassifier(out_dim=1, in_chans=in_chans).to(device)
+    else:
+        model = build_model(args.arch, out_dim=1, in_chans=in_chans).to(device)
     if args.init_backbone and hasattr(model, "backbone"):
         sd = torch.load(args.init_backbone, map_location=device,
                         weights_only=False)["backbone_state"]
