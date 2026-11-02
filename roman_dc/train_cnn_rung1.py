@@ -174,6 +174,81 @@ def residual_of(img, residual_type, hp_sigma):
     return radial_residual(img) if residual_type == "radial" else highpass(img, hp_sigma)
 
 
+def peak_arc_angle(img, rE, lo=0.7, hi=1.3):
+    """Flux-weighted mean azimuth (deg) of the arc in the ring band [lo,hi]*rE.
+    Robust (no histogram/argmax noise). atan2 in array coords (y down)."""
+    C, H, W = img.shape
+    yy, xx = np.mgrid[0:H, 0:W]
+    cy, cx = (H - 1) / 2.0, (W - 1) / 2.0
+    r = np.sqrt((yy - cy) ** 2 + (xx - cx) ** 2)
+    ring = (r >= lo * rE) & (r <= hi * rE)
+    if not ring.any():
+        return 0.0
+    f = img.sum(0)[ring]
+    phi = np.arctan2((yy - cy)[ring], (xx - cx)[ring])
+    return float(np.degrees(np.arctan2(np.sum(f * np.sin(phi)),
+                                       np.sum(f * np.cos(phi)))))
+
+
+def arc_align(img, rE):
+    """Rotate (C,H,W) so the arc's flux-weighted azimuth lands at 0 (canonical),
+    removing rotational nuisance variance. scipy rotates +CCW in array coords, so
+    rotating by +ang cancels an azimuth of +ang."""
+    from scipy.ndimage import rotate as nd_rotate
+    ang = peak_arc_angle(img, rE)
+    return nd_rotate(img, ang, axes=(1, 2), reshape=False, order=1,
+                     mode="nearest").astype("float32")
+
+
+class PolarClassifier(nn.Module):
+    """Ring-geometry model (Phase 1b; adapted from train_cnn_paltas.LogPolarScale
+    for 3-band 91px). Resamples the image to (r, phi) about the centre so the ring
+    becomes a horizontal band and arc perturbations become local features; a polar
+    branch (phi-pooled -> radial 1D conv, rotation-invariant) + a small cartesian
+    branch + the scale scalar -> classification head. See arXiv:2607.02663."""
+
+    def __init__(self, out_dim=1, in_chans=3, n_r=64, n_phi=96, r_min=1.5,
+                 r_max=44.0, img=91):
+        super().__init__()
+        self.out_dim = out_dim
+        rr = torch.linspace(r_min, r_max, n_r)
+        pp = torch.linspace(0, 2 * float(np.pi), n_phi + 1)[:-1]
+        c = (img - 1) / 2.0
+        gx = (c + rr[:, None] * torch.cos(pp[None, :])) / (img - 1) * 2 - 1
+        gy = (c + rr[:, None] * torch.sin(pp[None, :])) / (img - 1) * 2 - 1
+        self.register_buffer("pgrid", torch.stack([gx, gy], dim=-1).unsqueeze(0))
+
+        def blk(i, o, s):
+            return nn.Sequential(
+                nn.Conv2d(i, o, 3, stride=(1, s), padding=1,
+                          padding_mode="circular", bias=False),
+                nn.BatchNorm2d(o), nn.ReLU(inplace=True))
+        self.polar = nn.Sequential(blk(in_chans, 32, 2), blk(32, 64, 2),
+                                   blk(64, 64, 2), blk(64, 64, 2))
+        self.radial = nn.Sequential(
+            nn.Conv1d(64, 64, 5, padding=2), nn.ReLU(inplace=True),
+            nn.Conv1d(64, 64, 5, padding=2), nn.ReLU(inplace=True))
+        self.cart = nn.Sequential(
+            nn.Conv2d(in_chans, 16, 7, stride=2, padding=3, bias=False),
+            nn.BatchNorm2d(16), nn.ReLU(inplace=True),
+            nn.Conv2d(16, 32, 3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(32), nn.ReLU(inplace=True),
+            nn.Conv2d(32, 64, 3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(64), nn.ReLU(inplace=True),
+            nn.AdaptiveAvgPool2d(1))
+        self.head = nn.Sequential(nn.Linear(64 * 2 + 64 + 1, 128),
+                                  nn.ReLU(inplace=True), nn.Linear(128, out_dim))
+
+    def forward(self, x, s):
+        b = x.shape[0]
+        pol = torch.nn.functional.grid_sample(
+            x, self.pgrid.expand(b, -1, -1, -1), align_corners=True)
+        f = self.radial(self.polar(pol).mean(dim=3))   # phi pooling -> [b,64,n_r]
+        rad = torch.cat([f.mean(dim=2), f.max(dim=2).values], dim=1)
+        cart = self.cart(x).flatten(1)
+        return self.head(torch.cat([rad, cart, s], dim=1))
+
+
 class Rung1H5Dataset(Dataset):
     """Lazy per-lens reader. group_names/uids/labels are precomputed subsets;
     the h5 file is (re)opened inside each worker on first access so DataLoader
@@ -208,6 +283,9 @@ class Rung1H5Dataset(Dataset):
                        ).astype("float32")          # (C,H,W) raw MJy/sr
         if self.input_mode == "raw":
             return normalize_one(img, self.norm, self.asinh_a)
+        if self.input_mode == "arcalign":
+            rE = float(attr0(grp, "theta_e")) / PIX_SCALE
+            return normalize_one(arc_align(img, rE), self.norm, self.asinh_a)
         if self.input_mode == "arcmask":
             # normalize, then keep only the ring [arc_lo, arc_hi]*theta_E (px),
             # zeroing the central deflector + outer noise so the CNN sees the arc
@@ -282,12 +360,14 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     ap.add_argument("--out_ckpt", default="rung1_resnet50_s0.pt")
-    ap.add_argument("--arch", choices=["resnet50", "convnextv2"], default="resnet50",
-                    help="only timm archs take in_chans>1 (Roman 3-band)")
+    ap.add_argument("--arch", choices=["resnet50", "convnextv2", "polar"],
+                    default="resnet50",
+                    help="resnet50/convnextv2 (timm) or polar (ring-geometry, "
+                         "from-scratch, Phase 1b)")
     ap.add_argument("--norm", choices=["asinh", "minmax"], default="asinh")
     ap.add_argument("--asinh_a", type=float, default=1.0)
     ap.add_argument("--input_mode",
-                    choices=["raw", "residual", "stack", "arcmask"],
+                    choices=["raw", "residual", "stack", "arcmask", "arcalign"],
                     default="raw",
                     help="raw bands (3ch); residual = high-pass only (3ch); "
                          "stack = raw+residual (6ch); arcmask = keep only the ring "
@@ -307,6 +387,9 @@ def main():
     ap.add_argument("--no_augment", dest="augment", action="store_false",
                     help="disable flip/rot augmentation (e.g. for overfit sanity tests)")
     ap.add_argument("--limit", type=int, default=None, help="first N lenses (smoke test)")
+    ap.add_argument("--init_backbone", default=None,
+                    help="load a self-supervised encoder (rung1_ssl_pretrain.py "
+                         "output) into the timm backbone before fine-tuning")
     ap.add_argument("--label_attr", default="substructure",
                     help="DIAGNOSTIC: label from another attr via median split "
                          "(e.g. theta_e) to verify the pipeline can learn a "
@@ -341,7 +424,16 @@ def main():
     print(f"[data] train={len(train_set)} val={len(val_set)} device={device}")
 
     in_chans = Rung1H5Dataset.n_channels(args.input_mode)
-    model = build_model(args.arch, out_dim=1, in_chans=in_chans).to(device)
+    if args.arch == "polar":
+        model = PolarClassifier(out_dim=1, in_chans=in_chans).to(device)
+    else:
+        model = build_model(args.arch, out_dim=1, in_chans=in_chans).to(device)
+    if args.init_backbone and hasattr(model, "backbone"):
+        sd = torch.load(args.init_backbone, map_location=device,
+                        weights_only=False)["backbone_state"]
+        miss, unexp = model.backbone.load_state_dict(sd, strict=False)
+        print(f"[init] SSL backbone <- {args.init_backbone} "
+              f"(missing {len(miss)}, unexpected {len(unexp)})")
     print(f"[model] arch={args.arch} input_mode={args.input_mode} "
           f"in_chans={in_chans} hp_sigma={args.hp_sigma} "
           f"params={sum(p.numel() for p in model.parameters())/1e6:.2f}M | BCE head")
